@@ -23,3 +23,7 @@ PRINCIPAIS COMPONENTES DO SPRING FRAMWORK
     - Resolução de URLs e mapeamento
     - Injeção de dependências
     - Validações de entrada e saída
+
+---
+
+> [← Voltar para Spring MVC - APIs RESTful](README.md) · Próximo: [II - Fundamentos REST](ii-fundamentos-rest.md)
