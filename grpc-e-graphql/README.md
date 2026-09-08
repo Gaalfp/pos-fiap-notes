@@ -1,78 +1,51 @@
 # gRPC e GRAPHQL
 
-# O que é RPC?
+> **Capítulos:** [I - gRPC](i-grpc.md) · [II - GraphQL](ii-graphql.md)
 
-Protocolo que permite a comunicacao entre sistemas que estão em máquinas diferentes. Em outras palavras o RPC permite que o sistema “chame” um procedimento ou função em outro sistema como se estivesse local. 
+REST resolve bem o caso geral, mas cobra dois preços: **payload de texto** (JSON é verboso e caro de serializar) e **endpoint fixo** (o servidor decide o formato da resposta, e o cliente aceita o que vier). gRPC e GraphQL atacam esses dois preços por caminhos opostos.
 
-![image.png](assets/grpc-e-graphql-01.png)
+- **gRPC** otimiza a **comunicação**: contrato binário, tipado e gerado a partir de um `.proto`, sobre HTTP/2. Nasceu para conversa **entre serviços**.
+- **GraphQL** otimiza o **consumo**: um schema único onde o **cliente** declara exatamente os campos que quer, numa requisição só. Nasceu para alimentar **frontends**.
 
-Vantagens
+Nenhum dos dois substitui REST em todos os cenários — os três convivem numa mesma arquitetura: GraphQL no BFF que atende o app, gRPC entre os microsserviços, REST na API pública.
 
-- Se preocupar mais com logica e não, sem se preocupar com a complexidade de rede
-- Diminui a complexidade de debug ja que simula um ambiente local
-- Facilmente escalavel, principalmente em ambientes cloud
-- Eficiencia na comunicacao entre diferentes sistemas
+---
 
-Trade offs
+## Comparativo — a tabela que cai em prova
 
-- Latência de rede, comunicacao pode ter atrasos, por mais que o RPC simule um ambiente local, os servidores ainda estão fisicamente separados
-- Identificar e resolver problemas se torna mais complicado em sistemas distribuidos, pois os erros podem surgir em qualquer ponto da rede
-- Falhas de rede
+| | **REST** | **gRPC** | **GraphQL** |
+|---|---|---|---|
+| Estilo | recursos + verbos HTTP | chamada de procedimento (RPC) | consulta declarativa |
+| Transporte | HTTP/1.1 ou HTTP/2 | **HTTP/2 obrigatório** | HTTP (normalmente 1 endpoint `POST /graphql`) |
+| Formato | JSON (texto) | **Protobuf (binário)** | JSON (texto) |
+| Contrato | OpenAPI — **opcional** | `.proto` — **obrigatório** | Schema/SDL — **obrigatório** |
+| Tipagem | fraca (validada em runtime) | **forte, verificada em compilação** | forte, verificada no schema |
+| Quem define a resposta | servidor | servidor | **cliente** |
+| Over/under-fetching | comum | controlado pelo `.proto` | resolvido por construção |
+| Streaming | limitado (SSE, WebSocket) | **nativo e bidirecional** | subscriptions (WebSocket) |
+| Cache HTTP | ✅ nativo (`ETag`, `Cache-Control`) | ❌ | ❌ difícil (tudo é `POST` num endpoint só) |
+| Legível por humano | ✅ | ❌ binário | ✅ |
+| Suporte em navegador | ✅ | ❌ (precisa de gRPC-Web + proxy) | ✅ |
+| Códigos de erro | status HTTP | 17 status codes próprios | **sempre 200** + array `errors` |
+| Melhor para | API pública, CRUD, integração ampla | microsserviços, baixa latência, alto volume | BFF, apps com muitas telas e agregação |
+| Pior para | agregação de muitas fontes | cliente em navegador | operação simples de CRUD |
 
-# GOOGLE X GRPC
+### Critério de escolha
 
-o gRPC foi criado inicialmente pela google, que utilizava uma infraestrutura RPC chamada stubby para conectar seus microsserviços entre datacenters por mais de uma década. 
+```mermaid
+flowchart TD
+    Q1{"Quem consome?"} -->|navegador ou app| Q2{"Precisa agregar<br/>várias fontes e<br/>telas com formatos<br/>diferentes?"}
+    Q1 -->|outro serviço interno| Q3{"Alto volume,<br/>baixa latência<br/>ou streaming?"}
+    Q2 -->|sim| G["GraphQL<br/><i>BFF</i>"]
+    Q2 -->|não| R["REST<br/><i>simples e cacheável</i>"]
+    Q3 -->|sim| GR["gRPC"]
+    Q3 -->|não| R2["REST<br/><i>menos ferramental</i>"]
+```
 
-Em março de 2015, a Google decidiu desenvolver uma nova versão do stubby e disponibiliza-la como um projeto de código aberto, surgindo assim o gRPC.
+Perguntas que resolvem a maioria das discussões: **o consumidor é navegador?** (gRPC sai). **O cliente precisa de formatos de resposta diferentes por tela?** (GraphQL entra). **O cache HTTP é importante?** (REST ganha). **A latência entre serviços é crítica?** (gRPC ganha).
 
-## Funcionamento
+---
 
-É uma evolucao do RPC, permitindo que o cliente chame métodos no servidor como se fossem locais, mesmo em máquinas diferentes. Ele utiliza o protocol buffers (protobufs) para definir serviços e mensagens e usa o protocolo HTTP/2 
+**Capítulos:** [I - gRPC](i-grpc.md) · [II - GraphQL](ii-graphql.md)
 
-![image.png](assets/grpc-e-graphql-02.png)
-
-![image.png](assets/grpc-e-graphql-03.png)
-
-![image.png](assets/grpc-e-graphql-04.png)
-
-![image.png](assets/grpc-e-graphql-05.png)
-
-# Channel
-
-conexao entre o cliente e o servidor, é configurado como um endereco do servidor como localhost, e o gRPC gerencia o ciclo de vida desse canal. 
-
-# Stub
-
-Representação local de um serviço remoto, ele vai encapsular toda logica necessaria para serializar as solicitacoes, enviar os dados pelo channel e deserializar as repostas
-
-- Os stubs são seguros para threads, permitindo que várias usem o mesmo stub simultaneamente
-
-![image.png](assets/grpc-e-graphql-06.png)
-
-![image.png](assets/grpc-e-graphql-07.png)
-
-Caracteristicas de um protobuf:
-
-- Agnóstico a linguagen de programacao
-- Binário, não formato de texto
-- Tamanho reduzido em relaçao a um json
-- Melhor desemprenho de rede, consome menos largura de banda e leva menos tempo para serializar e deserializar
-- Type Safety
-
-- **Stub**: casca gerada que roda no client, faz a chamada parecer local mas por trás serializa/manda/desserializa
-- **Skeleton**: o equivalente do lado do server, que desserializa e delega pro seu código real
-- Isso mora no **adapter de output** na arquitetura hexagonal, atrás de uma porta (`ContaGateway`), então o domain fica agnóstico de protocolo
-- O modelo **unário** é o certo quando você precisa de uma resposta síncrona antes de continuar (como validar saldo antes de processar pagamento)
-- A vantagem real do `.proto` sobre JSON não é só "mais rápido" — é que ele move a detecção de quebra de contrato de **runtime em produção** pra **compile-time no CI**
-
-![image.png](assets/grpc-e-graphql-08.png)
-
-- O proto não é uma classe
-- O proto não lança nulos
-
-Padroes de comunicacao no gRPC
-
-- Unary: Cliente envia uma unica solicitacao e recebe uma unica resposta
-- Cliente Streaming: o cliente envia varias solicitacoes para o servidor e o servidor devolve apenas uma unica resposta
-- Server Streaming: o cliente envia uma solicitacao para o servidor e o servidor devolve varias respostas. Ex: netflix, o filme vai sendo enviado em pedacinhos para o cliente, durante a reproduçao dele.
-- Bi-diretional Stream: cliente e servidor trocam multiplas mensagens simultaneamente
+**Relacionados:** [Spring MVC - APIs RESTful](../spring-mvc-apis-restful/ii-fundamentos-rest.md) · [TEOREMA CAP](../teorema-cap/README.md) · [CLEAN ARCHITECTURE](../clean-architecture/README.md)
