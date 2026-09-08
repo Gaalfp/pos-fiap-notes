@@ -7,7 +7,7 @@ O spring é um framework para simplificar a criação de aplicações. Utiliza c
 - Segurança
 - Desenvolvimento Web
 
-Permite desenvolver soluções mais estruturadas. Nasceu em 2002 quando Rod Jonhson encontra vários problemas no JAVA EE; Embora os EJBs fossem uma boa opção para aplicações distribuidas, não era a melhor. Assim Johson, desenvolveu o Spring com base nessa tese.
+Permite desenvolver soluções mais estruturadas. Nasceu em 2002 quando Rod Johnson encontra vários problemas no JAVA EE; Embora os EJBs fossem uma boa opção para aplicações distribuidas, não era a melhor. Assim Johnson desenvolveu o Spring com base nessa tese.
 
 - EJBs não podiam ser executados fora de um servidor de aplicações. E esses servidores eram pesados e dificultavam a depuração e desenvolvimento.
 - Muito complexo para os desenvolvedores

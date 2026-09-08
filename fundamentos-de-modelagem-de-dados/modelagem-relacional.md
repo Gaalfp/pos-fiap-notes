@@ -5,7 +5,7 @@ Representação dos dados através das relações, organização em tabelas, cha
 - Domínio: um conjunto de valores que possuem propriedades em comum
 - Atributo: uma propriedade da entidade, como nome, cor, tamanho
 - Entidade: Um elemento do sistema que possui propriedades que o distinguem
-- Tuplas: um conjunto de atributos de uma entidade
+- Tupla: **uma linha** da tabela — o conjunto de *valores* dos atributos que descreve uma instância da entidade. (O conjunto de atributos sem valores é o *esquema* da relação, não a tupla.)
 
 Tipos de modelagem de dados: 
 

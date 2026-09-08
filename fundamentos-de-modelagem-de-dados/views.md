@@ -83,4 +83,4 @@ A view é uma tabela virtual, já a procedure executa alguma ação
 | Você usa pra... | **Ver** dados | **Fazer** algo |
 | Retorna... | Linhas e colunas | Pode retornar nada, ou resultados variados |
 | Aceita parâmetros? | Não | Sim |
-| Pode alterar dados? | Não | Sim (`INSERT`, `UPDATE`, `DELETE`) |
+| Pode alterar dados? | Depende do tipo — views **simples** são atualizáveis; **complexas** (JOIN, agregação, `DISTINCT`) são somente leitura | Sim (`INSERT`, `UPDATE`, `DELETE`) |

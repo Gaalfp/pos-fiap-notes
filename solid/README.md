@@ -17,7 +17,9 @@ Principio da responsabilidade única, a classe ela deve ter apenas uma responsab
 
 “Classes devem ser abertas a extensao mas fechadas para modificacao.”
 
-Se voce quer que uma classe execute mais funcionalidades, o ideal é adicionar elas nas que ja existem e nao modifica-las. 
+Se voce quer que uma classe execute mais funcionalidades, o ideal é **estender o comportamento sem tocar no código que já existe e já foi testado**. Na prática: em vez de abrir a classe e acrescentar mais um `if`/`switch` a cada caso novo, você cria uma **nova implementação de uma abstração** (interface ou classe abstrata) e o código antigo continua intacto.
+
+O sinal de violação é exatamente esse: toda vez que chega um requisito novo, alguém precisa editar a mesma classe. Se a única forma de estender é modificando o que já está pronto, o princípio foi quebrado. 
 
  
 

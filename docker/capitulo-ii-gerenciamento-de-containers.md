@@ -1,8 +1,8 @@
 # CAPITULO II - GERENCIAMENTO DE CONTAINERS
 
-- ddocker container - mexer em containeres
+- docker container → mexer em containeres
 - docker container ls → listar containeres ativos
-- docker container ls -la → listar todos os containeres
+- docker container ls -a → listar todos os containeres, inclusive os parados (`-a` = *all*; `-l` é *latest*, traz só o último criado)
 - docker container start idcontainer → startar o container
 - docker container stop idcontainer → stop o container
 - docker container pause idcontainer → pausa o container, nao para ele
@@ -28,7 +28,7 @@
 
 export DOCKER_CONTENT_TRUST=1 para habilitar que sejam baixadas apenas imagens verificadas.
 
-ao buildar uma imagem com um —no-cache voce nao usa cache e atualiza a imagem pra versão mais atualizada. Não utiliza a versão em memória.
+ao buildar uma imagem com um `--no-cache` voce nao usa cache e atualiza a imagem pra versão mais atualizada. Não utiliza a versão em memória.
 
 Nem sempre a imagem com a versão latest é a melhor
 

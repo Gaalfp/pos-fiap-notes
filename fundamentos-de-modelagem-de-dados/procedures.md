@@ -27,6 +27,8 @@ Pense nela como uma "função" no banco: você define a lógica uma vez, dá um 
 
 **Exemplo:**
 
+> ⚠️ A sintaxe abaixo é **T-SQL (SQL Server)** — parâmetro com `@`, corpo em `AS BEGIN ... END` e chamada com `EXEC`. MySQL e PostgreSQL usam sintaxe diferente (`DELIMITER` + `IN param`, e `CREATE PROCEDURE ... LANGUAGE plpgsql` + `CALL`).
+
 ```sql
 CREATE PROCEDURE BuscarCliente(@id INT)
 AS
