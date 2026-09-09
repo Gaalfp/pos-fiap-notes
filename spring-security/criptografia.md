@@ -232,3 +232,22 @@ Use sempre o gerador **criptograficamente seguro** da plataforma (CSPRNG). Aleat
 **PKI** — infraestrutura de chaves públicas; o sistema de CAs e certificados.
 **Salt** — valor aleatório único por senha, evita hashes iguais.
 **TLS** — protocolo que protege comunicação em trânsito.
+
+---
+
+## Perguntas para autoavaliação
+
+1. Quais são as quatro propriedades que a criptografia entrega, e qual delas o hash sozinho **não** garante?
+2. Diferencie hash, criptografia simétrica e assimétrica quanto a chave e reversibilidade.
+3. Por que a cifra híbrida existe, se a assimétrica já resolve a troca de chave?
+4. Qual a diferença entre um hash rápido (SHA-256) e um KDF (bcrypt/Argon2)? Por que isso importa para senha?
+5. O que salt e pepper resolvem, e onde cada um é armazenado?
+6. HMAC × assinatura digital: qual prova **autoria** e qual só prova integridade com segredo compartilhado?
+7. O que uma autoridade certificadora garante numa PKI?
+8. No handshake TLS, em que momento a criptografia deixa de ser assimétrica e passa a simétrica?
+9. Qual a diferença entre proteger dados em trânsito e em repouso?
+10. Por que `Random` não serve para gerar token, e o que usar no lugar?
+
+---
+
+> [← Voltar para SPRING SECURITY](README.md)

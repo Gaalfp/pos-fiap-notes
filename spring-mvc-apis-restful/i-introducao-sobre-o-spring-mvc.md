@@ -26,4 +26,14 @@ PRINCIPAIS COMPONENTES DO SPRING FRAMWORK
 
 ---
 
+## Perguntas para autoavaliação
+
+1. Que problemas dos EJBs o Spring nasceu para resolver?
+2. O que são inversão de controle e injeção de dependência, e qual a relação entre elas?
+3. Qual o papel do container do Spring?
+4. O que AOP resolve, e que tipo de preocupação ele separa?
+5. Por que uma especificação ditada por comitê, sem prática real, tende a falhar?
+
+---
+
 > [← Voltar para Spring MVC - APIs RESTful](README.md) · Próximo: [II - Fundamentos REST](ii-fundamentos-rest.md)

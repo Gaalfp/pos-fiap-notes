@@ -84,3 +84,20 @@ A view é uma tabela virtual, já a procedure executa alguma ação
 | Retorna... | Linhas e colunas | Pode retornar nada, ou resultados variados |
 | Aceita parâmetros? | Não | Sim |
 | Pode alterar dados? | Depende do tipo — views **simples** são atualizáveis; **complexas** (JOIN, agregação, `DISTINCT`) são somente leitura | Sim (`INSERT`, `UPDATE`, `DELETE`) |
+
+---
+
+## Perguntas para autoavaliação
+
+1. O que é uma view e o que ela realmente armazena?
+2. Uma view ocupa espaço em disco? Em que caso a resposta muda?
+3. Diferencie view simples, complexa, inline e materialized.
+4. Quais views aceitam `INSERT`/`UPDATE`/`DELETE` e por quê?
+5. O que uma materialized view resolve, e qual o preço que ela cobra?
+6. Cite dois usos de view ligados a **segurança** de dados.
+7. View × procedure: qual aceita parâmetros e qual "executa uma ação"?
+8. Uma view melhora a performance da consulta que ela encapsula? Justifique.
+
+---
+
+> [← Voltar para FUNDAMENTOS DE MODELAGEM DE DADOS](README.md) · **Relacionados:** [PROCEDURES](procedures.md) · [ÍNDICE](indice.md) · [MODELAGEM RELACIONAL](modelagem-relacional.md)

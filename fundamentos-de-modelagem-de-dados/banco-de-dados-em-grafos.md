@@ -79,3 +79,34 @@ RETURN amigo.name
 - Não é ideal para dados **tabulares simples** (prefira SQL nesses casos).
 - Menor adoção no mercado comparado a bancos relacionais.
 - Ferramentas e profissionais especializados ainda são menos comuns.
+
+---
+
+## Por que grafo vence o relacional em travessia
+
+A pergunta "amigos dos amigos dos amigos de Alice" em SQL exige **três `JOIN`s** da tabela de amizades consigo mesma — e cada nível **multiplica** o custo, porque o banco precisa consultar o índice a cada salto. Em banco de grafos, cada nó guarda **ponteiros diretos** para seus vizinhos (*index-free adjacency*): a travessia é um salto de ponteiro, e o custo depende do tamanho da **vizinhança**, não do tamanho da base.
+
+| Profundidade da consulta | Relacional | Grafo |
+|---|---|---|
+| 1 nível ("amigos de Alice") | rápido | rápido |
+| 3 níveis | lento (3 self-joins) | rápido |
+| 5+ níveis ou profundidade variável | inviável na prática | ainda rápido |
+
+É por isso que detecção de fraude e recomendação — que são justamente travessias profundas — migraram para grafos.
+
+---
+
+## Perguntas para autoavaliação
+
+1. O que são nós, arestas e propriedades num banco de grafos?
+2. Arestas são direcionadas? O que isso significa na modelagem?
+3. O que é *index-free adjacency* e por que ela muda o custo da travessia?
+4. Por que uma consulta de 4 níveis é cara no relacional e barata no grafo?
+5. Escreva em Cypher: criar duas pessoas e um relacionamento entre elas.
+6. Cite três casos de uso em que grafo é a escolha certa.
+7. Quando **não** usar banco de grafos?
+8. Onde os grafos se encaixam entre os tipos de NoSQL?
+
+---
+
+> [← Voltar para FUNDAMENTOS DE MODELAGEM DE DADOS](README.md) · **Relacionados:** [MODELAGEM NÃO RELACIONAL](modelagem-nao-relacional.md) · [MODELAGEM RELACIONAL](modelagem-relacional.md)
