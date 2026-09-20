@@ -4,16 +4,21 @@ Anotações da pós-graduação (migradas do Notion). Cada matéria é uma pasta
 conteúdo principal no `README.md` e os capítulos/subtópicos em arquivos próprios.
 Toda matéria termina com **perguntas de autoavaliação**.
 
-> 📌 **[RESUMO DE PROVA](RESUMO-PROVA.md)** — arquivo de véspera: as 20 pegadinhas, tabelas comparativas, definições em uma linha e o mapa de conexões entre as matérias.
+> 📌 **[RESUMO DE PROVA](RESUMO-PROVA.md)** — arquivo de véspera: as pegadinhas mais cobradas com a correção, tabelas comparativas, definições em uma linha e o mapa de conexões entre as matérias.
 
 ## Arquitetura e design
 
-- [ARQUITETURA DISTRIBUÍDA](arquitetura-distribuida/README.md) — desafios e estratégias: estilos, latência, consistência, resiliência e observabilidade
-- [FUNDAMENTOS DE MENSAGERIA](mensageria/README.md) — comunicação assíncrona, fila × tópico, tipos de mensagem, brokers, protocolos e padrões de entrega
 - [CLEAN ARCHITECTURE](clean-architecture/README.md) — camadas, Regra da Dependência, ports e adapters, comparativo com Hexagonal e Onion
 - [SOLID](solid/README.md) — os cinco princípios com código violando/corrigido, code smells e princípios de componentes
 - [DESIGN PATTERNS EM OO](design-patterns-em-oo/README.md) — os 23 padrões do GoF em três capítulos, com tabela de reconhecimento rápido
 - [POO](poo/README.md) — pilares com código, herança × composição, `equals`/`hashCode` e exceções
+
+## Sistemas distribuídos e integração
+
+- [ARQUITETURA DISTRIBUÍDA](arquitetura-distribuida/README.md) — desafios e estratégias: estilos, latência, consistência, resiliência e observabilidade
+- [FUNDAMENTOS DE MENSAGERIA](mensageria/README.md) — comunicação assíncrona, fila × tópico, tipos de mensagem, brokers, protocolos e padrões de entrega
+- [TEOREMA CAP](teorema-cap/README.md) — a leitura correta, quadrantes, PACELC e níveis de consistência
+- [gRPC e GRAPHQL](grpc-e-graphql/README.md) — protobuf, HTTP/2, schema, resolvers e DataLoader
 
 ## Java e Spring
 
@@ -25,12 +30,10 @@ Toda matéria termina com **perguntas de autoavaliação**.
 ## Dados
 
 - [FUNDAMENTOS DE MODELAGEM DE DADOS](fundamentos-de-modelagem-de-dados/README.md) — formas normais, modelagem relacional, índices, views, procedures, NoSQL e grafos
-- [TEOREMA CAP](teorema-cap/README.md) — a leitura correta, quadrantes, PACELC e níveis de consistência
 
-## Infraestrutura e integração
+## Infraestrutura
 
 - [DOCKER](docker/README.md) — containers, Dockerfile, redes, volumes e orquestração
-- [gRPC e GRAPHQL](grpc-e-graphql/README.md) — protobuf, HTTP/2, schema, resolvers e DataLoader
 
 ## Referência rápida
 
