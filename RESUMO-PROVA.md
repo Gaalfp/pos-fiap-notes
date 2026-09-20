@@ -2,11 +2,11 @@
 
 Arquivo de **véspera**: densidade máxima, sem explicação longa. Cada linha aponta para o material completo. Se algo aqui não fizer sentido de imediato, é exatamente o que você precisa revisar.
 
-**Índice:** [Pegadinhas](#as-20-pegadinhas) · [Tabelas](#tabelas-de-véspera) · [Definições](#definições-em-uma-linha) · [Por matéria](#por-matéria) · [Conexões](#mapa-de-conexões)
+**Índice:** [Pegadinhas](#as-24-pegadinhas) · [Tabelas](#tabelas-de-véspera) · [Definições](#definições-em-uma-linha) · [Por matéria](#por-matéria) · [Conexões](#mapa-de-conexões)
 
 ---
 
-## As 20 pegadinhas
+## As 24 pegadinhas
 
 As afirmações **erradas** que mais aparecem em prova — e a correção.
 
@@ -32,6 +32,10 @@ As afirmações **erradas** que mais aparecem em prova — e a correção.
 | 18 | "`save()` é obrigatório para atualizar" | entidade **managed** salva por **dirty checking** no commit |
 | 19 | "View nunca aceita `INSERT`/`UPDATE`" | view **simples** costuma aceitar; complexa é somente leitura |
 | 20 | "Sobrecarga é resolvida em runtime" | sobrecarga: **compilação** (tipo declarado). Sobrescrita: **runtime** (tipo real) |
+| 21 | "O timeout significa que a operação não aconteceu" | **falha parcial**: você não sabe — daí idempotência e retry |
+| 22 | "Retry resolve falha transitória" | só com **backoff + jitter**, em **uma** camada e se for **idempotente**; senão é retry storm |
+| 23 | "Circuit breaker conta só erro" | **lentidão também** (`slowCallRateThreshold`) — o lento é pior que o caído |
+| 24 | "Serviço fora do ar é o pior caso" | pior é o **lento**: prende as threads de quem chama e sobe em cascata |
 
 **Bônus:** `assertEquals(new BigDecimal("70.00"), new BigDecimal("70.0"))` **falha** (`equals` compara escala) · `Integer.valueOf(127) == Integer.valueOf(127)` é `true`, com 128 é `false` (cache flyweight) · `catch (Exception)` antes de `catch (IOException)` **não compila** · `return` no `finally` **engole** a exceção · `ddl-auto: update` **nunca** em produção.
 
@@ -177,6 +181,9 @@ Estados: transient → managed → detached → removed. **Dirty checking** salv
 ### [Modelagem de Dados](fundamentos-de-modelagem-de-dados/README.md)
 Conceitual → lógico → físico. `UNIQUE` na FK transforma 1:N em **1:1**. FK sempre no lado "muitos". Índice: custa escrita e disco; **seletividade** baixa = inútil; **prefixo mais à esquerda**; função na coluna mata o índice. `LEFT JOIN` com filtro no `WHERE` vira `INNER`.
 
+### [Arquitetura Distribuída](arquitetura-distribuida/README.md)
+Eixos: **latência, consistência, resiliência** (+ observabilidade). **8 falácias** (a rede é confiável, latência zero...). Estilos: cliente-servidor, P2P, microsserviços. Latência: CDN + cache; meça **p99**, não média; cuidado com **amplificação de cauda**. Consistência: replicação **síncrona** (consistente, lenta) × **assíncrona** (rápida, eventual); **Saga** substitui 2PC; **Outbox** resolve o dual write; **tudo idempotente**. Resiliência: **timeout → retry (backoff+jitter) → circuit breaker → bulkhead → fallback**. Observabilidade: logs, métricas, traces correlacionados por `traceId`; **RED/USE**; SLI/SLO/**error budget**. **Database per service**; banco compartilhado = monólito distribuído. **Lei de Conway**.
+
 ### [Teorema CAP](teorema-cap/README.md)
 CP recusa; AP responde desatualizado; "CA" = não distribuído. PACELC cobre o tempo sem partição (Latência × Consistência). Quórum: **R + W > N**.
 
@@ -203,7 +210,11 @@ Perguntas dissertativas adoram **cruzar** matérias. As pontes que existem no ma
 | **REST → GraphQL/gRPC** | mesma necessidade, três contratos diferentes |
 | **JPA → REST** | N+1 e `LazyInitializationException` aparecem ao serializar entidade no controller |
 | **Docker → 12 fatores** | stateless e config no ambiente ligam container a arquitetura |
+| **Distribuída → CAP** | replicação síncrona = CP; assíncrona = AP; a escolha é por caso de uso |
+| **Distribuída → REST/JPA** | idempotency key, `ETag`/`@Version` e Outbox são a mesma ideia em camadas diferentes |
+| **Distribuída → Design Patterns** | circuit breaker, bulkhead e retry são padrões de estabilidade; event-driven é Observer em escala |
+| **Distribuída → Docker/K8s** | liveness/readiness, graceful shutdown e escala horizontal materializam a resiliência |
 
 ---
 
-**Como usar na véspera:** leia as **20 pegadinhas** e as **tabelas**; para cada matéria, responda mentalmente às perguntas do arquivo correspondente. Onde travar, abra o material — os links estão em cada seção.
+**Como usar na véspera:** leia as **24 pegadinhas** e as **tabelas**; para cada matéria, responda mentalmente às perguntas do arquivo correspondente. Onde travar, abra o material — os links estão em cada seção.

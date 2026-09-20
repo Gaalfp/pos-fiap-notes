@@ -204,4 +204,4 @@ Vale conhecer para não repetir simplificações:
 
 ---
 
-**Relacionados:** [ACID](../fundamentos-de-modelagem-de-dados/acid.md) · [MODELAGEM NÃO RELACIONAL](../fundamentos-de-modelagem-de-dados/modelagem-nao-relacional.md) · [gRPC e GRAPHQL](../grpc-e-graphql/README.md) · [SPRING DATA JPA](../spring-data-jpa/README.md)
+**Relacionados:** [ARQUITETURA DISTRIBUÍDA](../arquitetura-distribuida/README.md) · [ACID](../fundamentos-de-modelagem-de-dados/acid.md) · [MODELAGEM NÃO RELACIONAL](../fundamentos-de-modelagem-de-dados/modelagem-nao-relacional.md) · [gRPC e GRAPHQL](../grpc-e-graphql/README.md) · [SPRING DATA JPA](../spring-data-jpa/README.md)
