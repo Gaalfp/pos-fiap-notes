@@ -9,6 +9,7 @@ Toda matéria termina com **perguntas de autoavaliação**.
 ## Arquitetura e design
 
 - [ARQUITETURA DISTRIBUÍDA](arquitetura-distribuida/README.md) — desafios e estratégias: estilos, latência, consistência, resiliência e observabilidade
+- [FUNDAMENTOS DE MENSAGERIA](mensageria/README.md) — comunicação assíncrona, fila × tópico, tipos de mensagem, brokers, protocolos e padrões de entrega
 - [CLEAN ARCHITECTURE](clean-architecture/README.md) — camadas, Regra da Dependência, ports e adapters, comparativo com Hexagonal e Onion
 - [SOLID](solid/README.md) — os cinco princípios com código violando/corrigido, code smells e princípios de componentes
 - [DESIGN PATTERNS EM OO](design-patterns-em-oo/README.md) — os 23 padrões do GoF em três capítulos, com tabela de reconhecimento rápido

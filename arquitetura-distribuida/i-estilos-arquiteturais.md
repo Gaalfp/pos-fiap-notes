@@ -196,7 +196,7 @@ Não há vencedor: orquestração para processos de negócio críticos que preci
 | novo consumidor sem tocar no produtor | ordem e duplicidade viram problema seu |
 | resiliência: o consumidor pode estar fora | exige **idempotência** em todo consumidor |
 
-**Garantias de entrega:** *at-most-once* (pode perder), *at-least-once* (pode duplicar — o padrão na prática) e *exactly-once* (existe só sob condições estritas, dentro de um mesmo sistema). Como o mundo real é **at-least-once**, **todo consumidor precisa ser idempotente**. → [III - CONSISTÊNCIA](iii-consistencia-e-dados.md)
+**Garantias de entrega:** *at-most-once* (pode perder), *at-least-once* (pode duplicar — o padrão na prática) e *exactly-once* (existe só sob condições estritas, dentro de um mesmo sistema). Como o mundo real é **at-least-once**, **todo consumidor precisa ser idempotente**. → [III - CONSISTÊNCIA](iii-consistencia-e-dados.md) · [MENSAGERIA - Padrões de entrega](../mensageria/iii-padroes-de-entrega.md)
 
 ---
 
@@ -246,7 +246,7 @@ A decisão que mais afeta acoplamento e resiliência:
 | **BFF** (*Backend for Frontend*) | um gateway por tipo de cliente (web, mobile, parceiro), cada um com o formato de resposta que aquela tela precisa → [GraphQL](../grpc-e-graphql/ii-graphql.md) |
 | **Service mesh** | um *sidecar* (Istio/Envoy, Linkerd) ao lado de cada serviço cuidando de mTLS, retry, circuit breaker, tracing e roteamento — **fora** do código da aplicação |
 | **Config centralizada** | configuração por ambiente sem rebuild (Spring Cloud Config, ConfigMap) |
-| **Broker de mensagens** | desacoplamento temporal e absorção de picos |
+| **Broker de mensagens** | desacoplamento temporal e absorção de picos → [MENSAGERIA](../mensageria/README.md) |
 
 **Service mesh × biblioteca:** a mesma preocupação (retry, circuit breaker, mTLS) pode ficar no código (Resilience4j) ou na malha (sidecar). A malha é poliglota e não exige mudar a aplicação; a biblioteca é mais simples de operar e conhece o contexto de negócio. Times pequenos costumam ganhar com biblioteca; plataformas grandes e poliglotas ganham com malha.
 

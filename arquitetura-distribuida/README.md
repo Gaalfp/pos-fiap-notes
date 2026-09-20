@@ -150,4 +150,4 @@ Os três eixos se **tensionam**: cache reduz latência e **piora** consistência
 
 ---
 
-**Relacionados:** [TEOREMA CAP](../teorema-cap/README.md) · [CLEAN ARCHITECTURE](../clean-architecture/README.md) · [gRPC e GRAPHQL](../grpc-e-graphql/README.md) · [DOCKER](../docker/README.md) · [SPRING SECURITY](../spring-security/README.md)
+**Relacionados:** [FUNDAMENTOS DE MENSAGERIA](../mensageria/README.md) · [TEOREMA CAP](../teorema-cap/README.md) · [CLEAN ARCHITECTURE](../clean-architecture/README.md) · [gRPC e GRAPHQL](../grpc-e-graphql/README.md) · [DOCKER](../docker/README.md) · [SPRING SECURITY](../spring-security/README.md)

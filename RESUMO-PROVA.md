@@ -2,11 +2,11 @@
 
 Arquivo de **véspera**: densidade máxima, sem explicação longa. Cada linha aponta para o material completo. Se algo aqui não fizer sentido de imediato, é exatamente o que você precisa revisar.
 
-**Índice:** [Pegadinhas](#as-24-pegadinhas) · [Tabelas](#tabelas-de-véspera) · [Definições](#definições-em-uma-linha) · [Por matéria](#por-matéria) · [Conexões](#mapa-de-conexões)
+**Índice:** [Pegadinhas](#as-27-pegadinhas) · [Tabelas](#tabelas-de-véspera) · [Definições](#definições-em-uma-linha) · [Por matéria](#por-matéria) · [Conexões](#mapa-de-conexões)
 
 ---
 
-## As 24 pegadinhas
+## As 27 pegadinhas
 
 As afirmações **erradas** que mais aparecem em prova — e a correção.
 
@@ -36,6 +36,9 @@ As afirmações **erradas** que mais aparecem em prova — e a correção.
 | 22 | "Retry resolve falha transitória" | só com **backoff + jitter**, em **uma** camada e se for **idempotente**; senão é retry storm |
 | 23 | "Circuit breaker conta só erro" | **lentidão também** (`slowCallRateThreshold`) — o lento é pior que o caído |
 | 24 | "Serviço fora do ar é o pior caso" | pior é o **lento**: prende as threads de quem chama e sobe em cascata |
+| 25 | "Exactly-once delivery é configurável" | **entrega** exactly-once é impossível; o que existe é **exactly-once semantics** = at-least-once + idempotência |
+| 26 | "Fila e tópico são a mesma coisa" | fila: a mensagem vai para **um** consumidor. Tópico: **todos** os assinantes recebem uma cópia |
+| 27 | "Mais consumidores = mais vazão, sempre" | na **fila** divide o trabalho; no **tópico** duplica a entrega (só divide dentro do mesmo grupo/assinatura) |
 
 **Bônus:** `assertEquals(new BigDecimal("70.00"), new BigDecimal("70.0"))` **falha** (`equals` compara escala) · `Integer.valueOf(127) == Integer.valueOf(127)` é `true`, com 128 é `false` (cache flyweight) · `catch (Exception)` antes de `catch (IOException)` **não compila** · `return` no `finally` **engole** a exceção · `ddl-auto: update` **nunca** em produção.
 
@@ -129,6 +132,22 @@ As afirmações **erradas** que mais aparecem em prova — e a correção.
 | Streaming | limitado | ✅ bidirecional | subscriptions |
 | Erro | status HTTP | 17 códigos | **sempre 200** |
 
+### Padrões de entrega
+
+| | Perde? | Duplica? | Ack | Caso de uso | MQTT |
+|---|:---:|:---:|---|---|:---:|
+| **At most once** | **sim** | não | **antes** de processar | telemetria, log, métrica | QoS 0 |
+| **At least once** | não | **sim** | **depois** de processar | **quase tudo** (+ idempotência) | QoS 1 |
+| **Exactly once** | não | não | transacional / dedup | financeiro, fiscal | QoS 2 |
+
+### Mensageria — fila × tópico
+
+| | Fila (point-to-point) | Tópico (pub/sub) |
+|---|---|---|
+| Recebe | **um** consumidor | **todos** os assinantes |
+| Mensagem | **comando** | **evento** |
+| Mais consumidores | divide o trabalho | duplica a entrega |
+
 ### Pirâmide de testes
 
 Unitário (70%, ms, isolado) → Integração (20%) → E2E (10%, lento, frágil). Anti-padrões: **cone de sorvete** (tudo E2E), **ampulheta** (sem integração).
@@ -184,6 +203,9 @@ Conceitual → lógico → físico. `UNIQUE` na FK transforma 1:N em **1:1**. FK
 ### [Arquitetura Distribuída](arquitetura-distribuida/README.md)
 Eixos: **latência, consistência, resiliência** (+ observabilidade). **8 falácias** (a rede é confiável, latência zero...). Estilos: cliente-servidor, P2P, microsserviços. Latência: CDN + cache; meça **p99**, não média; cuidado com **amplificação de cauda**. Consistência: replicação **síncrona** (consistente, lenta) × **assíncrona** (rápida, eventual); **Saga** substitui 2PC; **Outbox** resolve o dual write; **tudo idempotente**. Resiliência: **timeout → retry (backoff+jitter) → circuit breaker → bulkhead → fallback**. Observabilidade: logs, métricas, traces correlacionados por `traceId`; **RED/USE**; SLI/SLO/**error budget**. **Database per service**; banco compartilhado = monólito distribuído. **Lei de Conway**.
 
+### [Mensageria](mensageria/README.md)
+Produtor → **broker** → consumidor; **duplo ack** (broker e consumidor) explica a duplicata. **Fila** = comando, um consumidor; **tópico** = evento, todos. Tipos: **comando** (imperativo, fila, um destino, pode ser recusado), **evento** (passado, tópico, N consumidores, fato consumado), **consulta** (leitura, request-reply com `replyTo` + `correlationId`). Padrão: **comando entra, evento sai**. Brokers: **fila** (RabbitMQ/SQS — apaga após o ack, sem replay) × **log** (Kafka — retém, o consumidor guarda o **offset**, permite replay). Exchanges AMQP: direct, fanout, topic, headers. Kafka: ordem só **dentro da partição**; chave define partição; paralelismo máximo = nº de partições. Protocolos: AMQP, **MQTT** (IoT, QoS 0/1/2), JMS é **API**, não protocolo. Entrega: **at-least-once + idempotência** é a resposta prática. Operação: **retry com limite → DLQ**, Outbox/Inbox, **consumer lag** é a métrica nº 1.
+
 ### [Teorema CAP](teorema-cap/README.md)
 CP recusa; AP responde desatualizado; "CA" = não distribuído. PACELC cobre o tempo sem partição (Latência × Consistência). Quórum: **R + W > N**.
 
@@ -214,7 +236,11 @@ Perguntas dissertativas adoram **cruzar** matérias. As pontes que existem no ma
 | **Distribuída → REST/JPA** | idempotency key, `ETag`/`@Version` e Outbox são a mesma ideia em camadas diferentes |
 | **Distribuída → Design Patterns** | circuit breaker, bulkhead e retry são padrões de estabilidade; event-driven é Observer em escala |
 | **Distribuída → Docker/K8s** | liveness/readiness, graceful shutdown e escala horizontal materializam a resiliência |
+| **Mensageria → Distribuída** | o broker é a infraestrutura do event-driven; fila absorve pico e desacopla no tempo |
+| **Mensageria → CAP/ACID** | consumo assíncrono é consistência eventual; Saga e Outbox substituem a transação |
+| **Mensageria → JPA** | Outbox grava evento e dado na **mesma transação**; Inbox deduplica com constraint única |
+| **Mensageria → Design Patterns** | pub/sub é **Observer** em escala; DLQ e retry são padrões de estabilidade |
 
 ---
 
-**Como usar na véspera:** leia as **24 pegadinhas** e as **tabelas**; para cada matéria, responda mentalmente às perguntas do arquivo correspondente. Onde travar, abra o material — os links estão em cada seção.
+**Como usar na véspera:** leia as **27 pegadinhas** e as **tabelas**; para cada matéria, responda mentalmente às perguntas do arquivo correspondente. Onde travar, abra o material — os links estão em cada seção.
