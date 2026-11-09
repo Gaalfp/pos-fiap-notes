@@ -1,1 +1,11 @@
 .DS_Store
+
+# Site (web/) — tudo o que é gerado a partir dos .md da raiz
+web/node_modules/
+web/dist/
+web/.astro/
+web/src/content/docs/
+
+# Python
+__pycache__/
+*.pyc

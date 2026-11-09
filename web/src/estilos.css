@@ -1,0 +1,35 @@
+/* Ajustes para leitura das anotações — principalmente no celular. */
+
+:root {
+  --sl-content-width: 50rem;        /* as tabelas comparativas são largas */
+}
+
+/* Tabelas: rolagem horizontal em vez de estourar a tela do celular. */
+.sl-markdown-content table {
+  display: block;
+  overflow-x: auto;
+  white-space: normal;
+}
+.sl-markdown-content table th,
+.sl-markdown-content table td {
+  min-width: 7rem;
+}
+
+/* Diagramas Mermaid centralizados e sem fundo de bloco de código. */
+pre.mermaid {
+  background: none !important;
+  border: none !important;
+  padding: 0.5rem 0 !important;
+  text-align: center;
+  overflow-x: auto;
+}
+pre.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Enquanto o desenho não acontece, não mostra o código cru piscando. */
+pre.mermaid:not([data-processed]) {
+  visibility: hidden;
+  min-height: 2rem;
+}

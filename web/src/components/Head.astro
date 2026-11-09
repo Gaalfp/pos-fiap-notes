@@ -1,0 +1,44 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro';
+---
+
+<Default><slot /></Default>
+
+<script>
+  import mermaid from 'mermaid';
+
+  const temaAtual = () =>
+    document.documentElement.dataset.theme === 'light' ? 'default' : 'dark';
+
+  async function desenhar() {
+    const blocos = document.querySelectorAll('pre.mermaid');
+    if (!blocos.length) return;
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: temaAtual(),
+      securityLevel: 'strict',
+      fontFamily: 'inherit',
+      flowchart: { useMaxWidth: true, htmlLabels: true },
+      sequence: { useMaxWidth: true },
+    });
+
+    blocos.forEach((bloco) => {
+      const el = bloco as HTMLElement;
+      // guarda o código-fonte para conseguir redesenhar ao trocar de tema
+      if (!el.dataset.fonte) el.dataset.fonte = el.textContent ?? '';
+      el.innerHTML = el.dataset.fonte;
+      el.removeAttribute('data-processed');
+    });
+
+    await mermaid.run({ nodes: [...blocos] as HTMLElement[] });
+  }
+
+  desenhar();
+
+  // redesenha quando o visitante alterna claro/escuro
+  new MutationObserver(desenhar).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
+</script>

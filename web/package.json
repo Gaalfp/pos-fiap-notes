@@ -1,0 +1,17 @@
+{
+  "name": "pos-fiap-notes-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "python3 ../tools/sincronizar-site.py && python3 ../tools/gerar-site.py",
+    "dev": "npm run sync && astro dev",
+    "build": "npm run sync && astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.6",
+    "@astrojs/starlight": "^0.42.10",
+    "astro": "^7.4.8",
+    "mermaid": "^12.3.0"
+  }
+}

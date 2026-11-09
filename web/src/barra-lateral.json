@@ -1,0 +1,408 @@
+[
+  {
+    "label": "Início",
+    "link": "/"
+  },
+  {
+    "label": "Arquitetura e design",
+    "collapsed": true,
+    "items": [
+      {
+        "label": "CLEAN ARCHITECTURE",
+        "link": "/clean-architecture"
+      },
+      {
+        "label": "SOLID",
+        "link": "/solid"
+      },
+      {
+        "label": "DESIGN PATTERNS EM OO",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/design-patterns-em-oo"
+          },
+          {
+            "label": "I - PADRÕES CRIACIONAIS",
+            "link": "/design-patterns-em-oo/i-padroes-criacionais"
+          },
+          {
+            "label": "II - PADRÕES ESTRUTURAIS",
+            "link": "/design-patterns-em-oo/ii-padroes-estruturais"
+          },
+          {
+            "label": "III - PADRÕES COMPORTAMENTAIS",
+            "link": "/design-patterns-em-oo/iii-padroes-comportamentais"
+          }
+        ]
+      },
+      {
+        "label": "POO",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/poo"
+          },
+          {
+            "label": "CONCEITOS DE POO",
+            "link": "/poo/conceitos-de-poo"
+          },
+          {
+            "label": "MANIPULAÇÕES E EXCEÇÕES",
+            "link": "/poo/manipulacoes-e-excecoes"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Sistemas distribuídos e integração",
+    "collapsed": true,
+    "items": [
+      {
+        "label": "ARQUITETURA DISTRIBUÍDA",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/arquitetura-distribuida"
+          },
+          {
+            "label": "I - ESTILOS ARQUITETURAIS",
+            "link": "/arquitetura-distribuida/i-estilos-arquiteturais"
+          },
+          {
+            "label": "II - LATÊNCIA E PERFORMANCE",
+            "link": "/arquitetura-distribuida/ii-latencia-e-performance"
+          },
+          {
+            "label": "III - CONSISTÊNCIA E DADOS",
+            "link": "/arquitetura-distribuida/iii-consistencia-e-dados"
+          },
+          {
+            "label": "IV - RESILIÊNCIA",
+            "link": "/arquitetura-distribuida/iv-resiliencia"
+          },
+          {
+            "label": "V - OBSERVABILIDADE",
+            "link": "/arquitetura-distribuida/v-observabilidade"
+          }
+        ]
+      },
+      {
+        "label": "FUNDAMENTOS DE MENSAGERIA",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/mensageria"
+          },
+          {
+            "label": "I - TIPOS DE MENSAGEM",
+            "link": "/mensageria/i-tipos-de-mensagem"
+          },
+          {
+            "label": "II - MESSAGE BROKERS",
+            "link": "/mensageria/ii-message-brokers"
+          },
+          {
+            "label": "III - PADRÕES DE ENTREGA",
+            "link": "/mensageria/iii-padroes-de-entrega"
+          },
+          {
+            "label": "IV - PADRÕES DE USO E OPERAÇÃO",
+            "link": "/mensageria/iv-padroes-de-uso-e-operacao"
+          }
+        ]
+      },
+      {
+        "label": "TEOREMA CAP",
+        "link": "/teorema-cap"
+      },
+      {
+        "label": "gRPC e GRAPHQL",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/grpc-e-graphql"
+          },
+          {
+            "label": "I - gRPC",
+            "link": "/grpc-e-graphql/i-grpc"
+          },
+          {
+            "label": "II - GRAPHQL",
+            "link": "/grpc-e-graphql/ii-graphql"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Java e frameworks",
+    "collapsed": true,
+    "items": [
+      {
+        "label": "JVM E PLATAFORMA JAVA",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/jvm-e-plataforma-java"
+          },
+          {
+            "label": "I - A JVM POR DENTRO",
+            "link": "/jvm-e-plataforma-java/i-a-jvm-por-dentro"
+          },
+          {
+            "label": "II - MEMÓRIA E GARBAGE COLLECTOR",
+            "link": "/jvm-e-plataforma-java/ii-memoria-e-garbage-collector"
+          },
+          {
+            "label": "III - SUBIR E OPERAR EM PRODUÇÃO",
+            "link": "/jvm-e-plataforma-java/iii-subir-e-operar-em-producao"
+          }
+        ]
+      },
+      {
+        "label": "SPRING E SPRING BOOT",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/spring-e-spring-boot"
+          },
+          {
+            "label": "I - IoC E BEANS",
+            "link": "/spring-e-spring-boot/i-ioc-e-beans"
+          },
+          {
+            "label": "II - AOP E PROXIES",
+            "link": "/spring-e-spring-boot/ii-aop-e-proxies"
+          },
+          {
+            "label": "III - SPRING BOOT",
+            "link": "/spring-e-spring-boot/iii-spring-boot"
+          }
+        ]
+      },
+      {
+        "label": "Spring MVC - APIs RESTful",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/spring-mvc-apis-restful"
+          },
+          {
+            "label": "I - INTRODUÇÃO SOBRE O SPRING MVC",
+            "link": "/spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc"
+          },
+          {
+            "label": "II - FUNDAMENTOS REST",
+            "link": "/spring-mvc-apis-restful/ii-fundamentos-rest"
+          },
+          {
+            "label": "III - SPRING MVC NA PRÁTICA",
+            "link": "/spring-mvc-apis-restful/iii-spring-mvc-na-pratica"
+          },
+          {
+            "label": "IV - EVOLUÇÃO DA API",
+            "link": "/spring-mvc-apis-restful/iv-evolucao-da-api"
+          }
+        ]
+      },
+      {
+        "label": "SPRING DATA JPA",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/spring-data-jpa"
+          },
+          {
+            "label": "I - PERSISTENCE CONTEXT E CICLO DE VIDA",
+            "link": "/spring-data-jpa/i-persistence-context-e-ciclo-de-vida"
+          },
+          {
+            "label": "II - CONSULTAS E PERFORMANCE",
+            "link": "/spring-data-jpa/ii-consultas-e-performance"
+          },
+          {
+            "label": "III - TRANSAÇÕES E CONCORRÊNCIA",
+            "link": "/spring-data-jpa/iii-transacoes-e-concorrencia"
+          }
+        ]
+      },
+      {
+        "label": "SPRING SECURITY",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Conteúdo da matéria",
+            "link": "/spring-security"
+          },
+          {
+            "label": "CRIPTOGRAFIA",
+            "link": "/spring-security/criptografia"
+          }
+        ]
+      },
+      {
+        "label": "TESTES EM SOFTWARE",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/testes-em-software"
+          },
+          {
+            "label": "I - JUNIT 5 E ASSERTJ",
+            "link": "/testes-em-software/i-junit-5-e-assertj"
+          },
+          {
+            "label": "II - TEST DOUBLES E MOCKITO",
+            "link": "/testes-em-software/ii-test-doubles-e-mockito"
+          },
+          {
+            "label": "III - TESTES NO SPRING",
+            "link": "/testes-em-software/iii-testes-no-spring"
+          }
+        ]
+      },
+      {
+        "label": "QUARKUS",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/quarkus"
+          },
+          {
+            "label": "I - COMO FUNCIONA",
+            "link": "/quarkus/i-como-funciona"
+          },
+          {
+            "label": "II - QUARKUS NA PRÁTICA",
+            "link": "/quarkus/ii-quarkus-na-pratica"
+          },
+          {
+            "label": "III - QUARKUS × SPRING",
+            "link": "/quarkus/iii-quarkus-x-spring"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Dados",
+    "collapsed": true,
+    "items": [
+      {
+        "label": "FUNDAMENTOS DE MODELAGEM DE DADOS",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/fundamentos-de-modelagem-de-dados"
+          },
+          {
+            "label": "MODELAGEM RELACIONAL",
+            "link": "/fundamentos-de-modelagem-de-dados/modelagem-relacional"
+          },
+          {
+            "label": "ÍNDICE",
+            "link": "/fundamentos-de-modelagem-de-dados/indice"
+          },
+          {
+            "label": "ACID",
+            "link": "/fundamentos-de-modelagem-de-dados/acid"
+          },
+          {
+            "label": "VIEWS",
+            "link": "/fundamentos-de-modelagem-de-dados/views"
+          },
+          {
+            "label": "PROCEDURES",
+            "link": "/fundamentos-de-modelagem-de-dados/procedures"
+          },
+          {
+            "label": "MODELAGEM NÃO RELACIONAL",
+            "link": "/fundamentos-de-modelagem-de-dados/modelagem-nao-relacional"
+          },
+          {
+            "label": "BANCO DE DADOS EM GRAFOS",
+            "link": "/fundamentos-de-modelagem-de-dados/banco-de-dados-em-grafos"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Infraestrutura",
+    "collapsed": true,
+    "items": [
+      {
+        "label": "DOCKER",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/docker"
+          },
+          {
+            "label": "CAPÍTULO I - INTRODUÇÃO AO DOCKER",
+            "link": "/docker/capitulo-i-introducao-ao-docker"
+          },
+          {
+            "label": "CAPÍTULO II - GERENCIAMENTO DE CONTAINERS",
+            "link": "/docker/capitulo-ii-gerenciamento-de-containers"
+          },
+          {
+            "label": "CAPÍTULO III - REDES",
+            "link": "/docker/capitulo-iii-redes"
+          },
+          {
+            "label": "CAPÍTULO IV - VOLUMES",
+            "link": "/docker/capitulo-iv-volumes"
+          },
+          {
+            "label": "CAPÍTULO V - ORQUESTRAÇÃO DE CONTAINERES",
+            "link": "/docker/capitulo-v-orquestracao-de-containeres"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Referência rápida",
+    "collapsed": true,
+    "items": [
+      {
+        "label": "RESUMO DE PROVA",
+        "link": "/RESUMO-PROVA"
+      },
+      {
+        "label": "UTEIS",
+        "collapsed": true,
+        "items": [
+          {
+            "label": "Visão geral",
+            "link": "/uteis"
+          },
+          {
+            "label": "COMANDOS DOCKER",
+            "link": "/uteis/comandos-docker"
+          },
+          {
+            "label": "DICAS DE BANCO DE DADOS",
+            "link": "/uteis/dicas-de-banco-de-dados"
+          }
+        ]
+      }
+    ]
+  }
+]

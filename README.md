@@ -463,7 +463,7 @@ A plataforma embaixo de tudo: JVM, memória, garbage collector, inicialização 
 
 #### [Visão geral](jvm-e-plataforma-java/README.md)
 
-As três coisas que se chamam Java, JDK × JRE × JVM, o pipeline de execução, o mapa de memória, versões LTS e distribuições.
+As três coisas que se chamam Java, processo/thread/stack/heap/GC, JDK × JRE × JVM, o mapa de memória, versões LTS.
 
 - [1. "Java" são três coisas diferentes](jvm-e-plataforma-java/README.md#1-java-são-três-coisas-diferentes)
 - [2. O mínimo do mínimo: processo, thread, stack, heap e GC](jvm-e-plataforma-java/README.md#2-o-mínimo-do-mínimo-processo-thread-stack-heap-e-gc)
@@ -491,7 +491,7 @@ Carregamento de classes, bytecode, interpretador e JIT, aquecimento, CDS e cache
 
 #### [II - MEMÓRIA E GARBAGE COLLECTOR](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md)
 
-O mapa da memória, RSS × heap, gerações, GC roots, os coletores, tuning, container e os OutOfMemoryError.
+O que é um GC, o mapa da memória, RSS × heap, gerações, os coletores, tuning, container.
 
 - [1. O que é um garbage collector (e por que Java tem um)](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#1-o-que-é-um-garbage-collector-e-por-que-java-tem-um)
   - [Os dois modelos](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#os-dois-modelos)
@@ -511,7 +511,7 @@ O mapa da memória, RSS × heap, gerações, GC roots, os coletores, tuning, con
 
 #### [III - SUBIR E OPERAR EM PRODUÇÃO](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md)
 
-`java -jar` passo a passo, cold start, threads virtuais, imagem, flags, JFR, diagnóstico e Kubernetes.
+`java -jar` passo a passo, cold start, threads virtuais, imagem, flags, JFR, diagnóstico.
 
 - [1. O que acontece em `java -jar app.jar`](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#1-o-que-acontece-em-java--jar-appjar)
 - [2. *Cold start* e *warmup*](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#2-cold-start-e-warmup)
@@ -535,7 +535,7 @@ A base que as outras matérias de Spring supõem: o container, o bean, o proxy e
 
 #### [Visão geral](spring-e-spring-boot/README.md)
 
-IoC e DI, o vocabulário mínimo, Spring × Spring Boot, o ecossistema e o boot passo a passo.
+IoC e DI, o vocabulário mínimo, a origem do Spring, Spring × Spring Boot, o ecossistema.
 
 - [1. O problema: quem cria os objetos?](spring-e-spring-boot/README.md#1-o-problema-quem-cria-os-objetos)
 - [2. Inversão de controle e injeção de dependência](spring-e-spring-boot/README.md#2-inversão-de-controle-e-injeção-de-dependência)
@@ -580,7 +580,7 @@ Preocupações transversais, vocabulário do AOP, JDK proxy × CGLIB, limitaçõ
 
 #### [III - SPRING BOOT](spring-e-spring-boot/iii-spring-boot.md)
 
-`@SpringBootApplication`, autoconfiguração, starters, configuração e perfis, Actuator, empacotamento, Boot 3.
+`@SpringBootApplication`, autoconfiguração, starters, configuração e perfis, Actuator, empacotamento.
 
 - [1. O que o Boot acrescenta](spring-e-spring-boot/iii-spring-boot.md#1-o-que-o-boot-acrescenta)
 - [2. `@SpringBootApplication` decomposto](spring-e-spring-boot/iii-spring-boot.md#2-springbootapplication-decomposto)
@@ -608,7 +608,7 @@ _Só a apresentação da matéria, o índice dos capítulos e os links relaciona
 
 #### [I - INTRODUÇÃO SOBRE O SPRING MVC](spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc.md)
 
-Origem do Spring, o problema dos EJBs e os componentes do framework.
+Servlet e servlet container, Front Controller, por que "MVC" confunde numa API REST.
 
 - [1. O que é um servlet](spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc.md#1-o-que-é-um-servlet)
 - [2. O padrão Front Controller](spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc.md#2-o-padrão-front-controller)
@@ -915,7 +915,7 @@ O framework Java desenhado para container: trabalho antecipado para o build, ima
 
 #### [Visão geral](quarkus/README.md)
 
-O problema que resolve, build-time augmentation, modos JVM e nativo, onde é usado.
+Fundamentos de execução, o problema que resolve, build-time augmentation, modos JVM e nativo.
 
 - [1. Antes de tudo: o que uma aplicação Java faz, do código ao ar](quarkus/README.md#1-antes-de-tudo-o-que-uma-aplicação-java-faz-do-código-ao-ar)
   - [As três fases da vida de uma aplicação](quarkus/README.md#as-três-fases-da-vida-de-uma-aplicação)
@@ -1235,4 +1235,4 @@ _Arquivo curto, sem subdivisões — leia direto._
 
 ---
 
-<sub>Índice gerado a partir dos títulos dos arquivos. Ao criar ou renomear uma seção, atualize a entrada correspondente aqui.</sub>
+<sub>Índice gerado por `tools/gerar-indice.py` a partir dos títulos dos arquivos. Ao criar ou renomear uma matéria, edite `tools/estrutura.py` e rode o gerador.</sub>
