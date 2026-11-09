@@ -135,7 +135,7 @@ O que o `@WebMvcTest` **realmente prova**: desserialização do JSON, validaçã
 
 ### `@MockBean` está deprecado
 
-A partir do **Spring Boot 3.4 / Framework 6.2**, `@MockBean` e `@SpyBean` foram substituídos por **`@MockitoBean`** e **`@MockitoSpyBean`** (agora no core do Spring Framework). Código novo já deve usar os novos.
+A partir do **Spring Boot 3.4 / Framework 6.2**, `@MockBean` e `@SpyBean` foram depreciados em favor de **`@MockitoBean`** e **`@MockitoSpyBean`** (agora no core do Spring Framework) — e **removidos no Spring Boot 4.0**. Código novo já deve usar os novos, e migrar não é só renomear: `@MockBean(Foo.class)` vira `@MockitoBean(types = Foo.class)`, porque o `value` passou a ser o **nome** do bean.
 
 Não confunda com o `@Mock` do Mockito:
 

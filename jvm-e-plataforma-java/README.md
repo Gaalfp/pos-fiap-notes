@@ -185,7 +185,7 @@ As LTS são **8, 11, 17, 21 e 25**, e são elas que aparecem em produção. O qu
 |---|---|
 | **8** (2014) | fim do **PermGen**, que virou **Metaspace**; ainda é a versão mais comum em legado |
 | **11** (2018) | fim do JRE separado; **JFR** e **JMC** abertos; *container awareness* consolidado; cliente HTTP nativo; ZGC experimental |
-| **17** (2021) | **G1** maduro como padrão; ZGC pronto para produção; mudança de licença da Oracle; base mínima do Spring Boot 3 e do Quarkus 3 |
+| **17** (2021) | **G1** maduro como padrão; **ZGC** já pronto para produção (desde o 15) e disponível aqui; mudança de licença da Oracle; base mínima do Spring Boot 3 e do Quarkus 3 |
 | **21** (2023) | 🔥 **threads virtuais** (a maior mudança de modelo de execução em 20 anos); **ZGC geracional**; melhorias de CDS |
 | **25** (2025) | consolidação do **cache AOT** (Project Leyden) para cortar o tempo de inicialização; refinamentos nas threads virtuais |
 

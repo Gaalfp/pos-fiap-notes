@@ -206,7 +206,7 @@ flowchart LR
 | **Serial** | `-XX:+UseSerialGC` | uma única thread, STW | container **pequeno** (1 CPU, pouca memória); é o que a JVM escolhe sozinha nesse caso |
 | **Parallel** | `-XX:+UseParallelGC` | várias threads, mas **tudo em STW** | **lote/batch**: quando o que importa é terminar rápido e a pausa não incomoda |
 | **G1** | `-XX:+UseG1GC` | divide o heap em **regiões**; marca concorrentemente e compacta aos poucos, tentando respeitar uma **meta de pausa** (`-XX:MaxGCPauseMillis`, padrão 200 ms) | **o padrão desde o Java 9** e a resposta certa para quase toda aplicação de servidor |
-| **ZGC** | `-XX:+UseZGC` | quase tudo concorrente, com ponteiros marcados e barreiras de leitura. Pausas **abaixo de 1 ms, independentes do tamanho do heap** | latência é requisito duro, ou heap muito grande (dezenas de GB a TB) |
+| **ZGC** | `-XX:+UseZGC` | quase tudo concorrente, com ponteiros marcados e barreiras de leitura. Pausas **abaixo de 1 ms, independentes do tamanho do heap**. Experimental no 11, pronto para produção no **15**, geracional no **21** e geracional por padrão a partir do **23** | latência é requisito duro, ou heap muito grande (dezenas de GB a TB) |
 | **Shenandoah** | `-XX:+UseShenandoahGC` | compactação concorrente | mesmo caso do ZGC; disponível em distribuições que o incluem |
 | **Epsilon** | `-XX:+UseEpsilonGC` | **não coleta nada** — quando o heap acaba, a aplicação morre | testes e medição de alocação. **Nunca** em produção |
 

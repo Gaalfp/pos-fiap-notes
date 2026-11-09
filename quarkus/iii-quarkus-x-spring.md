@@ -13,6 +13,8 @@ Comparar os dois frameworks sem olhar **para qual problema cada um nasceu** leva
 | Virtude central | flexibilidade e desacoplamento | produtividade | eficiência de inicialização e memória |
 | Unidade de deploy pensada | WAR num servidor de aplicação | JAR executável numa VM | **container efêmero num pod** |
 
+O Spring Boot já está na linha **4.x** (sobre Spring Framework 7), mas a divisão de papéis acima não mudou — e é ela que importa aqui.
+
 Os três são respostas corretas — para perguntas diferentes. O Spring é dinâmico **porque** flexibilidade em runtime era o valor a entregar em 2004; o Quarkus é estático **porque** custo de boot e de memória é o que dói em 2019. Nenhum dos dois está "errado": eles otimizam grandezas diferentes.
 
 > **A consequência que atravessa este capítulo inteiro:** Spring resolve em **runtime** o que Quarkus resolve em **build time**. Toda outra diferença — velocidade, memória, nativo, testes, limites — é derivada dessa.
@@ -147,7 +149,7 @@ Na prática: **o Quarkus deixa o custo de ser reativo mais barato**, porque não
 
 Era o diferencial mais citado em 2019, e é onde a comparação mais envelheceu. Hoje:
 
-| | Quarkus | Spring Boot 3.x |
+| | Quarkus | Spring Boot 3.x / 4.x |
 |---|---|---|
 | Nativo | objetivo de projeto desde o início | suportado via **Spring AOT** + GraalVM Native Build Tools |
 | Como funciona | augmentação já resolve tudo no build | a fase AOT gera definições de bean e *hints* para o GraalVM |

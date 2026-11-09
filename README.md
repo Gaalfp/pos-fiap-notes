@@ -593,6 +593,7 @@ Preocupações transversais, vocabulário do AOP, JDK proxy × CGLIB, limitaçõ
 - [7. DevTools e produtividade](spring-e-spring-boot/iii-spring-boot.md#7-devtools-e-produtividade)
 - [8. Empacotamento](spring-e-spring-boot/iii-spring-boot.md#8-empacotamento)
 - [9. O que mudou no Spring Boot 3](spring-e-spring-boot/iii-spring-boot.md#9-o-que-mudou-no-spring-boot-3)
+- [10. E o Spring Boot 4](spring-e-spring-boot/iii-spring-boot.md#10-e-o-spring-boot-4)
 
 <br>
 

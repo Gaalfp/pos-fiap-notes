@@ -303,7 +303,34 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
 | **AOT e imagem nativa** | o Boot processa a aplicação em tempo de build e suporta GraalVM → [QUARKUS × SPRING](../quarkus/iii-quarkus-x-spring.md#6-imagem-nativa-o-quarkus-não-é-mais-o-único) |
 | **CRaC** (3.2+) | *checkpoint/restore*: salva o processo já aquecido e o restaura em milissegundos |
 | **Threads virtuais** (3.2+) | `spring.threads.virtual.enabled=true` — uma thread por requisição deixa de ser caro |
-| **`@MockitoBean`** (3.4+) | substitui o `@MockBean`, agora depreciado → [TESTES NO SPRING](../testes-em-software/iii-testes-no-spring.md) |
+| **`@MockitoBean`** (3.4+) | substitui o `@MockBean`, depreciado no 3.4 e **removido no 4.0** → [TESTES NO SPRING](../testes-em-software/iii-testes-no-spring.md) |
+
+---
+
+## 10. E o Spring Boot 4
+
+A linha **4.x** já é a corrente (sobre o **Spring Framework 7**). Os exemplos deste material são de Boot 3, e continuam válidos: **container, bean, escopo, proxy, autoconfiguração e configuração externalizada não mudaram** — é tudo o que os capítulos [I](i-ioc-e-beans.md) e [II](ii-aop-e-proxies.md) descrevem. O que muda é a plataforma embaixo e alguns nomes.
+
+| Item | Boot 3 | **Boot 4** |
+|---|---|---|
+| Spring Framework | 6.x | **7.x** |
+| Java | 17+ | **17+** (suportado até o 27) |
+| Servlet | 6.0 (Tomcat 10) | **6.1** (Tomcat 11, Jetty 12.1) |
+| Jakarta Persistence | 3.1 | **3.2** (Hibernate 7.2) |
+| Jackson | 2.x | **3.0** — o suporte ao Jackson 2 vem depreciado |
+| `@MockBean` / `@SpyBean` | depreciados no 3.4 | **removidos** |
+
+**O que o 4 acrescenta e vale conhecer:**
+
+| Novidade | O que é |
+|---|---|
+| **HTTP Service Clients** | autoconfiguração para interfaces anotadas com `@HttpExchange` — o cliente HTTP declarativo deixa de exigir montagem manual, aproximando-se do [`@RegisterRestClient` do Quarkus](../quarkus/ii-quarkus-na-pratica.md#2-endpoint-rest) |
+| **Versionamento de API** | suporte de primeira classe no MVC e no WebFlux, para o problema discutido em [EVOLUÇÃO DA API](../spring-mvc-apis-restful/iv-evolucao-da-api.md#2-versionamento) |
+| **`RestTestClient`** | um cliente de teste único para MockMvc e para servidor no ar → [TESTES NO SPRING](../testes-em-software/iii-testes-no-spring.md) |
+| **`spring-boot-starter-opentelemetry`** | starter dedicado para métricas e traces via OTLP → [OBSERVABILIDADE](../arquitetura-distribuida/v-observabilidade.md) |
+| Renomes de propriedade | `management.tracing.enabled` → `management.tracing.export.enabled`, entre outros |
+
+> **O que isso significa para quem está estudando:** aprender Boot 3 **não** é aprender errado — a mudança de 3 para 4 é de plataforma (Jakarta, Jackson, Tomcat) e de limpeza de API, não de modelo mental. A migração realmente trabalhosa foi a de **2 para 3** (`javax` → `jakarta`).
 
 ---
 
@@ -332,6 +359,9 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
 21. O que é um *layered jar* e por que ele importa para a imagem de container?
 22. Para que serve `server.shutdown=graceful` e por que é obrigatório em Kubernetes?
 23. Cite quatro mudanças do Spring Boot 3 e o impacto de cada uma.
+24. O que muda do Boot 3 para o Boot 4 — e o que **não** muda?
+25. Por que a migração de 2 para 3 foi mais trabalhosa que a de 3 para 4?
+26. Cite três novidades do Boot 4 e o problema que cada uma ataca.
 
 ---
 
