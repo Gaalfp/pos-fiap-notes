@@ -7,4 +7,4 @@ Como o Spring recebe uma requisição HTTP, transforma em chamada de método e d
 - [III - SPRING MVC NA PRÁTICA](iii-spring-mvc-na-pratica.md) — ciclo do DispatcherServlet, anotações, DTOs e records, Bean Validation, tratamento de erro com ProblemDetail, Jackson, filtros × interceptors × AOP
 - [IV - EVOLUÇÃO DA API](iv-evolucao-da-api.md) — paginação e keyset, versionamento, cache HTTP e ETag, idempotency key, operações assíncronas, rate limiting, CORS, OpenAPI e segurança de API
 
-**Relacionados:** [TESTES EM SOFTWARE](../testes-em-software/README.md) · [SPRING SECURITY](../spring-security/README.md) · [CLEAN ARCHITECTURE](../clean-architecture/README.md) · [gRPC e GRAPHQL](../grpc-e-graphql/README.md)
+**Relacionados:** [TESTES EM SOFTWARE](../testes-em-software/README.md) · [SPRING SECURITY](../spring-security/README.md) · [CLEAN ARCHITECTURE](../clean-architecture/README.md) · [gRPC e GRAPHQL](../grpc-e-graphql/README.md) · [QUARKUS](../quarkus/README.md)

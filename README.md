@@ -13,7 +13,7 @@ item leva direto à seção correspondente. Todo arquivo de conteúdo termina co
 
 - **[Arquitetura e design](#arquitetura-e-design)** — [CLEAN ARCHITECTURE](#clean-architecture) · [SOLID](#solid) · [DESIGN PATTERNS EM OO](#design-patterns-em-oo) · [POO](#poo)
 - **[Sistemas distribuídos e integração](#sistemas-distribuídos-e-integração)** — [ARQUITETURA DISTRIBUÍDA](#arquitetura-distribuída) · [FUNDAMENTOS DE MENSAGERIA](#fundamentos-de-mensageria) · [TEOREMA CAP](#teorema-cap) · [gRPC e GRAPHQL](#grpc-e-graphql)
-- **[Java e Spring](#java-e-spring)** — [Spring MVC - APIs RESTful](#spring-mvc---apis-restful) · [SPRING DATA JPA](#spring-data-jpa) · [SPRING SECURITY](#spring-security) · [TESTES EM SOFTWARE](#testes-em-software)
+- **[Java e frameworks](#java-e-frameworks)** — [Spring MVC - APIs RESTful](#spring-mvc---apis-restful) · [SPRING DATA JPA](#spring-data-jpa) · [SPRING SECURITY](#spring-security) · [TESTES EM SOFTWARE](#testes-em-software) · [QUARKUS](#quarkus)
 - **[Dados](#dados)** — [FUNDAMENTOS DE MODELAGEM DE DADOS](#fundamentos-de-modelagem-de-dados)
 - **[Infraestrutura](#infraestrutura)** — [DOCKER](#docker)
 - **[Referência rápida](#referência-rápida)** — [RESUMO DE PROVA](#resumo-de-prova) · [UTEIS](#uteis)
@@ -202,7 +202,7 @@ Anotações da aula, falácias, desafios e como os eixos se conectam.
 
 #### [I - ESTILOS ARQUITETURAIS](arquitetura-distribuida/i-estilos-arquiteturais.md)
 
-Cliente-servidor, P2P, microsserviços, event-driven, serverless.
+Cliente-servidor, P2P, monólito × microsserviços, SOA, event-driven, serverless.
 
 - [1. Cliente - Servidor](arquitetura-distribuida/i-estilos-arquiteturais.md#1-cliente---servidor)
 - [2. Peer-to-Peer (P2P)](arquitetura-distribuida/i-estilos-arquiteturais.md#2-peer-to-peer-p2p)
@@ -446,7 +446,7 @@ Schema e SDL, query, resolvers, DataLoader, Spring for GraphQL.
 
 ---
 
-## Java e Spring
+## Java e frameworks
 
 ### Spring MVC - APIs RESTful
 
@@ -753,6 +753,69 @@ Stub × mock, stubbing, matchers, verificação, spy, BDDMockito.
 - [9. ArchUnit — testando a arquitetura](testes-em-software/iii-testes-no-spring.md#9-archunit--testando-a-arquitetura)
 - [10. Estratégia de suíte](testes-em-software/iii-testes-no-spring.md#10-estratégia-de-suíte)
 - [Checklist de PR (testes no Spring)](testes-em-software/iii-testes-no-spring.md#checklist-de-pr-testes-no-spring)
+
+<br>
+
+### QUARKUS
+
+O framework Java desenhado para container: trabalho antecipado para o build, imagem nativa e o comparativo com o Spring.
+
+#### [Visão geral](quarkus/README.md)
+
+O problema que resolve, build-time augmentation, modos JVM e nativo, onde é usado.
+
+- [1. O problema que o Quarkus resolve](quarkus/README.md#1-o-problema-que-o-quarkus-resolve)
+- [2. A ideia central: *build-time augmentation*](quarkus/README.md#2-a-ideia-central-build-time-augmentation)
+- [3. Os dois modos de execução](quarkus/README.md#3-os-dois-modos-de-execução)
+- [4. O que ele é por dentro](quarkus/README.md#4-o-que-ele-é-por-dentro)
+- [5. Onde o Quarkus é usado](quarkus/README.md#5-onde-o-quarkus-é-usado)
+- [6. O que o Quarkus NÃO é](quarkus/README.md#6-o-que-o-quarkus-não-é)
+- [Capítulos](quarkus/README.md#capítulos)
+
+#### [I - COMO FUNCIONA](quarkus/i-como-funciona.md)
+
+As três fases, ArC, extensões, GraalVM e mundo fechado, JIT × AOT, dev mode, threads.
+
+- [1. As três fases: build, static init e runtime init](quarkus/i-como-funciona.md#1-as-três-fases-build-static-init-e-runtime-init)
+- [2. ArC — CDI resolvido em tempo de build](quarkus/i-como-funciona.md#2-arc--cdi-resolvido-em-tempo-de-build)
+- [3. Anatomia de uma extensão](quarkus/i-como-funciona.md#3-anatomia-de-uma-extensão)
+- [4. GraalVM, Mandrel e a hipótese do mundo fechado](quarkus/i-como-funciona.md#4-graalvm-mandrel-e-a-hipótese-do-mundo-fechado)
+- [5. JIT × AOT — por que o nativo pode ser mais lento](quarkus/i-como-funciona.md#5-jit--aot--por-que-o-nativo-pode-ser-mais-lento)
+- [6. Dev mode — o que mais impressiona na prática](quarkus/i-como-funciona.md#6-dev-mode--o-que-mais-impressiona-na-prática)
+- [7. O modelo de threads: Vert.x, event loop e Mutiny](quarkus/i-como-funciona.md#7-o-modelo-de-threads-vertx-event-loop-e-mutiny)
+- [8. O preço do modelo](quarkus/i-como-funciona.md#8-o-preço-do-modelo)
+
+#### [II - QUARKUS NA PRÁTICA](quarkus/ii-quarkus-na-pratica.md)
+
+Projeto, Jakarta REST, CDI, config e perfis, Panache, mensageria, testes, container.
+
+- [1. Criando e estruturando o projeto](quarkus/ii-quarkus-na-pratica.md#1-criando-e-estruturando-o-projeto)
+- [2. Endpoint REST](quarkus/ii-quarkus-na-pratica.md#2-endpoint-rest)
+- [3. CDI na prática](quarkus/ii-quarkus-na-pratica.md#3-cdi-na-prática)
+- [4. Configuração e perfis](quarkus/ii-quarkus-na-pratica.md#4-configuração-e-perfis)
+- [5. Persistência com Hibernate e Panache](quarkus/ii-quarkus-na-pratica.md#5-persistência-com-hibernate-e-panache)
+- [6. Validação e tratamento de erro](quarkus/ii-quarkus-na-pratica.md#6-validação-e-tratamento-de-erro)
+- [7. Mensageria](quarkus/ii-quarkus-na-pratica.md#7-mensageria)
+- [8. Testes](quarkus/ii-quarkus-na-pratica.md#8-testes)
+- [9. Observabilidade](quarkus/ii-quarkus-na-pratica.md#9-observabilidade)
+- [10. Empacotamento e container](quarkus/ii-quarkus-na-pratica.md#10-empacotamento-e-container)
+
+#### [III - QUARKUS × SPRING](quarkus/iii-quarkus-x-spring.md)
+
+DI em build time × runtime, números, tabela de-para, nativo, ecossistema, migração.
+
+- [1. A diferença de origem explica todas as outras](quarkus/iii-quarkus-x-spring.md#1-a-diferença-de-origem-explica-todas-as-outras)
+- [2. Injeção de dependência: runtime × build time](quarkus/iii-quarkus-x-spring.md#2-injeção-de-dependência-runtime--build-time)
+- [3. Inicialização e memória: os números e o que eles não dizem](quarkus/iii-quarkus-x-spring.md#3-inicialização-e-memória-os-números-e-o-que-eles-não-dizem)
+- [4. Tabela de-para](quarkus/iii-quarkus-x-spring.md#4-tabela-de-para)
+- [5. Modelo de execução e programação reativa](quarkus/iii-quarkus-x-spring.md#5-modelo-de-execução-e-programação-reativa)
+- [6. Imagem nativa: o Quarkus não é mais o único](quarkus/iii-quarkus-x-spring.md#6-imagem-nativa-o-quarkus-não-é-mais-o-único)
+- [7. As extensões de compatibilidade com Spring](quarkus/iii-quarkus-x-spring.md#7-as-extensões-de-compatibilidade-com-spring)
+- [8. Ecossistema, maturidade e mercado](quarkus/iii-quarkus-x-spring.md#8-ecossistema-maturidade-e-mercado)
+- [9. Experiência de desenvolvimento](quarkus/iii-quarkus-x-spring.md#9-experiência-de-desenvolvimento)
+- [10. Quando escolher cada um](quarkus/iii-quarkus-x-spring.md#10-quando-escolher-cada-um)
+- [11. Roteiro de migração (se for migrar)](quarkus/iii-quarkus-x-spring.md#11-roteiro-de-migração-se-for-migrar)
+- [12. As pegadinhas que mais aparecem](quarkus/iii-quarkus-x-spring.md#12-as-pegadinhas-que-mais-aparecem)
 
 <br>
 
