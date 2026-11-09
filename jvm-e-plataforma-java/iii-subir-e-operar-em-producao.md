@@ -58,6 +58,8 @@ São dois problemas diferentes, e a confusão entre eles leva a soluções errad
 
 A mudança mais importante da plataforma na última década, e ela é de **infraestrutura**, não de linguagem.
 
+> Relembrando a [base](README.md#2-o-mínimo-do-mínimo-processo-thread-stack-heap-e-gc): uma **thread** é uma linha de execução dentro do processo, com sua própria *stack*. O que muda aqui é **quem a gerencia** — o sistema operacional ou a JVM.
+
 ```mermaid
 flowchart TB
     subgraph PL["<b>THREAD DE PLATAFORMA</b> — o modelo clássico"]
@@ -142,7 +144,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 -Xlog:gc*:file=/logs/gc.log:time,uptime:filecount=5,filesize=10M
 ```
 
-É isso. O detalhamento de cada uma e o que **não** copiar da internet estão em [II - tuning](ii-memoria-e-garbage-collector.md#7-tuning-as-flags-que-importam). Para auditar o que a JVM realmente decidiu:
+É isso. O detalhamento de cada uma e o que **não** copiar da internet estão em [II - tuning](ii-memoria-e-garbage-collector.md#8-tuning-as-flags-que-importam). Para auditar o que a JVM realmente decidiu:
 
 ```bash
 java -XX:+PrintFlagsFinal -version | grep -iE 'heapsize|useg1|usez|processor'
@@ -209,7 +211,7 @@ Ordem de investigação: **log de GC** (as pausas explicam?) → **JFR** (conten
 
 ### c) Memória crescendo
 
-Vá direto ao padrão de assinatura: **o heap após *full GC* sobe e nunca volta**. Confirme no log de GC, tire o *heap dump*, abra no MAT e procure **quem segura** os objetos vivos. → [II - vazamento](ii-memoria-e-garbage-collector.md#4-como-o-gc-decide-o-que-é-lixo)
+Vá direto ao padrão de assinatura: **o heap após *full GC* sobe e nunca volta**. Confirme no log de GC, tire o *heap dump*, abra no MAT e procure **quem segura** os objetos vivos. → [II - vazamento](ii-memoria-e-garbage-collector.md#5-como-o-gc-decide-o-que-é-lixo)
 
 ### d) Aplicação travada (não responde)
 

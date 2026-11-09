@@ -465,11 +465,12 @@ A plataforma embaixo de tudo: JVM, memória, garbage collector, inicialização 
 As três coisas que se chamam Java, JDK × JRE × JVM, o pipeline de execução, o mapa de memória, versões LTS e distribuições.
 
 - [1. "Java" são três coisas diferentes](jvm-e-plataforma-java/README.md#1-java-são-três-coisas-diferentes)
-- [2. JDK × JRE × JVM](jvm-e-plataforma-java/README.md#2-jdk--jre--jvm)
-- [3. Do código-fonte ao processo em execução](jvm-e-plataforma-java/README.md#3-do-código-fonte-ao-processo-em-execução)
-- [4. A anatomia de um processo Java](jvm-e-plataforma-java/README.md#4-a-anatomia-de-um-processo-java)
-- [5. Versões: o ciclo de seis meses e as LTS](jvm-e-plataforma-java/README.md#5-versões-o-ciclo-de-seis-meses-e-as-lts)
-- [6. Qual JDK baixar](jvm-e-plataforma-java/README.md#6-qual-jdk-baixar)
+- [2. O mínimo do mínimo: processo, thread, stack, heap e GC](jvm-e-plataforma-java/README.md#2-o-mínimo-do-mínimo-processo-thread-stack-heap-e-gc)
+- [3. JDK × JRE × JVM](jvm-e-plataforma-java/README.md#3-jdk--jre--jvm)
+- [4. Do código-fonte ao processo em execução](jvm-e-plataforma-java/README.md#4-do-código-fonte-ao-processo-em-execução)
+- [5. A anatomia de um processo Java](jvm-e-plataforma-java/README.md#5-a-anatomia-de-um-processo-java)
+- [6. Versões: o ciclo de seis meses e as LTS](jvm-e-plataforma-java/README.md#6-versões-o-ciclo-de-seis-meses-e-as-lts)
+- [7. Qual JDK baixar](jvm-e-plataforma-java/README.md#7-qual-jdk-baixar)
 - [Capítulos](jvm-e-plataforma-java/README.md#capítulos)
 
 #### [I - A JVM POR DENTRO](jvm-e-plataforma-java/i-a-jvm-por-dentro.md)
@@ -491,16 +492,20 @@ Carregamento de classes, bytecode, interpretador e JIT, aquecimento, CDS e cache
 
 O mapa da memória, RSS × heap, gerações, GC roots, os coletores, tuning, container e os OutOfMemoryError.
 
-- [1. O mapa completo da memória](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#1-o-mapa-completo-da-memória)
-- [2. Por que RSS ≠ heap (e por que isso mata pod)](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#2-por-que-rss--heap-e-por-que-isso-mata-pod)
-- [3. Dentro do heap: as gerações](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#3-dentro-do-heap-as-gerações)
-- [4. Como o GC decide o que é lixo](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#4-como-o-gc-decide-o-que-é-lixo)
-- [5. Os algoritmos](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#5-os-algoritmos)
-- [6. Os coletores](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#6-os-coletores)
-- [7. *Tuning*: as flags que importam](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#7-tuning-as-flags-que-importam)
-- [8. JVM em container](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#8-jvm-em-container)
-- [9. Os `OutOfMemoryError` e como ler cada um](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#9-os-outofmemoryerror-e-como-ler-cada-um)
-- [10. O log de GC e o que observar](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#10-o-log-de-gc-e-o-que-observar)
+- [1. O que é um garbage collector (e por que Java tem um)](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#1-o-que-é-um-garbage-collector-e-por-que-java-tem-um)
+  - [Os dois modelos](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#os-dois-modelos)
+  - [O que se ganha e o que se paga](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#o-que-se-ganha-e-o-que-se-paga)
+  - [Um mal-entendido que vale desfazer](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#um-mal-entendido-que-vale-desfazer)
+- [2. O mapa completo da memória](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#2-o-mapa-completo-da-memória)
+- [3. Por que RSS ≠ heap (e por que isso mata pod)](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#3-por-que-rss--heap-e-por-que-isso-mata-pod)
+- [4. Dentro do heap: as gerações](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#4-dentro-do-heap-as-gerações)
+- [5. Como o GC decide o que é lixo](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#5-como-o-gc-decide-o-que-é-lixo)
+- [6. Os algoritmos](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#6-os-algoritmos)
+- [7. Os coletores](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#7-os-coletores)
+- [8. *Tuning*: as flags que importam](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#8-tuning-as-flags-que-importam)
+- [9. JVM em container](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#9-jvm-em-container)
+- [10. Os `OutOfMemoryError` e como ler cada um](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#10-os-outofmemoryerror-e-como-ler-cada-um)
+- [11. O log de GC e o que observar](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#11-o-log-de-gc-e-o-que-observar)
 - [Checklist de memória para produção](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#checklist-de-memória-para-produção)
 
 #### [III - SUBIR E OPERAR EM PRODUÇÃO](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md)

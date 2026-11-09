@@ -2,7 +2,50 @@
 
 > [← Voltar para JVM E PLATAFORMA JAVA](README.md) · Anterior: [I - A JVM POR DENTRO](i-a-jvm-por-dentro.md) · Próximo: [III - SUBIR E OPERAR EM PRODUÇÃO](iii-subir-e-operar-em-producao.md)
 
-## 1. O mapa completo da memória
+## 1. O que é um garbage collector (e por que Java tem um)
+
+Todo programa que cria coisas na memória precisa, em algum momento, **devolvê-la**. Memória é finita: se um programa aloca e nunca libera, ele cresce até morrer. A pergunta é **quem** faz essa devolução.
+
+### Os dois modelos
+
+Em linguagens como C e C++, **é você**: pede a memória (`malloc`) e a devolve (`free`). Explícito, previsível — e a origem de três das famílias de bug mais caras da história do software:
+
+| Bug do modelo manual | O que é |
+|---|---|
+| ***Memory leak*** | você **esqueceu** de liberar. O programa cresce até ser morto |
+| ***Double free*** | você liberou **duas vezes**. Corrompe as estruturas internas do alocador |
+| ***Dangling pointer*** / *use-after-free* | você liberou e **continuou usando** o ponteiro. Lê lixo, escreve em cima de outra coisa, ou abre uma falha de segurança explorável |
+
+Java faz a escolha oposta: **ninguém libera memória à mão.** Você cria objetos e simplesmente **para de usá-los**; um componente da JVM descobre quais não são mais alcançáveis e recupera o espaço. Esse componente é o **garbage collector**.
+
+> 🔑 **O contrato do Java, em uma frase:** *você não libera memória — você para de referenciar. O resto é problema do GC.*
+
+### O que se ganha e o que se paga
+
+| ✅ Ganhos | ❌ Custos |
+|---|---|
+| as três famílias de bug acima **deixam de existir** | o GC consome **CPU** para descobrir o que é lixo |
+| o código fica mais curto e mais simples | ele **pausa** a aplicação em certos momentos (as pausas *stop-the-world*) |
+| segurança de memória por construção | precisa de **mais memória** do que o estritamente necessário para trabalhar bem |
+| o programador pensa em domínio, não em ciclo de vida de ponteiro | o momento da coleta **não é determinístico**: você não controla *quando* acontece |
+
+Esses três custos — CPU, pausa e memória extra — formam um triângulo em que **melhorar um piora outro**. É exatamente por isso que não existe "o" garbage collector do Java, e sim **vários**, cada um com um compromisso diferente entre eles. Escolher é o assunto da [seção 7](#7-os-coletores).
+
+### Um mal-entendido que vale desfazer
+
+| Afirmação comum | Correção |
+|---|---|
+| "O GC libera a memória do objeto quando ele sai de escopo" | não: ele libera **quando passar** e perceber que o objeto está inalcançável — pode ser muito depois, ou nunca, se o processo morrer antes |
+| "Java não tem vazamento de memória" | tem, e é **mais sutil**: não é esquecer de liberar, é **manter alcançável** o que não se usa mais → [seção 5](#5-como-o-gc-decide-o-que-é-lixo) |
+| "`System.gc()` força a coleta" | é apenas uma **sugestão**, que a JVM pode ignorar. Em produção, chamá-lo quase sempre piora as coisas |
+| "Chamar o GC resolve consumo alto" | se a memória está alta porque os objetos estão **em uso**, não há nada a coletar |
+| "Objeto `null` é coletado na hora" | atribuir `null` apenas remove **uma** referência. Se houver outra, o objeto continua vivo |
+
+Com isso no lugar, o resto deste capítulo responde a quatro perguntas: **onde** essa memória está (seções 2 a 4), **como** o GC decide o que é lixo e com que algoritmos (seções 5 e 6), **quais** coletores existem e como escolher (seção 7) e **como** operar isso em produção (seções 8 a 11).
+
+---
+
+## 2. O mapa completo da memória
 
 ```mermaid
 flowchart TB
@@ -40,7 +83,7 @@ flowchart TB
 
 ---
 
-## 2. Por que RSS ≠ heap (e por que isso mata pod)
+## 3. Por que RSS ≠ heap (e por que isso mata pod)
 
 Esta é **a** seção prática da matéria. A conta que todo mundo erra:
 
@@ -74,7 +117,7 @@ jcmd <pid> VM.native_memory summary        # mostra cada área, somada
 
 ---
 
-## 3. Dentro do heap: as gerações
+## 4. Dentro do heap: as gerações
 
 O GC se apoia numa observação empírica, a **hipótese geracional**: *a maioria dos objetos morre jovem.* Um DTO de requisição vive milissegundos; um cache vive o processo inteiro. Varrer os dois com a mesma frequência é desperdício — então o heap é dividido.
 
@@ -102,7 +145,7 @@ flowchart LR
 
 ---
 
-## 4. Como o GC decide o que é lixo
+## 5. Como o GC decide o que é lixo
 
 Não é contagem de referências (que vazaria em ciclos). É **alcançabilidade**: partindo de um conjunto de raízes, o GC marca tudo o que consegue alcançar. **O que não for alcançado é lixo** — não importa quantas referências aponte para ele.
 
@@ -128,7 +171,7 @@ No desenho, **D e E referenciam um ao outro** — e ainda assim são lixo, porqu
 
 ---
 
-## 5. Os algoritmos
+## 6. Os algoritmos
 
 Todo coletor combina três ou quatro operações básicas:
 
@@ -145,7 +188,7 @@ E há o conceito que define a experiência do usuário:
 
 ---
 
-## 6. Os coletores
+## 7. Os coletores
 
 ```mermaid
 flowchart LR
@@ -179,7 +222,7 @@ flowchart LR
 
 ---
 
-## 7. *Tuning*: as flags que importam
+## 8. *Tuning*: as flags que importam
 
 **A lista curta, que resolve 90% dos casos:**
 
@@ -206,7 +249,7 @@ java -XX:MaxRAMPercentage=70.0 \        # heap = 70% da memória DO CONTAINER
 
 ---
 
-## 8. JVM em container
+## 9. JVM em container
 
 Antes do **Java 10**, a JVM olhava a memória e a CPU **da máquina hospedeira** e ignorava o limite do container: num nó de 64 GB, ela dimensionava o heap como se tivesse 64 GB — e o pod morria. Hoje `-XX:+UseContainerSupport` é **padrão** e a JVM lê os limites do `cgroup`.
 
@@ -228,7 +271,7 @@ flowchart TB
 
 ---
 
-## 9. Os `OutOfMemoryError` e como ler cada um
+## 10. Os `OutOfMemoryError` e como ler cada um
 
 A mensagem **depois** do `OutOfMemoryError:` é o diagnóstico — cada uma aponta para um lugar diferente:
 
@@ -253,7 +296,7 @@ No *heap dump*, a pergunta não é "o que é grande" — é **"quem está segura
 
 ---
 
-## 10. O log de GC e o que observar
+## 11. O log de GC e o que observar
 
 ```bash
 -Xlog:gc*:file=/logs/gc.log:time,uptime,level,tags:filecount=5,filesize=10M
@@ -287,33 +330,40 @@ O padrão mais importante dessa tabela é o terceiro: **"o heap depois do full G
 
 ## Perguntas para autoavaliação
 
-1. Desenhe o mapa de memória de um processo Java. O que está dentro e fora do heap?
-2. Escreva a fórmula do RSS. Por que `-Xmx` não é o consumo da aplicação?
-3. Por que um pod de 512 MB com `-Xmx512m` morre?
-4. Diferencie `OutOfMemoryError` e OOMKilled: quem mata, onde aparece, como investigar.
-5. O pod reinicia sem nada no log da aplicação. Qual a hipótese mais provável?
-6. Como auditar a memória fora do heap?
-7. Enuncie a hipótese geracional e diga como ela justifica a divisão do heap.
-8. Explique Eden, Survivor, promoção, minor GC e full GC.
-9. Por que objeto de vida curta é quase grátis e objeto de vida média é o pior caso?
-10. Como o GC decide o que é lixo? Por que alcançabilidade é melhor que contagem de referências?
-11. O que são GC roots? Cite quatro.
-12. Dois objetos que se referenciam mutuamente são coletados? Por quê?
-13. O que é um vazamento de memória em Java? Cite cinco causas clássicas.
-14. Explique mark, sweep, compact e copy — e o custo de cada um.
-15. O que é uma pausa stop-the-world e qual a direção da evolução dos coletores?
-16. Compare Serial, Parallel, G1 e ZGC: como funcionam e quando usar.
-17. Para que serve o Epsilon?
-18. Quais as três perguntas que resolvem a escolha do coletor?
-19. Por que "trocar o coletor" raramente é a correção certa?
-20. Cite cinco flags que valem a pena e o que cada uma faz.
-21. Por que `MaxRAMPercentage` é melhor que `-Xmx` em container?
-22. O que mudou no Java 10 em relação a container, e o que acontecia antes?
-23. Por que o heap padrão de 25% é um problema, e por que meia CPU é pior ainda?
-24. Dê o diagnóstico inicial para cada uma das seis mensagens de `OutOfMemoryError`.
-25. No heap dump, qual é a pergunta certa a fazer?
-26. Quais cinco coisas observar no log de GC, e qual delas denuncia vazamento?
-
+1. Por que todo programa precisa devolver memória em algum momento?
+2. Quais são os dois modelos de gerenciamento de memória, e qual o Java escolheu?
+3. Cite as três famílias de bug do modelo manual e explique cada uma.
+4. Enuncie o contrato de memória do Java em uma frase.
+5. Quais são os três custos de ter um garbage collector, e por que eles formam um triângulo?
+6. Por que existe mais de um coletor no Java, e não apenas "o" GC?
+7. Corrija: "o GC libera o objeto quando ele sai de escopo", "Java não tem vazamento de memória" e "`System.gc()` força a coleta".
+8. Atribuir `null` a uma variável faz o objeto ser coletado? Por quê?
+9. Desenhe o mapa de memória de um processo Java. O que está dentro e fora do heap?
+10. Escreva a fórmula do RSS. Por que `-Xmx` não é o consumo da aplicação?
+11. Por que um pod de 512 MB com `-Xmx512m` morre?
+12. Diferencie `OutOfMemoryError` e OOMKilled: quem mata, onde aparece, como investigar.
+13. O pod reinicia sem nada no log da aplicação. Qual a hipótese mais provável?
+14. Como auditar a memória fora do heap?
+15. Enuncie a hipótese geracional e diga como ela justifica a divisão do heap.
+16. Explique Eden, Survivor, promoção, minor GC e full GC.
+17. Por que objeto de vida curta é quase grátis e objeto de vida média é o pior caso?
+18. Como o GC decide o que é lixo? Por que alcançabilidade é melhor que contagem de referências?
+19. O que são GC roots? Cite quatro.
+20. Dois objetos que se referenciam mutuamente são coletados? Por quê?
+21. O que é um vazamento de memória em Java? Cite cinco causas clássicas.
+22. Explique mark, sweep, compact e copy — e o custo de cada um.
+23. O que é uma pausa stop-the-world e qual a direção da evolução dos coletores?
+24. Compare Serial, Parallel, G1 e ZGC: como funcionam e quando usar.
+25. Para que serve o Epsilon?
+26. Quais as três perguntas que resolvem a escolha do coletor?
+27. Por que "trocar o coletor" raramente é a correção certa?
+28. Cite cinco flags que valem a pena e o que cada uma faz.
+29. Por que `MaxRAMPercentage` é melhor que `-Xmx` em container?
+30. O que mudou no Java 10 em relação a container, e o que acontecia antes?
+31. Por que o heap padrão de 25% é um problema, e por que meia CPU é pior ainda?
+32. Dê o diagnóstico inicial para cada uma das seis mensagens de `OutOfMemoryError`.
+33. No heap dump, qual é a pergunta certa a fazer?
+34. Quais cinco coisas observar no log de GC, e qual delas denuncia vazamento?
 ---
 
 > [← Voltar para JVM E PLATAFORMA JAVA](README.md) · Anterior: [I - A JVM POR DENTRO](i-a-jvm-por-dentro.md) · Próximo: [III - SUBIR E OPERAR EM PRODUÇÃO](iii-subir-e-operar-em-producao.md)

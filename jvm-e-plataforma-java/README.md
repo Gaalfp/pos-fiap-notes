@@ -24,7 +24,63 @@ A separação entre linguagem e plataforma é o que permite que **Kotlin, Scala,
 
 ---
 
-## 2. JDK × JRE × JVM
+## 2. O mínimo do mínimo: processo, thread, stack, heap e GC
+
+Antes de qualquer coisa sobre a JVM, cinco palavras. Elas aparecem em **toda** página desta matéria, e o resto não faz sentido sem elas.
+
+```mermaid
+flowchart TB
+    subgraph PROC["<b>PROCESSO</b> — a aplicação em execução, com a sua memória"]
+        direction TB
+        subgraph THREADS["<b>THREADS</b> — as linhas de execução, cada uma com sua pilha"]
+            direction LR
+            subgraph T1["Thread 1"]
+                ST1["<b>STACK</b><br/><i>variáveis locais<br/>e a cadeia de<br/>chamadas</i>"]
+            end
+            subgraph T2["Thread 2"]
+                ST2["<b>STACK</b>"]
+            end
+            subgraph T3["Thread 3"]
+                ST3["<b>STACK</b>"]
+            end
+        end
+        subgraph HEAPB["<b>HEAP</b> — <i>compartilhado por TODAS as threads</i>"]
+            O1["objeto<br/>Pedido"]
+            O2["objeto<br/>Cliente"]
+            O3["objeto<br/>sem ninguém<br/>apontando<br/>🗑️"]
+        end
+        GC["<b>GARBAGE COLLECTOR</b><br/><i>varre o heap e recupera o que<br/>ninguém mais alcança</i>"]
+    end
+    ST1 -->|"referência"| O1
+    ST2 -->|"referência"| O2
+    ST3 -->|"referência"| O1
+    GC -.->|"recolhe"| O3
+```
+
+| Termo | O que é, sem rodeio |
+|---|---|
+| **Programa** | o arquivo no disco: o seu `app.jar`. Parado, não consome nada |
+| **Processo** | o programa **em execução**. `java -jar app.jar` cria **um** processo, com a sua própria memória, isolada dos outros. Um pod no Kubernetes é, na prática, um processo |
+| **Thread** | uma **linha de execução** dentro do processo. Um processo tem várias rodando ao mesmo tempo (uma por requisição HTTP, no modelo clássico). Todas compartilham a mesma memória — daí existirem os problemas de concorrência |
+| **Stack** (pilha) | a memória **privada de cada thread**: guarda as variáveis locais do método e a cadeia de quem chamou quem. Cresce quando um método é chamado e **encolhe sozinha** quando ele retorna. Estourar essa pilha (recursão sem fim) dá `StackOverflowError` |
+| **Heap** (monte) | a memória **compartilhada** onde vivem os **objetos**. Tudo o que nasce de um `new` está aqui. Ao contrário da stack, o heap **não se limpa sozinho** quando o método termina: o objeto continua lá enquanto alguém o referenciar |
+| **Garbage collector** (GC) | o componente da JVM que **recupera automaticamente** o espaço do heap ocupado por objetos que ninguém mais alcança. É o "alguém" que resolve o problema do parágrafo anterior → [II](ii-memoria-e-garbage-collector.md#1-o-que-é-um-garbage-collector-e-por-que-java-tem-um) |
+
+**A distinção que vale guardar:** a *stack* guarda **a referência**; o *heap* guarda **o objeto**.
+
+```java
+void processar() {
+    Pedido p = new Pedido();   // 'p' (a referência) vive na STACK desta thread
+                               // o objeto Pedido vive no HEAP, compartilhado
+}                              // aqui 'p' desaparece com a stack do método —
+                               // mas o OBJETO só sai do heap quando o GC passar
+```
+
+> A comparação completa entre stack e heap, com os erros típicos de cada uma, está em [CONCEITOS DE POO](../poo/conceitos-de-poo.md#stack--heap--onde-cada-coisa-mora). Daqui para a frente, esta matéria trata do **heap** e de quem cuida dele.
+
+---
+
+## 3. JDK × JRE × JVM
 
 ```mermaid
 flowchart TB
@@ -51,7 +107,7 @@ flowchart TB
 
 ---
 
-## 3. Do código-fonte ao processo em execução
+## 4. Do código-fonte ao processo em execução
 
 ```mermaid
 flowchart TB
@@ -80,7 +136,7 @@ Dois pontos para fixar desde já, porque explicam muito do comportamento de uma 
 
 ---
 
-## 4. A anatomia de um processo Java
+## 5. A anatomia de um processo Java
 
 Esta é a figura que vale ter na cabeça — e a razão pela qual **`-Xmx` não é o consumo de memória da sua aplicação**:
 
@@ -110,11 +166,11 @@ flowchart TB
 | **Stacks** | a pilha de chamadas de **cada** thread | `-Xss` × número de threads |
 | **Direct buffers** | memória fora do heap para I/O | `-XX:MaxDirectMemorySize` |
 
-> 🔑 **A consequência operacional mais importante desta matéria:** o **RSS** — a memória que o sistema operacional (e a cota do pod) realmente cobra — é a **soma de tudo** acima, não só o heap. Um pod com limite de 512 MB e `-Xmx=512m` **vai** ser morto por OOM, porque o heap sozinho já ocupa o limite inteiro. → [II - RSS ≠ heap](ii-memoria-e-garbage-collector.md#2-por-que-rss--heap-e-por-que-isso-mata-pod)
+> 🔑 **A consequência operacional mais importante desta matéria:** o **RSS** — a memória que o sistema operacional (e a cota do pod) realmente cobra — é a **soma de tudo** acima, não só o heap. Um pod com limite de 512 MB e `-Xmx=512m` **vai** ser morto por OOM, porque o heap sozinho já ocupa o limite inteiro. → [II - RSS ≠ heap](ii-memoria-e-garbage-collector.md#3-por-que-rss--heap-e-por-que-isso-mata-pod)
 
 ---
 
-## 5. Versões: o ciclo de seis meses e as LTS
+## 6. Versões: o ciclo de seis meses e as LTS
 
 Desde o **Java 9 (2017)**, o Java tem **uma versão nova a cada seis meses** — março e setembro. A maioria delas tem suporte curto; algumas são marcadas como **LTS** (*Long-Term Support*), com anos de correções.
 
@@ -139,7 +195,7 @@ As LTS são **8, 11, 17, 21 e 25**, e são elas que aparecem em produção. O qu
 
 ---
 
-## 6. Qual JDK baixar
+## 7. Qual JDK baixar
 
 Existe **uma** especificação e **várias** distribuições, todas construídas do mesmo código-fonte (OpenJDK):
 
@@ -167,22 +223,27 @@ Para a sua aplicação, **o comportamento é o mesmo**: o que varia é licença,
 
 ## Perguntas para autoavaliação
 
-1. Quais são as três coisas que a palavra "Java" nomeia? Por que a separação importa?
-2. Como Kotlin e Scala rodam na JVM?
-3. Diferencie JVM, JRE e JDK.
-4. Por que não existe mais JRE separado desde o Java 11, e quais as duas alternativas?
-5. Por que há um bom argumento para levar o JDK (e não só o JRE) para produção?
-6. Descreva o caminho do código-fonte até o código nativo, dizendo quem faz cada etapa e quando.
-7. Por que o bytecode é portátil?
-8. Por que uma aplicação Java tem "aquecimento"?
-9. Desenhe de memória: quais são as áreas de um processo Java, dentro e fora do heap?
-10. O que `-Xmx` limita — e o que ele **não** limita?
-11. Por que um pod com limite de 512 MB e `-Xmx=512m` é morto por OOM?
-12. Qual é a cadência de versões do Java e quais são as LTS?
-13. Cite, para cada LTS de 8 a 25, uma mudança de **plataforma** relevante.
-14. Quais são as quatro mudanças de maior impacto para infraestrutura ao atualizar de Java 8 para 21?
-15. Existe diferença de comportamento entre Temurin, Corretto e Oracle JDK? O que varia, então?
-
+1. Diferencie programa, processo e thread.
+2. O que uma thread tem de privado e o que ela compartilha com as outras?
+3. O que é a stack? Quando ela cresce e quando encolhe? Que erro o estouro dela produz?
+4. O que é o heap? Por que ele **não** se limpa quando o método termina?
+5. Onde vive a referência e onde vive o objeto, em `Pedido p = new Pedido()`?
+6. O que é um garbage collector, em uma frase?
+7. Quais são as três coisas que a palavra "Java" nomeia? Por que a separação importa?
+8. Como Kotlin e Scala rodam na JVM?
+9. Diferencie JVM, JRE e JDK.
+10. Por que não existe mais JRE separado desde o Java 11, e quais as duas alternativas?
+11. Por que há um bom argumento para levar o JDK (e não só o JRE) para produção?
+12. Descreva o caminho do código-fonte até o código nativo, dizendo quem faz cada etapa e quando.
+13. Por que o bytecode é portátil?
+14. Por que uma aplicação Java tem "aquecimento"?
+15. Desenhe de memória: quais são as áreas de um processo Java, dentro e fora do heap?
+16. O que `-Xmx` limita — e o que ele **não** limita?
+17. Por que um pod com limite de 512 MB e `-Xmx=512m` é morto por OOM?
+18. Qual é a cadência de versões do Java e quais são as LTS?
+19. Cite, para cada LTS de 8 a 25, uma mudança de **plataforma** relevante.
+20. Quais são as quatro mudanças de maior impacto para infraestrutura ao atualizar de Java 8 para 21?
+21. Existe diferença de comportamento entre Temurin, Corretto e Oracle JDK? O que varia, então?
 ---
 
 **Relacionados:** [SPRING E SPRING BOOT](../spring-e-spring-boot/README.md) · [QUARKUS](../quarkus/README.md) · [DOCKER](../docker/README.md) · [ARQUITETURA DISTRIBUÍDA](../arquitetura-distribuida/ii-latencia-e-performance.md) · [POO](../poo/README.md)
