@@ -10,9 +10,124 @@ A frase de marketing é *"Supersonic Subatomic Java"*, mas a ideia técnica por 
 
 Essa única decisão explica praticamente todo o resto: a inicialização em milissegundos, o consumo baixo de memória, a compatibilidade com imagem nativa, o modelo de extensões — e também as limitações dele.
 
+> Essa frase só tem sentido se **compilar**, **subir** e **rodar** forem três coisas distintas e nítidas na sua cabeça. Se não forem — ou se termos como *build*, *boot*, *runtime* e *reflexão* ainda escorregam — comece pela **seção 1**: ela monta o mapa que o resto do material usa.
+
 ---
 
-## 1. O problema que o Quarkus resolve
+## 1. Antes de tudo: o que uma aplicação Java faz, do código ao ar
+
+Todo o resto deste material gira em torno de **em qual momento** o trabalho é feito. Então, antes de falar do Quarkus, vale deixar nítido o que são esses momentos — e o que uma aplicação Java de fato faz em cada um deles.
+
+### As três fases da vida de uma aplicação
+
+```mermaid
+flowchart LR
+    DEV["👩‍💻 você escreve<br/><b>código-fonte</b><br/><i>arquivos .java</i>"]
+    BUILD["🔨 <b>BUILD</b><br/>compilar + empacotar<br/><i>na sua máquina ou no CI</i>"]
+    ART["📦 <b>artefato</b><br/><i>JAR, binário<br/>ou imagem</i>"]
+    BOOT["🚀 <b>BOOT</b><br/>o processo sobe<br/>e se prepara"]
+    RUN["⚙️ <b>EM REGIME</b><br/>atendendo requisições<br/><i>'em runtime'</i>"]
+    DEV --> BUILD --> ART --> BOOT --> RUN
+    RUN -->|"deploy novo,<br/>escala, reinício"| BOOT
+```
+
+| Fase | Quando acontece | Quem executa | O que acontece | Quantas vezes |
+|---|---|---|---|---|
+| **Build** | antes de publicar | sua máquina ou o servidor de CI | o **compilador** traduz `.java` em `.class` (bytecode) e empacota tudo num artefato | **uma vez por versão** |
+| **Boot** (inicialização) | ao iniciar o processo | a máquina onde a aplicação roda | a JVM sobe, carrega as classes e o framework **monta a aplicação**: lê configuração, cria objetos, abre conexões, registra rotas | **a cada** vez que o processo sobe |
+| **Em regime** (*runtime*) | depois do boot | a mesma máquina | o processo fica no ar recebendo requisições, executando regra de negócio e falando com banco e outros serviços | continuamente, até o processo morrer |
+
+A distinção que importa: **o build acontece uma vez; o boot acontece sempre.** Se há 200 réplicas de um serviço subindo e descendo ao longo do dia, o trabalho de boot é pago 200 vezes por dia — e é exatamente aí que o Quarkus vai mexer.
+
+### O vocabulário mínimo
+
+| Termo | O que é, em uma linha |
+|---|---|
+| **Código-fonte** | os arquivos `.java` que você escreve; nada disso roda direto |
+| **Compilar** | traduzir código-fonte para um formato executável. Em Java, o `javac` gera **bytecode** |
+| **Bytecode** (`.class`) | instruções para a **JVM**, não para o processador. É o que está dentro do JAR |
+| **Build** | o processo completo: compilar + resolver dependências + empacotar (+ no Quarkus, a *augmentation*). É o que o Maven/Gradle faz |
+| **Artefato** | o pacote que sai do build: um **JAR**, um binário do sistema operacional ou uma imagem de container |
+| **JVM** | *Java Virtual Machine* — o programa que executa o bytecode, traduzindo-o para instruções reais do processador |
+| **Deploy** | levar o artefato para o ambiente onde ele vai rodar (servidor, container, pod) |
+| **Processo** | a aplicação **em execução**, ocupando memória e CPU. Um pod no Kubernetes é, na prática, um processo |
+| **Boot** / *startup* / inicialização | o intervalo entre o comando `java -jar app.jar` e a aplicação **estar pronta** para atender a primeira requisição |
+| **Runtime** | o tempo em que o processo está no ar. "Decidido em runtime" = decidido **enquanto a aplicação roda**, com o ambiente real na mão |
+| ***Classpath*** | a lista de lugares onde a JVM procura classes: o seu código **mais** todas as bibliotecas (dezenas de milhares de classes, num projeto comum) |
+| ***Classloading*** | carregar uma classe do disco para a memória na primeira vez que ela é usada |
+| **Anotação** (`@Entity`) | um marcador no código que não faz nada por si: um framework precisa **lê-lo** e agir |
+| **Reflexão** (*reflection*) | código que **inspeciona e usa outras classes por nome**, descobrindo-as enquanto roda. É assim que um framework encontra suas classes anotadas sem nunca ter ouvido falar delas |
+| **JIT** (*just-in-time*) | compilador que, **em runtime**, observa quais trechos são mais executados e os recompila otimizados para a máquina. É o que faz a JVM ficar mais rápida com o tempo |
+| **AOT** (*ahead-of-time*) | o oposto: compilar **antes** de rodar, já para código nativo da máquina |
+| ***Heap*** / **RSS** | *heap* é a área de memória dos objetos; **RSS** é a memória física total que o sistema operacional vê o processo ocupando (é o número que a cota do pod cobra) |
+| ***Cold start*** | a espera sentida pelo usuário quando a requisição chega e **não havia instância no ar** — ela precisa bootar primeiro |
+
+### O que a aplicação faz no boot — o passo a passo
+
+Esta é a parte que quase ninguém olha de perto, e é o coração do assunto. Entre o `java -jar app.jar` e o primeiro `200 OK`, numa aplicação web típica, acontece isto:
+
+```mermaid
+flowchart TB
+    P1["1 · a JVM sobe<br/><i>aloca memória, inicializa</i>"]
+    P2["2 · carrega classes<br/><i>suas e das bibliotecas</i>"]
+    P3["3 · VARRE O CLASSPATH<br/>procurando anotações<br/><i>@Entity, @Service, @RestController…</i>"]
+    P4["4 · monta o grafo de objetos<br/><i>quem depende de quem,<br/>cria tudo na ordem certa</i>"]
+    P5["5 · gera proxies<br/><i>classes 'embrulho' para transação,<br/>cache, segurança</i>"]
+    P6["6 · valida o mapeamento ORM<br/><i>classe × tabela × coluna</i>"]
+    P7["7 · lê a configuração<br/>e abre o pool de conexões"]
+    P8["8 · registra as rotas<br/>e abre a porta HTTP"]
+    OK["✅ pronto para a<br/>primeira requisição"]
+    P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> OK
+```
+
+| Passo | O que é, em palavras simples |
+|---|---|
+| **1–2. JVM e classes** | o processo nasce e as classes vão sendo lidas do JAR para a memória |
+| **3. Varredura do classpath** | o framework **não sabe** quais são as suas classes. Para descobrir, ele percorre tudo o que está no classpath, por **reflexão**, perguntando "esta classe tem `@Entity`? tem `@Service`?" Em projeto grande, são muitos milhares de classes examinadas **toda vez que a aplicação sobe** |
+| **4. Grafo de objetos** | com a lista em mãos, o container de **injeção de dependência** descobre que `PedidoService` precisa de `PedidoRepository`, que precisa de `DataSource`… e constrói todo mundo na ordem correta |
+| **5. Proxies** | para `@Transactional` funcionar, o framework **embrulha** a sua classe em outra, gerada ali na hora, que abre e fecha a transação em volta do seu método. O mesmo para cache e segurança |
+| **6. Validação do ORM** | o Hibernate confere se cada entidade bate com as tabelas e monta seu metamodelo interno |
+| **7–8. Config, pool e porta** | lê variáveis de ambiente e arquivos, abre as conexões de banco e finalmente passa a escutar na porta |
+
+**Dois fatos sobre essa lista** sustentam tudo o que vem depois:
+
+- **É trabalho repetido e idêntico.** Os passos 3, 4, 5 e 6 dão exatamente o mesmo resultado em toda inicialização — a mesma varredura, o mesmo grafo, os mesmos proxies. Nada ali depende do ambiente.
+- **Ele deixa resíduo na memória.** Os metadados do escaneamento, o catálogo de objetos e os caches de reflexão continuam ocupando memória enquanto o processo vive, mesmo sem nunca serem usados de novo.
+
+### O que ela faz depois, em regime
+
+Pronta, a aplicação entra no laço que é a vida real dela:
+
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant S as Servidor HTTP
+    participant A as Seu código
+    participant DB as Banco
+    C->>S: GET /pedidos/42
+    S->>A: entrega a requisição a uma thread
+    A->>DB: consulta
+    DB-->>A: dados
+    A-->>S: objeto de resposta
+    S-->>C: 200 OK (JSON)
+    Note over A: a cada repetição, o JIT<br/>aprende e otimiza o caminho quente
+```
+
+Duas coisas acontecem com o tempo nesse regime: a aplicação **fica mais rápida** (o JIT vai compilando e otimizando o que mais se executa — é o "aquecimento") e a memória **se estabiliza** num patamar que inclui os objetos em uso, os caches e todo o resíduo do boot.
+
+### Por que isso importa para entender o Quarkus
+
+Com esse mapa na mão, as três ideias centrais do framework ficam óbvias:
+
+1. Os passos **3 a 6** do boot são sempre iguais → então podem ser feitos **uma vez, no build**, e não a cada inicialização. É isso, e só isso, que significa *build-time augmentation*.
+2. Se esse trabalho não acontece mais no boot, **o resíduo dele não existe na memória** → footprint menor.
+3. Se nada é descoberto por **reflexão em runtime**, a aplicação pode ser compilada **AOT** para um binário nativo — porque tudo já é conhecido antes de rodar.
+
+> Se algum termo da tabela acima ainda estiver nebuloso, vale fixá-lo agora: as seções seguintes usam "build", "boot", "runtime" e "reflexão" como vocabulário corrente.
+
+---
+
+## 2. O problema que o Quarkus resolve
 
 A JVM foi projetada para um mundo em que a aplicação subia **uma vez**, numa máquina grande, e ficava no ar por meses. Nesse mundo, gastar 40 segundos no boot e 2 GB de heap era irrelevante: o JIT tinha tempo de aquecer e o throughput compensava tudo.
 
@@ -27,11 +142,11 @@ Container, Kubernetes e serverless mudaram a conta:
 | Otimizar throughput de pico | Otimizar **densidade** (quantas instâncias cabem por nó) e **custo** |
 | Reflexão e classpath dinâmico são grátis | Reflexão custa memória e **impede compilação nativa** |
 
-O custo do modelo antigo está concentrado no **boot**: ler o classpath, escanear anotações, montar o grafo de dependências, construir proxies, validar o mapeamento ORM, processar configuração. Esse trabalho é **sempre o mesmo** a cada inicialização — e é exatamente ele que o Quarkus tira do caminho.
+O custo do modelo antigo está concentrado no **boot** — nos passos 3 a 6 do [passo a passo da seção 1](#o-que-a-aplicação-faz-no-boot--o-passo-a-passo): varrer o classpath, montar o grafo de dependências, gerar proxies, validar o mapeamento ORM. Esse trabalho dá **sempre o mesmo resultado** a cada inicialização — e é exatamente ele que o Quarkus tira do caminho.
 
 ---
 
-## 2. A ideia central: *build-time augmentation*
+## 3. A ideia central: *build-time augmentation*
 
 O Quarkus move o trabalho de inicialização para a **fase de compilação** (chamada de **augmentation**). O resultado do build não é só o seu código: é o seu código **mais o bytecode já gerado** com o grafo de injeção resolvido, os proxies criados e os metadados prontos.
 
@@ -59,7 +174,7 @@ O preço aparece no [capítulo I](i-como-funciona.md#8-o-preço-do-modelo): se a
 
 ---
 
-## 3. Os dois modos de execução
+## 4. Os dois modos de execução
 
 O mesmo código-fonte produz dois artefatos diferentes, e essa escolha é de **deploy**, não de programação:
 
@@ -81,7 +196,7 @@ O mesmo código-fonte produz dois artefatos diferentes, e essa escolha é de **d
 
 ---
 
-## 4. O que ele é por dentro
+## 5. O que ele é por dentro
 
 O Quarkus não inventou um conjunto novo de APIs: ele **implementa padrões** já existentes do ecossistema Java corporativo, sobre um núcleo reativo.
 
@@ -115,7 +230,7 @@ Isso tem um efeito prático importante: **o que você aprende em Quarkus é em b
 
 ---
 
-## 5. Onde o Quarkus é usado
+## 6. Onde o Quarkus é usado
 
 O denominador comum dos casos de uso é sempre o mesmo: **quando inicialização e memória viram custo ou requisito**.
 
@@ -136,7 +251,7 @@ O denominador comum dos casos de uso é sempre o mesmo: **quando inicialização
 
 ---
 
-## 6. O que o Quarkus **NÃO** é
+## 7. O que o Quarkus **NÃO** é
 
 | Afirmação comum | Por que está errada |
 |---|---|
@@ -159,20 +274,28 @@ O denominador comum dos casos de uso é sempre o mesmo: **quando inicialização
 
 ## Perguntas para autoavaliação
 
-1. Qual é a ideia central do Quarkus, em uma frase?
-2. O que mudou no mundo de container e Kubernetes que tornou o custo de boot e de memória relevante?
-3. Que trabalho um framework tradicional faz a cada inicialização, e onde o Quarkus o faz?
-4. Por que o Quarkus sobe rápido **mesmo sem** imagem nativa?
-5. Qual a relação entre *build-time augmentation* e a possibilidade de compilar nativo?
-6. Compare modo JVM e modo nativo em cinco critérios.
-7. Em que situação o modo JVM **ganha** do nativo? Por quê?
-8. Que padrões o Quarkus implementa em vez de criar APIs próprias? Dê exemplos de cada.
-9. O que são ArC, Mutiny e Vert.x no desenho do framework?
-10. Cite quatro cenários em que o Quarkus se encaixa bem e dois em que não vale a pena.
-11. Por que "é rápido porque é nativo" está invertido?
-12. As extensões `quarkus-spring-*` rodam Spring dentro do Quarkus? O que elas fazem de fato?
-13. Qual é o preço de tomar decisões em tempo de build?
-
+1. Quais são as três fases da vida de uma aplicação e o que acontece em cada uma?
+2. Qual a diferença entre compilar, buildar, bootar e rodar?
+3. O que é bytecode e por que ele precisa da JVM?
+4. Explique classpath, classloading e reflexão — e por que um framework precisa de reflexão.
+5. Descreva os oito passos entre `java -jar app.jar` e a primeira requisição atendida.
+6. Quais desses passos dão sempre o mesmo resultado, e por que isso é a chave do Quarkus?
+7. Que resíduo o boot deixa na memória do processo?
+8. O que é o JIT e por que a aplicação fica mais rápida com o tempo?
+9. Diferencie JIT e AOT, heap e RSS, boot e *cold start*.
+10. Qual é a ideia central do Quarkus, em uma frase?
+11. O que mudou no mundo de container e Kubernetes que tornou o custo de boot e de memória relevante?
+12. Que trabalho um framework tradicional faz a cada inicialização, e onde o Quarkus o faz?
+13. Por que o Quarkus sobe rápido **mesmo sem** imagem nativa?
+14. Qual a relação entre *build-time augmentation* e a possibilidade de compilar nativo?
+15. Compare modo JVM e modo nativo em cinco critérios.
+16. Em que situação o modo JVM **ganha** do nativo? Por quê?
+17. Que padrões o Quarkus implementa em vez de criar APIs próprias? Dê exemplos de cada.
+18. O que são ArC, Mutiny e Vert.x no desenho do framework?
+19. Cite quatro cenários em que o Quarkus se encaixa bem e dois em que não vale a pena.
+20. Por que "é rápido porque é nativo" está invertido?
+21. As extensões `quarkus-spring-*` rodam Spring dentro do Quarkus? O que elas fazem de fato?
+22. Qual é o preço de tomar decisões em tempo de build?
 ---
 
 **Relacionados:** [Spring MVC - APIs RESTful](../spring-mvc-apis-restful/README.md) · [SPRING DATA JPA](../spring-data-jpa/README.md) · [DOCKER](../docker/README.md) · [ARQUITETURA DISTRIBUÍDA](../arquitetura-distribuida/i-estilos-arquiteturais.md) · [MENSAGERIA](../mensageria/README.md)

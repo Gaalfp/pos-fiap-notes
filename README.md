@@ -772,12 +772,18 @@ O framework Java desenhado para container: trabalho antecipado para o build, ima
 
 O problema que resolve, build-time augmentation, modos JVM e nativo, onde é usado.
 
-- [1. O problema que o Quarkus resolve](quarkus/README.md#1-o-problema-que-o-quarkus-resolve)
-- [2. A ideia central: *build-time augmentation*](quarkus/README.md#2-a-ideia-central-build-time-augmentation)
-- [3. Os dois modos de execução](quarkus/README.md#3-os-dois-modos-de-execução)
-- [4. O que ele é por dentro](quarkus/README.md#4-o-que-ele-é-por-dentro)
-- [5. Onde o Quarkus é usado](quarkus/README.md#5-onde-o-quarkus-é-usado)
-- [6. O que o Quarkus NÃO é](quarkus/README.md#6-o-que-o-quarkus-não-é)
+- [1. Antes de tudo: o que uma aplicação Java faz, do código ao ar](quarkus/README.md#1-antes-de-tudo-o-que-uma-aplicação-java-faz-do-código-ao-ar)
+  - [As três fases da vida de uma aplicação](quarkus/README.md#as-três-fases-da-vida-de-uma-aplicação)
+  - [O vocabulário mínimo](quarkus/README.md#o-vocabulário-mínimo)
+  - [O que a aplicação faz no boot — o passo a passo](quarkus/README.md#o-que-a-aplicação-faz-no-boot--o-passo-a-passo)
+  - [O que ela faz depois, em regime](quarkus/README.md#o-que-ela-faz-depois-em-regime)
+  - [Por que isso importa para entender o Quarkus](quarkus/README.md#por-que-isso-importa-para-entender-o-quarkus)
+- [2. O problema que o Quarkus resolve](quarkus/README.md#2-o-problema-que-o-quarkus-resolve)
+- [3. A ideia central: *build-time augmentation*](quarkus/README.md#3-a-ideia-central-build-time-augmentation)
+- [4. Os dois modos de execução](quarkus/README.md#4-os-dois-modos-de-execução)
+- [5. O que ele é por dentro](quarkus/README.md#5-o-que-ele-é-por-dentro)
+- [6. Onde o Quarkus é usado](quarkus/README.md#6-onde-o-quarkus-é-usado)
+- [7. O que o Quarkus NÃO é](quarkus/README.md#7-o-que-o-quarkus-não-é)
 - [Capítulos](quarkus/README.md#capítulos)
 
 #### [I - COMO FUNCIONA](quarkus/i-como-funciona.md)
