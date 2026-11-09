@@ -1,0 +1,113 @@
+---
+/** Capa da home: mascote, o que é isto, e os números do material. */
+import { CABECA, CORPO, paraSvg } from '../pixel/mascote.js';
+import materias from '../materias.json';
+
+// cabeça (14 de largura) centralizada sobre o corpo (16)
+const personagem = [...CABECA.map((l) => `.${l}.`), ...CORPO];
+const mascote = paraSvg(personagem, { escala: 1 });
+
+const totalMinutos = materias.reduce((s, m) => s + m.minutos, 0);
+const totalCapitulos = materias.reduce((s, m) => s + m.capitulos.length, 0);
+const horas = Math.floor(totalMinutos / 60);
+---
+
+<header class="capa">
+  <div class="mascote" set:html={mascote} />
+
+  <div class="texto">
+    <p class="sobrescrito">Arquitetura e Desenvolvimento Java · PÓSTECH FIAP</p>
+    <h1>Caderno de <span class="px-cromo">anotações</span></h1>
+    <p class="chamada">
+      O curso inteiro em texto: da JVM ao Quarkus, com os diagramas, as tabelas de
+      prova e as pegadinhas que eu errei antes de entender.
+    </p>
+
+    <dl class="numeros">
+      <div><dt>matérias</dt><dd>{materias.length}</dd></div>
+      <div><dt>capítulos</dt><dd>{totalCapitulos}</dd></div>
+      <div><dt>de leitura</dt><dd>{horas}h</dd></div>
+    </dl>
+
+    <nav class="acoes">
+      <a class="principal" href="#trilha">Seguir a trilha</a>
+      <a class="secundaria" href={`${import.meta.env.BASE_URL}indice/`}>Índice completo</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .capa {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(1rem, 4vw, 2.5rem);
+    align-items: center;
+    padding: clamp(1rem, 3vw, 2rem) 0 2rem;
+    border-bottom: 1px solid var(--sl-color-hairline);
+    margin-bottom: 2.5rem;
+  }
+  .mascote :global(svg) {
+    width: clamp(88px, 12vw, 132px);
+    height: auto;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 6px 0 color-mix(in oklab, var(--sl-color-black) 35%, transparent));
+  }
+  .sobrescrito {
+    font-family: var(--sl-font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-3);
+    margin: 0 0 0.4rem;
+  }
+  h1 {
+    font-family: var(--px-display);
+    font-variation-settings: 'SOFT' 30, 'opsz' 144;
+    font-weight: 600;
+    font-size: clamp(2rem, 7vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    margin: 0 0 0.6rem;
+  }
+  .chamada {
+    max-width: 46ch;
+    color: var(--sl-color-gray-2);
+    margin: 0 0 1.2rem;
+    text-wrap: pretty;
+  }
+  .numeros { display: flex; gap: 1.6rem; margin: 0 0 1.4rem; }
+  .numeros div { display: flex; flex-direction: column-reverse; }
+  .numeros dd {
+    margin: 0;
+    font-family: var(--px-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .numeros dt {
+    font-family: var(--sl-font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-3);
+  }
+  .acoes { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .acoes a {
+    display: inline-block;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 1px solid var(--sl-color-hairline-light, var(--sl-color-gray-5));
+    transition: transform 0.12s ease, background-color 0.12s ease;
+  }
+  .acoes a:hover { transform: translateY(-1px); }
+  .principal { background: var(--sl-color-text); color: var(--sl-color-bg); border-color: transparent; }
+  .secundaria { color: var(--sl-color-text); }
+
+  @media (max-width: 52rem) {
+    .capa { grid-template-columns: 1fr; justify-items: start; gap: 1rem; }
+    .numeros { gap: 1.1rem; }
+  }
+</style>

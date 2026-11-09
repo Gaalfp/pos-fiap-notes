@@ -1,0 +1,37 @@
+---
+title: Caderno de anotações
+description: Anotações da pós em Arquitetura e Desenvolvimento Java — da JVM ao Quarkus, com diagramas, tabelas de prova e as pegadinhas.
+tableOfContents: false
+editUrl: false
+next: false
+prev: false
+---
+
+import Capa from '../../components/Capa.astro';
+import Trilha from '../../components/Trilha.astro';
+import Grupos from '../../components/Grupos.astro';
+import Progresso from '../../components/Progresso.astro';
+
+<Capa />
+<Trilha />
+<Grupos />
+
+<p id="resumo-progresso" class="rodape-progresso"></p>
+
+<Progresso />
+
+<style>{`
+  /* a capa já traz o título e o contexto; o cabeçalho padrão sobraria */
+  h1#_top { display: none; }
+  /* "marcar como lida" é para páginas de conteúdo, não para a capa */
+  .marcar { display: none; }
+
+  .rodape-progresso {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    font-family: var(--sl-font-mono);
+    font-size: 0.78rem;
+    color: var(--sl-color-gray-4);
+  }
+`}</style>

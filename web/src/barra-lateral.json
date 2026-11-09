@@ -4,6 +4,10 @@
     "link": "/"
   },
   {
+    "label": "Índice completo",
+    "link": "/indice/"
+  },
+  {
     "label": "Arquitetura e design",
     "collapsed": true,
     "items": [
@@ -383,7 +387,7 @@
     "items": [
       {
         "label": "RESUMO DE PROVA",
-        "link": "/RESUMO-PROVA"
+        "link": "/resumo-prova"
       },
       {
         "label": "UTEIS",

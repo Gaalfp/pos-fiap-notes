@@ -1,0 +1,95 @@
+---
+/** As matérias agrupadas por área, com progresso de leitura. */
+import materias from '../materias.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const grupos = [];
+for (const m of materias) {
+  let g = grupos.find((x) => x.nome === m.grupo);
+  if (!g) grupos.push((g = { nome: m.grupo, materias: [] }));
+  g.materias.push(m);
+}
+---
+
+<section class="grupos">
+  <h2>Por área</h2>
+
+  <div class="grade">
+    {grupos.map((g) => (
+      <article data-grupo={g.nome}>
+        <header>
+          <h3>{g.nome}</h3>
+          <span class="barra"><i></i></span>
+        </header>
+        <ul>
+          {g.materias.map((m) => (
+            <li data-url={`${base}${m.url}`}>
+              <a href={`${base}${m.url}`}>
+                <span>{m.nome}</span>
+                <small>{m.minutos} min</small>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .grupos h2, .grupos :global(h2) {
+    font-family: var(--px-display);
+    font-size: 1.8rem;
+    margin: 0 0 1.2rem;
+    border: none;
+  }
+  .grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1rem;
+  }
+  article {
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 12px;
+    padding: 0.9rem 1rem 0.6rem;
+    background: color-mix(in oklab, var(--sl-color-gray-6) 45%, transparent);
+  }
+  article header { margin-bottom: 0.6rem; }
+  .grupos h3 {
+    font-size: 0.74rem;
+    font-family: var(--sl-font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-3);
+    margin: 0 0 0.45rem;
+  }
+  .barra {
+    display: block;
+    height: 2px;
+    background: var(--sl-color-hairline);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .barra i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--sl-color-text);
+    transition: width 0.4s ease;
+  }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.32rem 0;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.93rem;
+  }
+  li a:hover span { text-decoration: underline; }
+  li small { font-family: var(--sl-font-mono); font-size: 0.72rem; color: var(--sl-color-gray-4); }
+  li[data-lido] a span { color: var(--sl-color-gray-3); }
+  li[data-lido] a span::before { content: '✓ '; color: var(--sl-color-text); }
+</style>

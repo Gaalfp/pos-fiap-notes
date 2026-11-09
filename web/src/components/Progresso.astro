@@ -1,0 +1,39 @@
+---
+/** Marca na home o que já foi lido, a partir do que o navegador guardou. */
+---
+
+<script>
+  const normalizar = (p: string) => p.toLowerCase().replace(/\/+$/, '') + '/';
+  const chave = (p: string) => `lido:${normalizar(p)}`;
+
+  function pintar() {
+    let lidos = 0;
+    document.querySelectorAll<HTMLElement>('[data-url]').forEach((el) => {
+      let marcado = false;
+      try {
+        marcado = localStorage.getItem(chave(el.dataset.url!)) === '1';
+      } catch { /* navegação privada: segue sem progresso */ }
+      el.toggleAttribute('data-lido', marcado);
+      if (marcado) lidos++;
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-grupo]').forEach((card) => {
+      const itens = card.querySelectorAll('[data-url]');
+      const feitos = card.querySelectorAll('[data-url][data-lido]').length;
+      const barra = card.querySelector<HTMLElement>('.barra i');
+      if (barra && itens.length) barra.style.width = `${(feitos / itens.length) * 100}%`;
+    });
+
+    const resumo = document.getElementById('resumo-progresso');
+    if (resumo) {
+      const total = document.querySelectorAll('#trilha [data-url]').length;
+      const feitos = document.querySelectorAll('#trilha [data-url][data-lido]').length;
+      resumo.textContent = feitos
+        ? `${feitos} de ${total} matérias da trilha marcadas como lidas`
+        : 'Nada marcado ainda — a marcação fica só neste navegador.';
+    }
+  }
+
+  pintar();
+  addEventListener('storage', pintar);   // outra aba marcou algo
+</script>

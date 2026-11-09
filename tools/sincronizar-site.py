@@ -38,6 +38,8 @@ def url_do_arquivo(caminho_md):
     partes = caminho_md[:-3].lower().split("/") if caminho_md.endswith(".md") \
         else caminho_md.lower().split("/")
     partes = [p for p in partes if p not in (".", "")]
+    if partes == ["readme"]:
+        return BASE + "/indice/"          # o índice completo da raiz
     if partes and partes[-1] in ("readme", "index"):
         partes.pop()
     return BASE + "/" + ("/".join(partes) + "/" if partes else "")
@@ -93,7 +95,9 @@ for base, pastas, arquivos in os.walk(RAIZ):
         ext = os.path.splitext(arq)[1].lower()
         origem = os.path.join(base, arq)
         if ext == ".md":
-            nome = "index.md" if arq == "README.md" else arq
+            # o README da raiz é o índice completo; a home é uma página própria
+            nome = "indice.md" if (rel == "." and arq == "README.md") else \
+                   ("index.md" if arq == "README.md" else arq)
             destino = os.path.normpath(os.path.join(DOCS, rel, nome))
             os.makedirs(os.path.dirname(destino), exist_ok=True)
             with open(origem, encoding="utf-8") as fh:
@@ -108,4 +112,18 @@ for base, pastas, arquivos in os.walk(RAIZ):
             shutil.copy2(origem, destino)
             imagens += 1
 
-print(f"{paginas} páginas e {imagens} imagens sincronizadas para web/src/content/docs/")
+# páginas escritas à mão (a capa, por exemplo) vivem fora de content/docs,
+# que é apagado a cada sincronização
+PROPRIAS = os.path.join(RAIZ, "web", "src", "paginas")
+proprias = 0
+if os.path.isdir(PROPRIAS):
+    for base, _, arquivos in os.walk(PROPRIAS):
+        for arq in arquivos:
+            rel = os.path.relpath(os.path.join(base, arq), PROPRIAS)
+            destino = os.path.join(DOCS, rel)
+            os.makedirs(os.path.dirname(destino), exist_ok=True)
+            shutil.copy2(os.path.join(base, arq), destino)
+            proprias += 1
+
+print(f"{paginas} páginas, {imagens} imagens e {proprias} páginas próprias "
+      f"sincronizadas para web/src/content/docs/")

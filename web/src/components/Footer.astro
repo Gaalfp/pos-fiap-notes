@@ -1,0 +1,74 @@
+---
+/** Rodapé padrão do Starlight + o botão de marcar a página como lida. */
+import Default from '@astrojs/starlight/components/Footer.astro';
+import type { Props } from '@astrojs/starlight/props';
+---
+
+<div class="marcar">
+  <button type="button" id="marcar-lida" aria-pressed="false">
+    <span class="caixa" aria-hidden="true"></span>
+    <span class="rotulo">marcar como lida</span>
+  </button>
+</div>
+
+<Default {...Astro.props}><slot /></Default>
+
+<script>
+  const botao = document.getElementById('marcar-lida');
+  if (botao) {
+    const chave = `lido:${location.pathname.toLowerCase().replace(/\/+$/, '')}/`;
+    const ler = () => {
+      try { return localStorage.getItem(chave) === '1'; } catch { return false; }
+    };
+    const pintar = () => {
+      const lido = ler();
+      botao.setAttribute('aria-pressed', String(lido));
+      botao.querySelector('.rotulo')!.textContent = lido ? 'lida' : 'marcar como lida';
+    };
+    botao.addEventListener('click', () => {
+      try {
+        if (ler()) localStorage.removeItem(chave);
+        else localStorage.setItem(chave, '1');
+      } catch { /* sem armazenamento: o botão simplesmente não guarda */ }
+      pintar();
+    });
+    pintar();
+  }
+</script>
+
+<style>
+  .marcar { display: flex; justify-content: flex-end; margin-top: 2rem; }
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    color: var(--sl-color-gray-3);
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+  button:hover { color: var(--sl-color-text); border-color: var(--sl-color-gray-4); }
+  .caixa {
+    width: 1.05rem;
+    height: 1.05rem;
+    border-radius: 4px;
+    border: 1px solid currentColor;
+    display: grid;
+    place-items: center;
+  }
+  button[aria-pressed='true'] { color: var(--sl-color-text); }
+  button[aria-pressed='true'] .caixa {
+    background: var(--sl-color-text);
+    border-color: transparent;
+  }
+  button[aria-pressed='true'] .caixa::after {
+    content: '✓';
+    color: var(--sl-color-bg);
+    font-size: 0.72rem;
+    line-height: 1;
+  }
+</style>

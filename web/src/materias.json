@@ -1,0 +1,711 @@
+[
+ {
+  "grupo": "Arquitetura e design",
+  "nome": "CLEAN ARCHITECTURE",
+  "pasta": "clean-architecture",
+  "descricao": "Camadas, Regra da Dependência, ports e adapters, e o comparativo com Hexagonal e Onion.",
+  "url": "/clean-architecture",
+  "capitulos": [
+   {
+    "rotulo": "Conteúdo da matéria",
+    "url": "/clean-architecture",
+    "descricao": null,
+    "palavras": 1830,
+    "minutos": 9
+   }
+  ],
+  "minutos": 9,
+  "palavras": 1830,
+  "trilha": 5
+ },
+ {
+  "grupo": "Arquitetura e design",
+  "nome": "SOLID",
+  "pasta": "solid",
+  "descricao": "Os cinco princípios com código violando/corrigido, code smells e princípios de componentes.",
+  "url": "/solid",
+  "capitulos": [
+   {
+    "rotulo": "Conteúdo da matéria",
+    "url": "/solid",
+    "descricao": null,
+    "palavras": 2340,
+    "minutos": 12
+   }
+  ],
+  "minutos": 12,
+  "palavras": 2340,
+  "trilha": 3
+ },
+ {
+  "grupo": "Arquitetura e design",
+  "nome": "DESIGN PATTERNS EM OO",
+  "pasta": "design-patterns-em-oo",
+  "descricao": "Os 23 padrões do GoF em três capítulos, com tabela de reconhecimento rápido.",
+  "url": "/design-patterns-em-oo",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/design-patterns-em-oo",
+    "descricao": "princípios, os 23 padrões, reconhecimento rápido, padrões no JDK e no Spring",
+    "palavras": 1642,
+    "minutos": 8
+   },
+   {
+    "rotulo": "I - PADRÕES CRIACIONAIS",
+    "url": "/design-patterns-em-oo/i-padroes-criacionais",
+    "descricao": "como o objeto nasce",
+    "palavras": 1173,
+    "minutos": 6
+   },
+   {
+    "rotulo": "II - PADRÕES ESTRUTURAIS",
+    "url": "/design-patterns-em-oo/ii-padroes-estruturais",
+    "descricao": "como os objetos se compõem",
+    "palavras": 1254,
+    "minutos": 6
+   },
+   {
+    "rotulo": "III - PADRÕES COMPORTAMENTAIS",
+    "url": "/design-patterns-em-oo/iii-padroes-comportamentais",
+    "descricao": "como os objetos se comunicam",
+    "palavras": 1449,
+    "minutos": 7
+   }
+  ],
+  "minutos": 27,
+  "palavras": 5518,
+  "trilha": 4
+ },
+ {
+  "grupo": "Arquitetura e design",
+  "nome": "POO",
+  "pasta": "poo",
+  "descricao": "Os fundamentos que sustentam o resto do curso: pilares com código, herança × composição e exceções.",
+  "url": "/poo",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/poo",
+    "descricao": "índice e ligação com SOLID, Design Patterns e Clean Architecture",
+    "palavras": 117,
+    "minutos": 1
+   },
+   {
+    "rotulo": "CONCEITOS DE POO",
+    "url": "/poo/conceitos-de-poo",
+    "descricao": "classe e objeto, memória, os quatro pilares, Java moderno",
+    "palavras": 2097,
+    "minutos": 10
+   },
+   {
+    "rotulo": "MANIPULAÇÕES E EXCEÇÕES",
+    "url": "/poo/manipulacoes-e-excecoes",
+    "descricao": "Call Stack, `Throwable`, checked × unchecked, anti-padrões",
+    "palavras": 1787,
+    "minutos": 9
+   }
+  ],
+  "minutos": 20,
+  "palavras": 4001,
+  "trilha": 2
+ },
+ {
+  "grupo": "Sistemas distribuídos e integração",
+  "nome": "ARQUITETURA DISTRIBUÍDA",
+  "pasta": "arquitetura-distribuida",
+  "descricao": "Os três eixos de preocupação — latência, consistência e resiliência — mais estilos e observabilidade.",
+  "url": "/arquitetura-distribuida",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/arquitetura-distribuida",
+    "descricao": "anotações da aula, falácias, desafios e como os eixos se conectam",
+    "palavras": 1268,
+    "minutos": 6
+   },
+   {
+    "rotulo": "I - ESTILOS ARQUITETURAIS",
+    "url": "/arquitetura-distribuida/i-estilos-arquiteturais",
+    "descricao": "cliente-servidor, P2P, monólito × microsserviços, SOA, event-driven, serverless",
+    "palavras": 3797,
+    "minutos": 19
+   },
+   {
+    "rotulo": "II - LATÊNCIA E PERFORMANCE",
+    "url": "/arquitetura-distribuida/ii-latencia-e-performance",
+    "descricao": "CDN, camadas de cache, redução de chamadas, backpressure",
+    "palavras": 1869,
+    "minutos": 9
+   },
+   {
+    "rotulo": "III - CONSISTÊNCIA E DADOS",
+    "url": "/arquitetura-distribuida/iii-consistencia-e-dados",
+    "descricao": "replicação, Saga, Outbox, idempotência, CQRS",
+    "palavras": 1835,
+    "minutos": 9
+   },
+   {
+    "rotulo": "IV - RESILIÊNCIA",
+    "url": "/arquitetura-distribuida/iv-resiliencia",
+    "descricao": "timeout, retry, circuit breaker, bulkhead, chaos engineering",
+    "palavras": 2070,
+    "minutos": 10
+   },
+   {
+    "rotulo": "V - OBSERVABILIDADE",
+    "url": "/arquitetura-distribuida/v-observabilidade",
+    "descricao": "logs, métricas, tracing, SLI/SLO/SLA e alertas",
+    "palavras": 1688,
+    "minutos": 8
+   }
+  ],
+  "minutos": 61,
+  "palavras": 12527,
+  "trilha": 13
+ },
+ {
+  "grupo": "Sistemas distribuídos e integração",
+  "nome": "FUNDAMENTOS DE MENSAGERIA",
+  "pasta": "mensageria",
+  "descricao": "Comunicação assíncrona, fila × tópico, tipos de mensagem, brokers, protocolos e padrões de entrega.",
+  "url": "/mensageria",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/mensageria",
+    "descricao": "anotações da aula, assincronia, fila × tópico, onde se usa",
+    "palavras": 1366,
+    "minutos": 7
+   },
+   {
+    "rotulo": "I - TIPOS DE MENSAGEM",
+    "url": "/mensageria/i-tipos-de-mensagem",
+    "descricao": "comando, evento, consulta e pub/sub em profundidade",
+    "palavras": 2013,
+    "minutos": 10
+   },
+   {
+    "rotulo": "II - MESSAGE BROKERS",
+    "url": "/mensageria/ii-message-brokers",
+    "descricao": "modelos de organização, protocolos e as ferramentas",
+    "palavras": 2010,
+    "minutos": 10
+   },
+   {
+    "rotulo": "III - PADRÕES DE ENTREGA",
+    "url": "/mensageria/iii-padroes-de-entrega",
+    "descricao": "at most / at least / exactly once e garantias do produtor",
+    "palavras": 1498,
+    "minutos": 7
+   },
+   {
+    "rotulo": "IV - PADRÕES DE USO E OPERAÇÃO",
+    "url": "/mensageria/iv-padroes-de-uso-e-operacao",
+    "descricao": "competing consumers, ordenação, DLQ, Outbox/Inbox, Spring",
+    "palavras": 1718,
+    "minutos": 9
+   }
+  ],
+  "minutos": 43,
+  "palavras": 8605,
+  "trilha": 15
+ },
+ {
+  "grupo": "Sistemas distribuídos e integração",
+  "nome": "TEOREMA CAP",
+  "pasta": "teorema-cap",
+  "descricao": "A leitura correta do teorema, os quadrantes, PACELC e níveis de consistência.",
+  "url": "/teorema-cap",
+  "capitulos": [
+   {
+    "rotulo": "Conteúdo da matéria",
+    "url": "/teorema-cap",
+    "descricao": null,
+    "palavras": 1985,
+    "minutos": 10
+   }
+  ],
+  "minutos": 10,
+  "palavras": 1985,
+  "trilha": 14
+ },
+ {
+  "grupo": "Sistemas distribuídos e integração",
+  "nome": "gRPC e GRAPHQL",
+  "pasta": "grpc-e-graphql",
+  "descricao": "Os dois caminhos opostos para os preços que o REST cobra: payload de texto e endpoint fixo.",
+  "url": "/grpc-e-graphql",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/grpc-e-graphql",
+    "descricao": "comparativo REST × gRPC × GraphQL e critério de escolha",
+    "palavras": 374,
+    "minutos": 2
+   },
+   {
+    "rotulo": "I - gRPC",
+    "url": "/grpc-e-graphql/i-grpc",
+    "descricao": "RPC, Protocol Buffers, channel e stub, HTTP/2, status codes",
+    "palavras": 1980,
+    "minutos": 10
+   },
+   {
+    "rotulo": "II - GRAPHQL",
+    "url": "/grpc-e-graphql/ii-graphql",
+    "descricao": "schema e SDL, query, resolvers, DataLoader, Spring for GraphQL",
+    "palavras": 1696,
+    "minutos": 8
+   }
+  ],
+  "minutos": 20,
+  "palavras": 4050,
+  "trilha": 16
+ },
+ {
+  "grupo": "Java e frameworks",
+  "nome": "JVM E PLATAFORMA JAVA",
+  "pasta": "jvm-e-plataforma-java",
+  "descricao": "A plataforma embaixo de tudo: JVM, memória, garbage collector, inicialização e operação em produção.",
+  "url": "/jvm-e-plataforma-java",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/jvm-e-plataforma-java",
+    "descricao": "as três coisas que se chamam Java, processo/thread/stack/heap/GC, JDK × JRE × JVM, o mapa de memória, versões LTS",
+    "palavras": 1945,
+    "minutos": 10
+   },
+   {
+    "rotulo": "I - A JVM POR DENTRO",
+    "url": "/jvm-e-plataforma-java/i-a-jvm-por-dentro",
+    "descricao": "carregamento de classes, bytecode, interpretador e JIT, aquecimento, CDS e cache AOT",
+    "palavras": 1773,
+    "minutos": 9
+   },
+   {
+    "rotulo": "II - MEMÓRIA E GARBAGE COLLECTOR",
+    "url": "/jvm-e-plataforma-java/ii-memoria-e-garbage-collector",
+    "descricao": "o que é um GC, o mapa da memória, RSS × heap, gerações, os coletores, tuning, container",
+    "palavras": 3078,
+    "minutos": 15
+   },
+   {
+    "rotulo": "III - SUBIR E OPERAR EM PRODUÇÃO",
+    "url": "/jvm-e-plataforma-java/iii-subir-e-operar-em-producao",
+    "descricao": "`java -jar` passo a passo, cold start, threads virtuais, imagem, flags, JFR, diagnóstico",
+    "palavras": 1925,
+    "minutos": 10
+   }
+  ],
+  "minutos": 44,
+  "palavras": 8721,
+  "trilha": 1
+ },
+ {
+  "grupo": "Java e frameworks",
+  "nome": "SPRING E SPRING BOOT",
+  "pasta": "spring-e-spring-boot",
+  "descricao": "A base que as outras matérias de Spring supõem: o container, o bean, o proxy e o que o Boot acrescenta.",
+  "url": "/spring-e-spring-boot",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/spring-e-spring-boot",
+    "descricao": "IoC e DI, o vocabulário mínimo, a origem do Spring, Spring × Spring Boot, o ecossistema",
+    "palavras": 2195,
+    "minutos": 11
+   },
+   {
+    "rotulo": "I - IoC E BEANS",
+    "url": "/spring-e-spring-boot/i-ioc-e-beans",
+    "descricao": "o container, declarar e injetar beans, ambiguidade, ciclo de vida, escopos, dependência circular",
+    "palavras": 2202,
+    "minutos": 11
+   },
+   {
+    "rotulo": "II - AOP E PROXIES",
+    "url": "/spring-e-spring-boot/ii-aop-e-proxies",
+    "descricao": "preocupações transversais, vocabulário do AOP, JDK proxy × CGLIB, limitações, `@Aspect`, eventos",
+    "palavras": 1967,
+    "minutos": 10
+   },
+   {
+    "rotulo": "III - SPRING BOOT",
+    "url": "/spring-e-spring-boot/iii-spring-boot",
+    "descricao": "`@SpringBootApplication`, autoconfiguração, starters, configuração e perfis, Actuator, empacotamento",
+    "palavras": 2159,
+    "minutos": 11
+   }
+  ],
+  "minutos": 43,
+  "palavras": 8523,
+  "trilha": 6
+ },
+ {
+  "grupo": "Java e frameworks",
+  "nome": "Spring MVC - APIs RESTful",
+  "pasta": "spring-mvc-apis-restful",
+  "descricao": "Como o Spring transforma HTTP em chamada de método — e como projetar a API para resistir a volume, mudança e retry.",
+  "url": "/spring-mvc-apis-restful",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/spring-mvc-apis-restful",
+    "descricao": "índice da matéria e relacionados",
+    "palavras": 189,
+    "minutos": 1
+   },
+   {
+    "rotulo": "I - INTRODUÇÃO SOBRE O SPRING MVC",
+    "url": "/spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc",
+    "descricao": "servlet e servlet container, Front Controller, por que \"MVC\" confunde numa API REST",
+    "palavras": 1113,
+    "minutos": 6
+   },
+   {
+    "rotulo": "II - FUNDAMENTOS REST",
+    "url": "/spring-mvc-apis-restful/ii-fundamentos-rest",
+    "descricao": "Fielding, Richardson, verbos, status codes, URIs, HATEOAS",
+    "palavras": 2022,
+    "minutos": 10
+   },
+   {
+    "rotulo": "III - SPRING MVC NA PRÁTICA",
+    "url": "/spring-mvc-apis-restful/iii-spring-mvc-na-pratica",
+    "descricao": "DispatcherServlet, DTOs, Bean Validation, ProblemDetail, Jackson",
+    "palavras": 1304,
+    "minutos": 7
+   },
+   {
+    "rotulo": "IV - EVOLUÇÃO DA API",
+    "url": "/spring-mvc-apis-restful/iv-evolucao-da-api",
+    "descricao": "paginação, versionamento, cache HTTP, idempotência, CORS, OpenAPI",
+    "palavras": 1660,
+    "minutos": 8
+   }
+  ],
+  "minutos": 32,
+  "palavras": 6288,
+  "trilha": 7
+ },
+ {
+  "grupo": "Java e frameworks",
+  "nome": "SPRING DATA JPA",
+  "pasta": "spring-data-jpa",
+  "descricao": "Anotações e mapeamento, persistence context, N+1, transações e concorrência.",
+  "url": "/spring-data-jpa",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/spring-data-jpa",
+    "descricao": "mapeamento de tabelas, herança, embedded, callbacks, named queries",
+    "palavras": 1542,
+    "minutos": 8
+   },
+   {
+    "rotulo": "I - PERSISTENCE CONTEXT E CICLO DE VIDA",
+    "url": "/spring-data-jpa/i-persistence-context-e-ciclo-de-vida",
+    "descricao": "estados da entidade, `EntityManager`, flush, LAZY × EAGER, cascade",
+    "palavras": 1497,
+    "minutos": 7
+   },
+   {
+    "rotulo": "II - CONSULTAS E PERFORMANCE",
+    "url": "/spring-data-jpa/ii-consultas-e-performance",
+    "descricao": "derived queries, `@Query`, projections, paginação, N+1, batch",
+    "palavras": 1186,
+    "minutos": 6
+   },
+   {
+    "rotulo": "III - TRANSAÇÕES E CONCORRÊNCIA",
+    "url": "/spring-data-jpa/iii-transacoes-e-concorrencia",
+    "descricao": "`@Transactional`, propagação, rollback, locking, isolamento, migrations",
+    "palavras": 1439,
+    "minutos": 7
+   }
+  ],
+  "minutos": 28,
+  "palavras": 5664,
+  "trilha": 8
+ },
+ {
+  "grupo": "Java e frameworks",
+  "nome": "SPRING SECURITY",
+  "pasta": "spring-security",
+  "descricao": "Parte 1: conceitos de AuthN/AuthZ, JWT e OAuth2. Parte 2: o framework — filter chain, resource server e method security.",
+  "url": "/spring-security",
+  "capitulos": [
+   {
+    "rotulo": "Conteúdo da matéria",
+    "url": "/spring-security",
+    "descricao": "parte 1 — conceitos de AuthN/AuthZ; parte 2 — o framework na prática",
+    "palavras": 2510,
+    "minutos": 13
+   },
+   {
+    "rotulo": "CRIPTOGRAFIA",
+    "url": "/spring-security/criptografia",
+    "descricao": "hash × simétrica × assimétrica, KDF, HMAC, PKI, TLS",
+    "palavras": 1822,
+    "minutos": 9
+   }
+  ],
+  "minutos": 22,
+  "palavras": 4332,
+  "trilha": 9
+ },
+ {
+  "grupo": "Java e frameworks",
+  "nome": "TESTES EM SOFTWARE",
+  "pasta": "testes-em-software",
+  "descricao": "Pirâmide, TDD, BDD, cobertura — e a prática com JUnit 5, Mockito e o ecossistema de testes do Spring.",
+  "url": "/testes-em-software",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/testes-em-software",
+    "descricao": "pirâmide, tipos, vocabulário, TDD, BDD, cobertura, anti-padrões",
+    "palavras": 2732,
+    "minutos": 14
+   },
+   {
+    "rotulo": "I - JUNIT 5 E ASSERTJ",
+    "url": "/testes-em-software/i-junit-5-e-assertj",
+    "descricao": "arquitetura do JUnit 5, ciclo de vida, assertions, parametrizados, AssertJ",
+    "palavras": 949,
+    "minutos": 5
+   },
+   {
+    "rotulo": "II - TEST DOUBLES E MOCKITO",
+    "url": "/testes-em-software/ii-test-doubles-e-mockito",
+    "descricao": "stub × mock, stubbing, matchers, verificação, spy, BDDMockito",
+    "palavras": 1314,
+    "minutos": 7
+   },
+   {
+    "rotulo": "III - TESTES NO SPRING",
+    "url": "/testes-em-software/iii-testes-no-spring",
+    "descricao": "`@SpringBootTest`, slices, Testcontainers, segurança, ArchUnit",
+    "palavras": 1375,
+    "minutos": 7
+   }
+  ],
+  "minutos": 33,
+  "palavras": 6370,
+  "trilha": 10
+ },
+ {
+  "grupo": "Java e frameworks",
+  "nome": "QUARKUS",
+  "pasta": "quarkus",
+  "descricao": "O framework Java desenhado para container: trabalho antecipado para o build, imagem nativa e o comparativo com o Spring.",
+  "url": "/quarkus",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/quarkus",
+    "descricao": "fundamentos de execução, o problema que resolve, build-time augmentation, modos JVM e nativo",
+    "palavras": 3077,
+    "minutos": 15
+   },
+   {
+    "rotulo": "I - COMO FUNCIONA",
+    "url": "/quarkus/i-como-funciona",
+    "descricao": "as três fases, ArC, extensões, GraalVM e mundo fechado, JIT × AOT, dev mode, threads",
+    "palavras": 3217,
+    "minutos": 16
+   },
+   {
+    "rotulo": "II - QUARKUS NA PRÁTICA",
+    "url": "/quarkus/ii-quarkus-na-pratica",
+    "descricao": "projeto, Jakarta REST, CDI, config e perfis, Panache, mensageria, testes, container",
+    "palavras": 1558,
+    "minutos": 8
+   },
+   {
+    "rotulo": "III - QUARKUS × SPRING",
+    "url": "/quarkus/iii-quarkus-x-spring",
+    "descricao": "DI em build time × runtime, números, tabela de-para, nativo, ecossistema, migração",
+    "palavras": 2890,
+    "minutos": 14
+   }
+  ],
+  "minutos": 53,
+  "palavras": 10742,
+  "trilha": 17
+ },
+ {
+  "grupo": "Dados",
+  "nome": "FUNDAMENTOS DE MODELAGEM DE DADOS",
+  "pasta": "fundamentos-de-modelagem-de-dados",
+  "descricao": "Da normalização ao NoSQL: formas normais, modelagem relacional, índices, views, procedures, ACID e grafos.",
+  "url": "/fundamentos-de-modelagem-de-dados",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/fundamentos-de-modelagem-de-dados",
+    "descricao": "conceitos básicos, normalização, as formas normais, desnormalização",
+    "palavras": 1224,
+    "minutos": 6
+   },
+   {
+    "rotulo": "MODELAGEM RELACIONAL",
+    "url": "/fundamentos-de-modelagem-de-dados/modelagem-relacional",
+    "descricao": "chaves, relacionamentos e cardinalidade, integridade, álgebra relacional, JOINs",
+    "palavras": 1373,
+    "minutos": 7
+   },
+   {
+    "rotulo": "ÍNDICE",
+    "url": "/fundamentos-de-modelagem-de-dados/indice",
+    "descricao": "tipos, custo, seletividade, índice composto, covering index, plano de execução",
+    "palavras": 1685,
+    "minutos": 8
+   },
+   {
+    "rotulo": "ACID",
+    "url": "/fundamentos-de-modelagem-de-dados/acid",
+    "descricao": "os níveis de isolamento, anomalias e a relação com BASE",
+    "palavras": 1054,
+    "minutos": 5
+   },
+   {
+    "rotulo": "VIEWS",
+    "url": "/fundamentos-de-modelagem-de-dados/views",
+    "descricao": "view simples e materializada, quando compensa",
+    "palavras": 439,
+    "minutos": 2
+   },
+   {
+    "rotulo": "PROCEDURES",
+    "url": "/fundamentos-de-modelagem-de-dados/procedures",
+    "descricao": "a mesma procedure em três dialetos, procedure × function × trigger",
+    "palavras": 908,
+    "minutos": 5
+   },
+   {
+    "rotulo": "MODELAGEM NÃO RELACIONAL",
+    "url": "/fundamentos-de-modelagem-de-dados/modelagem-nao-relacional",
+    "descricao": "tipos de NoSQL, modelagem por query, embedding × referencing, sharding",
+    "palavras": 1314,
+    "minutos": 7
+   },
+   {
+    "rotulo": "BANCO DE DADOS EM GRAFOS",
+    "url": "/fundamentos-de-modelagem-de-dados/banco-de-dados-em-grafos",
+    "descricao": "nós, arestas, propriedades, Cypher, quando grafo vence o relacional",
+    "palavras": 620,
+    "minutos": 3
+   }
+  ],
+  "minutos": 43,
+  "palavras": 8617,
+  "trilha": 11
+ },
+ {
+  "grupo": "Infraestrutura",
+  "nome": "DOCKER",
+  "pasta": "docker",
+  "descricao": "Do conceito de processo isolado até o `docker-compose.yml` de produção.",
+  "url": "/docker",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/docker",
+    "descricao": "índice da matéria e relacionados",
+    "palavras": 171,
+    "minutos": 1
+   },
+   {
+    "rotulo": "CAPÍTULO I - INTRODUÇÃO AO DOCKER",
+    "url": "/docker/capitulo-i-introducao-ao-docker",
+    "descricao": "VM × container, namespaces e cgroups, camadas, registry, ciclo de vida",
+    "palavras": 1241,
+    "minutos": 6
+   },
+   {
+    "rotulo": "CAPÍTULO II - GERENCIAMENTO DE CONTAINERS",
+    "url": "/docker/capitulo-ii-gerenciamento-de-containers",
+    "descricao": "comandos, Dockerfile, `CMD` × `ENTRYPOINT`, multi-stage build, segurança",
+    "palavras": 1274,
+    "minutos": 6
+   },
+   {
+    "rotulo": "CAPÍTULO III - REDES",
+    "url": "/docker/capitulo-iii-redes",
+    "descricao": "drivers, DNS interno, `EXPOSE` × `-p`, isolamento",
+    "palavras": 733,
+    "minutos": 4
+   },
+   {
+    "rotulo": "CAPÍTULO IV - VOLUMES",
+    "url": "/docker/capitulo-iv-volumes",
+    "descricao": "volume × bind mount × tmpfs, permissões, backup, Compose",
+    "palavras": 774,
+    "minutos": 4
+   },
+   {
+    "rotulo": "CAPÍTULO V - ORQUESTRAÇÃO DE CONTAINERES",
+    "url": "/docker/capitulo-v-orquestracao-de-containeres",
+    "descricao": "Compose real, limites do Compose, Swarm × Kubernetes, 12 fatores",
+    "palavras": 1094,
+    "minutos": 5
+   }
+  ],
+  "minutos": 26,
+  "palavras": 5287,
+  "trilha": 12
+ },
+ {
+  "grupo": "Referência rápida",
+  "nome": "RESUMO DE PROVA",
+  "pasta": ".",
+  "descricao": "Arquivo de véspera: as pegadinhas mais cobradas com a correção, tabelas comparativas, definições em uma linha e o mapa de conexões entre as matérias.",
+  "url": "/resumo-prova",
+  "capitulos": [
+   {
+    "rotulo": "Conteúdo",
+    "url": "/resumo-prova",
+    "descricao": null,
+    "palavras": 2216,
+    "minutos": 11
+   }
+  ],
+  "minutos": 11,
+  "palavras": 2216
+ },
+ {
+  "grupo": "Referência rápida",
+  "nome": "UTEIS",
+  "pasta": "uteis",
+  "descricao": "Para consultar durante o trabalho, não para estudar.",
+  "url": "/uteis",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/uteis",
+    "descricao": "índice da referência rápida",
+    "palavras": 57,
+    "minutos": 1
+   },
+   {
+    "rotulo": "COMANDOS DOCKER",
+    "url": "/uteis/comandos-docker",
+    "descricao": "cheat sheet do dia a dia — o conceito está em [DOCKER](docker/README.md)",
+    "palavras": 346,
+    "minutos": 2
+   },
+   {
+    "rotulo": "DICAS DE BANCO DE DADOS",
+    "url": "/uteis/dicas-de-banco-de-dados",
+    "descricao": "boas práticas soltas — o aprofundamento está em [ÍNDICE](fundamentos-de-modelagem-de-dados/indice.md)",
+    "palavras": 100,
+    "minutos": 1
+   }
+  ],
+  "minutos": 4,
+  "palavras": 503
+ }
+]

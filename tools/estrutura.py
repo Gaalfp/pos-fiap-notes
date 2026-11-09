@@ -70,6 +70,28 @@ def arvore(caminho, recuo=""):
     return saida
 
 
+# Ordem de leitura recomendada (a "trilha" da home): dos fundamentos da
+# plataforma até as alternativas. Use exatamente os nomes das matérias.
+TRILHA = [
+    "JVM E PLATAFORMA JAVA",
+    "POO",
+    "SOLID",
+    "DESIGN PATTERNS EM OO",
+    "CLEAN ARCHITECTURE",
+    "SPRING E SPRING BOOT",
+    "Spring MVC - APIs RESTful",
+    "SPRING DATA JPA",
+    "SPRING SECURITY",
+    "TESTES EM SOFTWARE",
+    "FUNDAMENTOS DE MODELAGEM DE DADOS",
+    "DOCKER",
+    "ARQUITETURA DISTRIBUÍDA",
+    "TEOREMA CAP",
+    "FUNDAMENTOS DE MENSAGERIA",
+    "gRPC e GRAPHQL",
+    "QUARKUS",
+]
+
 # (grupo, [ (matéria, pasta, descrição, [ (rótulo, arquivo, descrição curta) ]) ])
 DADOS = [
 ("Arquitetura e design", [
