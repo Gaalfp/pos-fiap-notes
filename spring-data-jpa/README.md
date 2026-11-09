@@ -138,4 +138,4 @@ Para centralizar consultas JPQL ou SQL nativas diretamente nas entidades.
 
 ---
 
-**Relacionados:** [FUNDAMENTOS DE MODELAGEM DE DADOS](../fundamentos-de-modelagem-de-dados/README.md) · [ÍNDICE](../fundamentos-de-modelagem-de-dados/indice.md) · [ACID](../fundamentos-de-modelagem-de-dados/acid.md) · [CLEAN ARCHITECTURE](../clean-architecture/README.md) · [TESTES EM SOFTWARE](../testes-em-software/iii-testes-no-spring.md)
+**Relacionados:** [FUNDAMENTOS DE MODELAGEM DE DADOS](../fundamentos-de-modelagem-de-dados/README.md) · [ÍNDICE](../fundamentos-de-modelagem-de-dados/indice.md) · [ACID](../fundamentos-de-modelagem-de-dados/acid.md) · [CLEAN ARCHITECTURE](../clean-architecture/README.md) · [TESTES EM SOFTWARE](../testes-em-software/iii-testes-no-spring.md) · [SPRING E SPRING BOOT](../spring-e-spring-boot/README.md)

@@ -13,7 +13,7 @@ item leva direto à seção correspondente. Todo arquivo de conteúdo termina co
 
 - **[Arquitetura e design](#arquitetura-e-design)** — [CLEAN ARCHITECTURE](#clean-architecture) · [SOLID](#solid) · [DESIGN PATTERNS EM OO](#design-patterns-em-oo) · [POO](#poo)
 - **[Sistemas distribuídos e integração](#sistemas-distribuídos-e-integração)** — [ARQUITETURA DISTRIBUÍDA](#arquitetura-distribuída) · [FUNDAMENTOS DE MENSAGERIA](#fundamentos-de-mensageria) · [TEOREMA CAP](#teorema-cap) · [gRPC e GRAPHQL](#grpc-e-graphql)
-- **[Java e frameworks](#java-e-frameworks)** — [Spring MVC - APIs RESTful](#spring-mvc---apis-restful) · [SPRING DATA JPA](#spring-data-jpa) · [SPRING SECURITY](#spring-security) · [TESTES EM SOFTWARE](#testes-em-software) · [QUARKUS](#quarkus)
+- **[Java e frameworks](#java-e-frameworks)** — [SPRING E SPRING BOOT](#spring-e-spring-boot) · [Spring MVC - APIs RESTful](#spring-mvc---apis-restful) · [SPRING DATA JPA](#spring-data-jpa) · [SPRING SECURITY](#spring-security) · [TESTES EM SOFTWARE](#testes-em-software) · [QUARKUS](#quarkus)
 - **[Dados](#dados)** — [FUNDAMENTOS DE MODELAGEM DE DADOS](#fundamentos-de-modelagem-de-dados)
 - **[Infraestrutura](#infraestrutura)** — [DOCKER](#docker)
 - **[Referência rápida](#referência-rápida)** — [RESUMO DE PROVA](#resumo-de-prova) · [UTEIS](#uteis)
@@ -455,6 +455,71 @@ Schema e SDL, query, resolvers, DataLoader, Spring for GraphQL.
 ---
 
 ## Java e frameworks
+
+### SPRING E SPRING BOOT
+
+A base que as outras matérias de Spring supõem: o container, o bean, o proxy e o que o Boot acrescenta.
+
+#### [Visão geral](spring-e-spring-boot/README.md)
+
+IoC e DI, o vocabulário mínimo, Spring × Spring Boot, o ecossistema e o boot passo a passo.
+
+- [1. O problema: quem cria os objetos?](spring-e-spring-boot/README.md#1-o-problema-quem-cria-os-objetos)
+- [2. Inversão de controle e injeção de dependência](spring-e-spring-boot/README.md#2-inversão-de-controle-e-injeção-de-dependência)
+- [3. O vocabulário mínimo](spring-e-spring-boot/README.md#3-o-vocabulário-mínimo)
+- [4. Spring × Spring Boot — a confusão mais comum](spring-e-spring-boot/README.md#4-spring--spring-boot--a-confusão-mais-comum)
+- [5. O ecossistema](spring-e-spring-boot/README.md#5-o-ecossistema)
+- [6. Como uma aplicação Spring Boot sobe](spring-e-spring-boot/README.md#6-como-uma-aplicação-spring-boot-sobe)
+- [Capítulos](spring-e-spring-boot/README.md#capítulos)
+
+#### [I - IoC E BEANS](spring-e-spring-boot/i-ioc-e-beans.md)
+
+O container, declarar e injetar beans, ambiguidade, ciclo de vida, escopos, dependência circular.
+
+- [1. O container: `ApplicationContext`](spring-e-spring-boot/i-ioc-e-beans.md#1-o-container-applicationcontext)
+- [2. As três formas de declarar um bean](spring-e-spring-boot/i-ioc-e-beans.md#2-as-três-formas-de-declarar-um-bean)
+  - [a) `@Component` e os *stereotypes* — para as suas classes](spring-e-spring-boot/i-ioc-e-beans.md#a-component-e-os-stereotypes--para-as-suas-classes)
+  - [b) `@Bean` dentro de `@Configuration` — para classes que não são suas](spring-e-spring-boot/i-ioc-e-beans.md#b-bean-dentro-de-configuration--para-classes-que-não-são-suas)
+  - [c) Registro programático — o caso raro](spring-e-spring-boot/i-ioc-e-beans.md#c-registro-programático--o-caso-raro)
+- [3. As três formas de injetar — e por que construtor](spring-e-spring-boot/i-ioc-e-beans.md#3-as-três-formas-de-injetar--e-por-que-construtor)
+- [4. Quando há mais de um candidato](spring-e-spring-boot/i-ioc-e-beans.md#4-quando-há-mais-de-um-candidato)
+- [5. O ciclo de vida de um bean](spring-e-spring-boot/i-ioc-e-beans.md#5-o-ciclo-de-vida-de-um-bean)
+- [6. Escopos](spring-e-spring-boot/i-ioc-e-beans.md#6-escopos)
+- [7. `@Lazy` e a inicialização antecipada](spring-e-spring-boot/i-ioc-e-beans.md#7-lazy-e-a-inicialização-antecipada)
+- [8. Dependência circular](spring-e-spring-boot/i-ioc-e-beans.md#8-dependência-circular)
+- [9. Beans condicionais](spring-e-spring-boot/i-ioc-e-beans.md#9-beans-condicionais)
+- [10. Como inspecionar o container](spring-e-spring-boot/i-ioc-e-beans.md#10-como-inspecionar-o-container)
+
+#### [II - AOP E PROXIES](spring-e-spring-boot/ii-aop-e-proxies.md)
+
+Preocupações transversais, vocabulário do AOP, JDK proxy × CGLIB, limitações, `@Aspect`, eventos.
+
+- [1. O problema: preocupações transversais](spring-e-spring-boot/ii-aop-e-proxies.md#1-o-problema-preocupações-transversais)
+- [2. O vocabulário do AOP](spring-e-spring-boot/ii-aop-e-proxies.md#2-o-vocabulário-do-aop)
+- [3. Como o Spring implementa: o proxy](spring-e-spring-boot/ii-aop-e-proxies.md#3-como-o-spring-implementa-o-proxy)
+- [4. As limitações estruturais do proxy](spring-e-spring-boot/ii-aop-e-proxies.md#4-as-limitações-estruturais-do-proxy)
+- [5. Escrevendo um aspecto próprio](spring-e-spring-boot/ii-aop-e-proxies.md#5-escrevendo-um-aspecto-próprio)
+- [6. As anotações que dependem de proxy](spring-e-spring-boot/ii-aop-e-proxies.md#6-as-anotações-que-dependem-de-proxy)
+- [7. Eventos, `@Async` e `@Scheduled`](spring-e-spring-boot/ii-aop-e-proxies.md#7-eventos-async-e-scheduled)
+- [8. Spring AOP × AspectJ](spring-e-spring-boot/ii-aop-e-proxies.md#8-spring-aop--aspectj)
+
+#### [III - SPRING BOOT](spring-e-spring-boot/iii-spring-boot.md)
+
+`@SpringBootApplication`, autoconfiguração, starters, configuração e perfis, Actuator, empacotamento, Boot 3.
+
+- [1. O que o Boot acrescenta](spring-e-spring-boot/iii-spring-boot.md#1-o-que-o-boot-acrescenta)
+- [2. `@SpringBootApplication` decomposto](spring-e-spring-boot/iii-spring-boot.md#2-springbootapplication-decomposto)
+- [3. Autoconfiguração: o mecanismo](spring-e-spring-boot/iii-spring-boot.md#3-autoconfiguração-o-mecanismo)
+  - [Starters](spring-e-spring-boot/iii-spring-boot.md#starters)
+- [4. Configuração externalizada](spring-e-spring-boot/iii-spring-boot.md#4-configuração-externalizada)
+  - [`@Value` × `@ConfigurationProperties`](spring-e-spring-boot/iii-spring-boot.md#value--configurationproperties)
+- [5. Perfis](spring-e-spring-boot/iii-spring-boot.md#5-perfis)
+- [6. Actuator](spring-e-spring-boot/iii-spring-boot.md#6-actuator)
+- [7. DevTools e produtividade](spring-e-spring-boot/iii-spring-boot.md#7-devtools-e-produtividade)
+- [8. Empacotamento](spring-e-spring-boot/iii-spring-boot.md#8-empacotamento)
+- [9. O que mudou no Spring Boot 3](spring-e-spring-boot/iii-spring-boot.md#9-o-que-mudou-no-spring-boot-3)
+
+<br>
 
 ### Spring MVC - APIs RESTful
 
