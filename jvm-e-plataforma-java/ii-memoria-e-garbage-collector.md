@@ -130,6 +130,8 @@ flowchart LR
     O -.->|"Major GC:<br/>mais raro e mais caro"| X
 ```
 
+<!--animacao: ciclo-do-gc-->
+
 | Conceito | O que é |
 |---|---|
 | **Eden** | onde todo objeto nasce. Alocar aqui é só avançar um ponteiro — **operação baríssima** |

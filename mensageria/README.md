@@ -127,6 +127,8 @@ flowchart TB
     end
 ```
 
+<!--animacao: fila-vs-topico-->
+
 | | **Fila (queue)** | **Tópico (topic)** |
 |---|---|---|
 | Padrão | **point-to-point** (ponta a ponta) | **publish/subscribe** |

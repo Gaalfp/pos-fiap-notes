@@ -148,6 +148,8 @@ flowchart LR
     A["<b>0–?s</b><br/>classes carregando<br/>código interpretado<br/><i>LENTO</i>"] --> B["<b>depois</b><br/>C1 compila<br/>perfil sendo coletado<br/><i>melhorando</i>"] --> C["<b>regime</b><br/>C2 no caminho quente<br/>caches cheios<br/><i>RÁPIDO e estável</i>"]
 ```
 
+<!--animacao: aquecimento-do-jit-->
+
 | O que acontece durante o aquecimento | Efeito observável |
 |---|---|
 | Classes sendo carregadas e verificadas sob demanda | picos de latência em caminhos exercitados pela primeira vez |

@@ -175,7 +175,7 @@
     "rotulo": "Visão geral",
     "url": "/mensageria",
     "descricao": "anotações da aula, assincronia, fila × tópico, onde se usa",
-    "palavras": 1366,
+    "palavras": 1368,
     "minutos": 7
    },
    {
@@ -208,7 +208,7 @@
    }
   ],
   "minutos": 43,
-  "palavras": 8605,
+  "palavras": 8607,
   "trilha": 15
  },
  {
@@ -281,14 +281,14 @@
     "rotulo": "I - A JVM POR DENTRO",
     "url": "/jvm-e-plataforma-java/i-a-jvm-por-dentro",
     "descricao": "carregamento de classes, bytecode, interpretador e JIT, aquecimento, CDS e cache AOT",
-    "palavras": 1773,
+    "palavras": 1775,
     "minutos": 9
    },
    {
     "rotulo": "II - MEMÓRIA E GARBAGE COLLECTOR",
     "url": "/jvm-e-plataforma-java/ii-memoria-e-garbage-collector",
     "descricao": "o que é um GC, o mapa da memória, RSS × heap, gerações, os coletores, tuning, container",
-    "palavras": 3078,
+    "palavras": 3080,
     "minutos": 15
    },
    {
@@ -300,7 +300,7 @@
    }
   ],
   "minutos": 44,
-  "palavras": 8721,
+  "palavras": 8725,
   "trilha": 1
  },
  {
@@ -321,7 +321,7 @@
     "rotulo": "I - IoC E BEANS",
     "url": "/spring-e-spring-boot/i-ioc-e-beans",
     "descricao": "o container, declarar e injetar beans, ambiguidade, ciclo de vida, escopos, dependência circular",
-    "palavras": 2202,
+    "palavras": 2204,
     "minutos": 11
    },
    {
@@ -340,7 +340,7 @@
    }
   ],
   "minutos": 43,
-  "palavras": 8523,
+  "palavras": 8525,
   "trilha": 6
  },
  {
@@ -507,7 +507,7 @@
     "rotulo": "Visão geral",
     "url": "/quarkus",
     "descricao": "fundamentos de execução, o problema que resolve, build-time augmentation, modos JVM e nativo",
-    "palavras": 3077,
+    "palavras": 3079,
     "minutos": 15
    },
    {
@@ -533,7 +533,7 @@
    }
   ],
   "minutos": 53,
-  "palavras": 10742,
+  "palavras": 10744,
   "trilha": 17
  },
  {

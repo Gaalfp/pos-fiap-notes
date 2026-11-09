@@ -1,39 +1,188 @@
 ---
-/** Marca na home o que já foi lido, a partir do que o navegador guardou. */
+/**
+ * Progresso de leitura: pinta o que já foi lido na trilha e nos grupos, e
+ * oferece a gestão — ver tudo o que foi marcado, desmarcar um a um ou limpar.
+ *
+ * O que foi lido fica no localStorage do navegador: é por aparelho, não
+ * sincroniza entre celular e computador, e some se os dados do site forem
+ * limpos. Por isso a interface diz isso em voz alta.
+ */
+import materias from '../materias.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// url -> rótulo legível, para a lista do painel
+const nomes: Record<string, string> = {};
+for (const m of materias) {
+  for (const c of m.capitulos) {
+    const url = `${base}${c.url}`.toLowerCase().replace(/\/+$/, '') + '/';
+    nomes[url] = m.capitulos.length === 1 ? m.nome : `${m.nome} · ${c.rotulo}`;
+  }
+}
 ---
 
-<script>
-  const normalizar = (p: string) => p.toLowerCase().replace(/\/+$/, '') + '/';
-  const chave = (p: string) => `lido:${normalizar(p)}`;
+<section class="progresso" id="progresso">
+  <h2>O que você já leu</h2>
+  <p class="aviso">
+    A marcação fica guardada <strong>neste navegador</strong> — não sincroniza
+    entre aparelhos e some se você limpar os dados do site.
+  </p>
+
+  <p class="vazio" hidden>Nada marcado ainda. O botão fica no fim de cada página.</p>
+
+  <ul class="lista" hidden></ul>
+
+  <button type="button" class="limpar" hidden>Desmarcar tudo</button>
+</section>
+
+<script define:vars={{ nomes }}>
+  const normalizar = (p) => p.toLowerCase().replace(/\/+$/, '') + '/';
+  const PREFIXO = 'lido:';
+
+  const lidas = () => {
+    try {
+      return Object.keys(localStorage)
+        .filter((k) => k.startsWith(PREFIXO))
+        .map((k) => k.slice(PREFIXO.length));
+    } catch {
+      return [];
+    }
+  };
+
+  const esquecer = (url) => {
+    try { localStorage.removeItem(PREFIXO + normalizar(url)); } catch { /* sem storage */ }
+  };
 
   function pintar() {
-    let lidos = 0;
-    document.querySelectorAll<HTMLElement>('[data-url]').forEach((el) => {
-      let marcado = false;
-      try {
-        marcado = localStorage.getItem(chave(el.dataset.url!)) === '1';
-      } catch { /* navegação privada: segue sem progresso */ }
-      el.toggleAttribute('data-lido', marcado);
-      if (marcado) lidos++;
+    const marcadas = new Set(lidas());
+
+    document.querySelectorAll('[data-url]').forEach((el) => {
+      el.toggleAttribute('data-lido', marcadas.has(normalizar(el.dataset.url)));
     });
 
-    document.querySelectorAll<HTMLElement>('[data-grupo]').forEach((card) => {
-      const itens = card.querySelectorAll('[data-url]');
+    document.querySelectorAll('[data-grupo]').forEach((card) => {
+      const itens = card.querySelectorAll('[data-url]').length;
       const feitos = card.querySelectorAll('[data-url][data-lido]').length;
-      const barra = card.querySelector<HTMLElement>('.barra i');
-      if (barra && itens.length) barra.style.width = `${(feitos / itens.length) * 100}%`;
+      const barra = card.querySelector('.barra i');
+      if (barra && itens) barra.style.width = `${(feitos / itens) * 100}%`;
     });
 
+    const total = document.querySelectorAll('#trilha [data-url]').length;
+    const naTrilha = document.querySelectorAll('#trilha [data-url][data-lido]').length;
     const resumo = document.getElementById('resumo-progresso');
     if (resumo) {
-      const total = document.querySelectorAll('#trilha [data-url]').length;
-      const feitos = document.querySelectorAll('#trilha [data-url][data-lido]').length;
-      resumo.textContent = feitos
-        ? `${feitos} de ${total} matérias da trilha marcadas como lidas`
-        : 'Nada marcado ainda — a marcação fica só neste navegador.';
+      resumo.textContent = naTrilha
+        ? `${naTrilha} de ${total} matérias da trilha marcadas como lidas`
+        : '';
     }
+
+    // painel de gestão
+    const lista = document.querySelector('.progresso .lista');
+    const vazio = document.querySelector('.progresso .vazio');
+    const limpar = document.querySelector('.progresso .limpar');
+    if (!lista) return;
+
+    const itens = [...marcadas].sort((a, b) =>
+      (nomes[a] || a).localeCompare(nomes[b] || b, 'pt-BR'));
+
+    lista.innerHTML = '';
+    for (const url of itens) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = url;
+      a.textContent = nomes[url] || url;
+      const botao = document.createElement('button');
+      botao.type = 'button';
+      botao.className = 'tirar';
+      botao.setAttribute('aria-label', `Desmarcar ${nomes[url] || url}`);
+      botao.textContent = '×';
+      botao.addEventListener('click', () => { esquecer(url); pintar(); });
+      li.append(a, botao);
+      lista.append(li);
+    }
+
+    lista.hidden = itens.length === 0;
+    vazio.hidden = itens.length > 0;
+    limpar.hidden = itens.length === 0;
+    limpar.textContent = `Desmarcar tudo (${itens.length})`;
   }
 
+  document.querySelector('.progresso .limpar')?.addEventListener('click', () => {
+    const quantas = lidas().length;
+    if (!confirm(`Desmarcar as ${quantas} páginas marcadas como lidas?`)) return;
+    lidas().forEach(esquecer);
+    pintar();
+  });
+
   pintar();
-  addEventListener('storage', pintar);   // outra aba marcou algo
+  addEventListener('storage', pintar);   // outra aba mexeu
+  addEventListener('pageshow', pintar);  // voltou pelo histórico
 </script>
+
+<style>
+  .progresso {
+    margin: 3rem 0 0;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+  .progresso h2,
+  .progresso :global(h2) {
+    font-family: var(--px-display);
+    font-size: 1.5rem;
+    margin: 0 0 0.3rem;
+    border: none;
+  }
+  .aviso {
+    color: var(--sl-color-gray-4);
+    font-size: 0.84rem;
+    margin: 0 0 1rem;
+    max-width: 58ch;
+  }
+  .vazio {
+    color: var(--sl-color-gray-4);
+    font-family: var(--sl-font-mono);
+    font-size: 0.8rem;
+  }
+  .lista {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .lista li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.1rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 999px;
+    padding: 0.18rem 0.3rem 0.18rem 0.75rem;
+    font-size: 0.84rem;
+    background: color-mix(in oklab, var(--sl-color-gray-6) 55%, transparent);
+  }
+  .lista a { color: inherit; text-decoration: none; }
+  .lista a:hover { text-decoration: underline; }
+  .tirar {
+    background: none;
+    border: none;
+    color: var(--sl-color-gray-3);
+    font-size: 1.05rem;
+    line-height: 1;
+    padding: 0.1rem 0.35rem;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  .tirar:hover { color: var(--sl-color-text); background: var(--sl-color-hairline); }
+  .limpar {
+    background: none;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    color: var(--sl-color-gray-3);
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+  .limpar:hover { color: var(--sl-color-text); border-color: var(--sl-color-gray-4); }
+</style>

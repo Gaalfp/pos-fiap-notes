@@ -5,9 +5,9 @@ import Default from '@astrojs/starlight/components/Head.astro';
 <Default><slot /></Default>
 
 <script>
-  /* Os diagramas vêm desenhados do build (tools/renderizar-diagramas.mjs).
-     O Mermaid só é baixado se sobrar algum bloco não renderizado — o que
-     evita ~5 MB de JavaScript no caso normal. */
+  /* Diagramas: vêm desenhados do build (tools/renderizar-diagramas.mjs).
+     O Mermaid só é baixado se sobrar algum bloco sem SVG — o que evita
+     ~5 MB de JavaScript no caso normal. */
   const pendentes = document.querySelectorAll('pre.mermaid');
   if (pendentes.length) {
     const { default: mermaid } = await import('mermaid');
@@ -20,5 +20,18 @@ import Default from '@astrojs/starlight/components/Head.astro';
       sequence: { useMaxWidth: true },
     });
     await mermaid.run({ nodes: [...pendentes] as HTMLElement[] });
+  }
+
+  /* Animações: cada uma é um módulo próprio, baixado só na página que a usa.
+     O marcador <!--animacao: nome--> do markdown virou <div data-animacao>. */
+  for (const alvo of document.querySelectorAll<HTMLElement>('[data-animacao]')) {
+    const nome = alvo.dataset.animacao!;
+    try {
+      const modulo = await import(`../animacoes/${nome}.js`);
+      modulo.montar(alvo);
+    } catch (erro) {
+      console.warn(`[animacao] "${nome}" não pôde ser carregada`, erro);
+      alvo.remove();   // sem animação, a página segue como texto
+    }
   }
 </script>

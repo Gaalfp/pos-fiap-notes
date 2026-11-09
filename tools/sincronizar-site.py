@@ -61,6 +61,21 @@ def reescrever_links(corpo, pasta_rel):
     return re.sub(r'\]\(([^)\s#]+\.md)(#[^)\s]*)?\)', troca, corpo)
 
 
+ANIMACAO = re.compile(r'^<!--[ \t]*animacao:[ \t]*([a-z0-9-]+)[ \t]*-->[ \t]*$', re.M)
+
+
+def plantar_animacoes(corpo):
+    """`<!--animacao: ciclo-do-gc-->` vira o ponto onde a animação é montada.
+
+    No GitHub é um comentário — invisível. No site vira um elemento que o
+    navegador preenche sob demanda (web/src/animacoes/). Assim o markdown
+    continua markdown: nada de MDX, que tentaria ler `<pid>` como componente.
+    """
+    return ANIMACAO.sub(
+        lambda m: f'<div class="animacao" data-animacao="{m.group(1)}"></div>',
+        corpo)
+
+
 def transformar(conteudo, pasta_rel, caminho_original):
     """Extrai o H1 como título e devolve frontmatter + corpo com links de site."""
     linhas = conteudo.split("\n")
@@ -73,6 +88,7 @@ def transformar(conteudo, pasta_rel, caminho_original):
             break
     corpo = "\n".join(linhas[corte:]).lstrip("\n") if titulo else conteudo
     corpo = reescrever_links(corpo, pasta_rel)
+    corpo = plantar_animacoes(corpo)
 
     if not titulo:
         return corpo

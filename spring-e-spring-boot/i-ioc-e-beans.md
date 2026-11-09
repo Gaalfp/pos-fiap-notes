@@ -187,6 +187,8 @@ flowchart TB
     L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7 --> L8
 ```
 
+<!--animacao: ciclo-de-vida-do-bean-->
+
 | Etapa | O que acontece | O que isso te explica |
 |---|---|---|
 | **2. Instanciação** | o construtor é chamado | no construtor, **as dependências de campo/setter ainda são `null`** — não as use lá |

@@ -151,3 +151,141 @@ pre.mermaid:not([data-processed]) { visibility: hidden; min-height: 2rem; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ── palco das animações ─────────────────────────────────────────────────── */
+.palco {
+  margin: 1.8rem 0;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--sl-color-gray-6) 45%, transparent);
+  overflow: hidden;
+}
+.palco-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--sl-color-hairline);
+}
+.palco-titulo {
+  font-family: var(--sl-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+}
+.palco-controles { display: flex; gap: 0.25rem; }
+.palco-controles button {
+  background: none;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 7px;
+  color: var(--sl-color-gray-2);
+  cursor: pointer;
+  font-size: 0.82rem;
+  line-height: 1;
+  padding: 0.3rem 0.5rem;
+}
+.palco-controles button:hover { color: var(--sl-color-text); border-color: var(--sl-color-gray-4); }
+.palco-svg { display: block; width: 100%; height: auto; padding: 0.5rem; }
+.palco-svg .area { fill: none; stroke: var(--sl-color-gray-5); stroke-width: 1; }
+.palco-svg .rotulo {
+  fill: var(--sl-color-gray-3);
+  font-family: var(--sl-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+}
+.palco-svg .obj { fill: var(--sl-color-gray-4); }
+.palco-svg .obj-longevo { fill: var(--sl-color-text); }
+.palco-svg .destaque { fill: var(--sl-color-text); }
+.palco-extras {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 0.85rem 0.5rem;
+}
+.palco-faixa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--sl-font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--sl-color-gray-3);
+}
+.palco-faixa input { accent-color: var(--sl-color-text); width: 7rem; }
+.palco-numeros { display: flex; gap: 1rem; margin: 0; }
+.palco-numeros div { display: flex; flex-direction: column-reverse; }
+.palco-numeros dd {
+  margin: 0;
+  font-family: var(--px-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1;
+}
+.palco-numeros dt {
+  font-family: var(--sl-font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-4);
+}
+.palco-legenda {
+  margin: 0;
+  padding: 0 0.85rem 0.75rem;
+  font-size: 0.82rem;
+  color: var(--sl-color-gray-3);
+  text-wrap: pretty;
+}
+
+/* elementos usados pelas animações */
+.palco-svg .caixa { fill: none; stroke: var(--sl-color-gray-5); }
+.palco-svg .caixa-forte { fill: color-mix(in oklab, var(--sl-color-gray-5) 40%, transparent);
+                          stroke: var(--sl-color-gray-4); }
+.palco-svg .trilho { fill: color-mix(in oklab, var(--sl-color-gray-5) 45%, transparent); }
+.palco-svg .fio { stroke: var(--sl-color-gray-5); stroke-dasharray: 3 3; }
+.palco-svg .eixo { stroke: var(--sl-color-gray-5); }
+.palco-svg .marca { stroke: var(--sl-color-gray-5); stroke-dasharray: 2 4; }
+.palco-svg .linha { stroke: var(--sl-color-text); stroke-width: 1.6; }
+.palco-svg .msg { fill: var(--sl-color-text); }
+.palco-svg .bean { fill: color-mix(in oklab, var(--sl-color-gray-5) 55%, transparent);
+                   stroke: var(--sl-color-gray-3); }
+.palco-svg .receita { fill: none; stroke: var(--sl-color-gray-5); stroke-dasharray: 4 3; }
+.palco-svg .proxy { fill: none; stroke: var(--sl-color-text); stroke-width: 1.5; }
+.palco-svg .rotulo-forte {
+  fill: var(--sl-color-text);
+  font-family: var(--sl-font-mono);
+  font-size: 9px;
+}
+.palco-svg .rotulo-fraco {
+  fill: var(--sl-color-gray-4);
+  font-family: var(--sl-font-mono);
+  font-size: 8px;
+}
+.palco-passo {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--sl-color-gray-2);
+  flex: 1 1 100%;
+}
+.palco-passo strong { color: var(--sl-color-text); }
+.palco-opcoes { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.palco-opcoes [role='group'] { display: inline-flex; gap: 0.25rem; }
+.palco-opcoes button {
+  background: none;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 999px;
+  padding: 0.22rem 0.7rem;
+  color: var(--sl-color-gray-3);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.palco-opcoes button[aria-pressed='true'] {
+  background: var(--sl-color-text);
+  color: var(--sl-color-bg);
+  border-color: transparent;
+}

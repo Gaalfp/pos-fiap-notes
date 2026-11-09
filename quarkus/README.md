@@ -164,6 +164,8 @@ flowchart TB
     end
 ```
 
+<!--animacao: build-time-vs-runtime-->
+
 Três consequências diretas:
 
 1. **Sobe rápido mesmo na JVM comum.** O ganho de inicialização não depende de imagem nativa — vem de não repetir no boot um trabalho que já foi feito.
