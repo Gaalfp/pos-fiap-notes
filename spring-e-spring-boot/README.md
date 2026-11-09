@@ -97,7 +97,7 @@ O item ③ é o que as pessoas chamam de "mágica do Spring" — e é o assunto 
 | **Autoconfiguração** | o mecanismo do Boot que, olhando o que está no classpath, **configura sozinho** o que você não configurou |
 | ***Fat jar*** | o JAR do Boot, que carrega dentro de si as dependências **e** um servidor web embutido — basta `java -jar` |
 
-> Se os termos **build**, **boot**, **runtime**, *classpath* e **reflexão** também estiverem nebulosos, eles estão abertos em [QUARKUS - fundamentos](../quarkus/README.md#1-antes-de-tudo-o-que-uma-aplicação-java-faz-do-código-ao-ar) — valem para qualquer aplicação Java, inclusive Spring.
+> Se os termos **build**, **boot**, **runtime**, *classpath* e **reflexão** também estiverem nebulosos, eles estão abertos em [JVM E PLATAFORMA JAVA](../jvm-e-plataforma-java/README.md) — a matéria que fica abaixo desta, e que vale para qualquer aplicação Java.
 
 ---
 
@@ -211,4 +211,4 @@ flowchart TB
 
 ---
 
-**Relacionados:** [Spring MVC - APIs RESTful](../spring-mvc-apis-restful/README.md) · [SPRING DATA JPA](../spring-data-jpa/README.md) · [SPRING SECURITY](../spring-security/README.md) · [QUARKUS](../quarkus/README.md) · [SOLID](../solid/README.md) · [DESIGN PATTERNS EM OO](../design-patterns-em-oo/README.md)
+**Relacionados:** [Spring MVC - APIs RESTful](../spring-mvc-apis-restful/README.md) · [SPRING DATA JPA](../spring-data-jpa/README.md) · [SPRING SECURITY](../spring-security/README.md) · [QUARKUS](../quarkus/README.md) · [SOLID](../solid/README.md) · [DESIGN PATTERNS EM OO](../design-patterns-em-oo/README.md) · [JVM E PLATAFORMA JAVA](../jvm-e-plataforma-java/README.md)

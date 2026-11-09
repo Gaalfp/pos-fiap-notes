@@ -8,4 +8,4 @@ Container não é uma VM leve — é um **processo isolado** pelo kernel do host
 - [CAPITULO IV - VOLUMES](capitulo-iv-volumes.md) — volume × bind mount × tmpfs, permissões, backup
 - [CAPITULO V - ORQUESTRAÇÃO DE CONTAINERES](capitulo-v-orquestracao-de-containeres.md) — Compose real, healthcheck e `depends_on`, limites do Compose, Swarm × Kubernetes e 12 fatores
 
-**Relacionados:** [COMANDOS DOCKER](../uteis/comandos-docker.md) · [TESTES EM SOFTWARE](../testes-em-software/iii-testes-no-spring.md) · [CLEAN ARCHITECTURE](../clean-architecture/README.md) · [QUARKUS](../quarkus/README.md)
+**Relacionados:** [COMANDOS DOCKER](../uteis/comandos-docker.md) · [TESTES EM SOFTWARE](../testes-em-software/iii-testes-no-spring.md) · [CLEAN ARCHITECTURE](../clean-architecture/README.md) · [QUARKUS](../quarkus/README.md) · [JVM E PLATAFORMA JAVA](../jvm-e-plataforma-java/README.md)

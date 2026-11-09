@@ -125,6 +125,8 @@ Com esse mapa na mão, as três ideias centrais do framework ficam óbvias:
 
 > Se algum termo da tabela acima ainda estiver nebuloso, vale fixá-lo agora: as seções seguintes usam "build", "boot", "runtime" e "reflexão" como vocabulário corrente.
 
+> 📚 Esta seção é um resumo do necessário para entender o Quarkus. O aprofundamento — JVM por dentro, memória, *garbage collector*, JIT, threads virtuais e operação em produção — está em [JVM E PLATAFORMA JAVA](../jvm-e-plataforma-java/README.md).
+
 ---
 
 ## 2. O problema que o Quarkus resolve
@@ -298,4 +300,4 @@ O denominador comum dos casos de uso é sempre o mesmo: **quando inicialização
 22. Qual é o preço de tomar decisões em tempo de build?
 ---
 
-**Relacionados:** [Spring MVC - APIs RESTful](../spring-mvc-apis-restful/README.md) · [SPRING DATA JPA](../spring-data-jpa/README.md) · [DOCKER](../docker/README.md) · [ARQUITETURA DISTRIBUÍDA](../arquitetura-distribuida/i-estilos-arquiteturais.md) · [MENSAGERIA](../mensageria/README.md) · [SPRING E SPRING BOOT](../spring-e-spring-boot/README.md)
+**Relacionados:** [Spring MVC - APIs RESTful](../spring-mvc-apis-restful/README.md) · [SPRING DATA JPA](../spring-data-jpa/README.md) · [DOCKER](../docker/README.md) · [ARQUITETURA DISTRIBUÍDA](../arquitetura-distribuida/i-estilos-arquiteturais.md) · [MENSAGERIA](../mensageria/README.md) · [SPRING E SPRING BOOT](../spring-e-spring-boot/README.md) · [JVM E PLATAFORMA JAVA](../jvm-e-plataforma-java/README.md)

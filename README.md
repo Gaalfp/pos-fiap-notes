@@ -13,7 +13,7 @@ item leva direto à seção correspondente. Todo arquivo de conteúdo termina co
 
 - **[Arquitetura e design](#arquitetura-e-design)** — [CLEAN ARCHITECTURE](#clean-architecture) · [SOLID](#solid) · [DESIGN PATTERNS EM OO](#design-patterns-em-oo) · [POO](#poo)
 - **[Sistemas distribuídos e integração](#sistemas-distribuídos-e-integração)** — [ARQUITETURA DISTRIBUÍDA](#arquitetura-distribuída) · [FUNDAMENTOS DE MENSAGERIA](#fundamentos-de-mensageria) · [TEOREMA CAP](#teorema-cap) · [gRPC e GRAPHQL](#grpc-e-graphql)
-- **[Java e frameworks](#java-e-frameworks)** — [SPRING E SPRING BOOT](#spring-e-spring-boot) · [Spring MVC - APIs RESTful](#spring-mvc---apis-restful) · [SPRING DATA JPA](#spring-data-jpa) · [SPRING SECURITY](#spring-security) · [TESTES EM SOFTWARE](#testes-em-software) · [QUARKUS](#quarkus)
+- **[Java e frameworks](#java-e-frameworks)** — [JVM E PLATAFORMA JAVA](#jvm-e-plataforma-java) · [SPRING E SPRING BOOT](#spring-e-spring-boot) · [Spring MVC - APIs RESTful](#spring-mvc---apis-restful) · [SPRING DATA JPA](#spring-data-jpa) · [SPRING SECURITY](#spring-security) · [TESTES EM SOFTWARE](#testes-em-software) · [QUARKUS](#quarkus)
 - **[Dados](#dados)** — [FUNDAMENTOS DE MODELAGEM DE DADOS](#fundamentos-de-modelagem-de-dados)
 - **[Infraestrutura](#infraestrutura)** — [DOCKER](#docker)
 - **[Referência rápida](#referência-rápida)** — [RESUMO DE PROVA](#resumo-de-prova) · [UTEIS](#uteis)
@@ -455,6 +455,73 @@ Schema e SDL, query, resolvers, DataLoader, Spring for GraphQL.
 ---
 
 ## Java e frameworks
+
+### JVM E PLATAFORMA JAVA
+
+A plataforma embaixo de tudo: JVM, memória, garbage collector, inicialização e operação em produção.
+
+#### [Visão geral](jvm-e-plataforma-java/README.md)
+
+As três coisas que se chamam Java, JDK × JRE × JVM, o pipeline de execução, o mapa de memória, versões LTS e distribuições.
+
+- [1. "Java" são três coisas diferentes](jvm-e-plataforma-java/README.md#1-java-são-três-coisas-diferentes)
+- [2. JDK × JRE × JVM](jvm-e-plataforma-java/README.md#2-jdk--jre--jvm)
+- [3. Do código-fonte ao processo em execução](jvm-e-plataforma-java/README.md#3-do-código-fonte-ao-processo-em-execução)
+- [4. A anatomia de um processo Java](jvm-e-plataforma-java/README.md#4-a-anatomia-de-um-processo-java)
+- [5. Versões: o ciclo de seis meses e as LTS](jvm-e-plataforma-java/README.md#5-versões-o-ciclo-de-seis-meses-e-as-lts)
+- [6. Qual JDK baixar](jvm-e-plataforma-java/README.md#6-qual-jdk-baixar)
+- [Capítulos](jvm-e-plataforma-java/README.md#capítulos)
+
+#### [I - A JVM POR DENTRO](jvm-e-plataforma-java/i-a-jvm-por-dentro.md)
+
+Carregamento de classes, bytecode, interpretador e JIT, aquecimento, CDS e cache AOT.
+
+- [1. A arquitetura em três subsistemas](jvm-e-plataforma-java/i-a-jvm-por-dentro.md#1-a-arquitetura-em-três-subsistemas)
+- [2. Carregamento de classes](jvm-e-plataforma-java/i-a-jvm-por-dentro.md#2-carregamento-de-classes)
+  - [Os três carregadores](jvm-e-plataforma-java/i-a-jvm-por-dentro.md#os-três-carregadores)
+  - [As três fases](jvm-e-plataforma-java/i-a-jvm-por-dentro.md#as-três-fases)
+- [3. Bytecode: uma máquina de pilha](jvm-e-plataforma-java/i-a-jvm-por-dentro.md#3-bytecode-uma-máquina-de-pilha)
+- [4. O motor de execução: interpretador + JIT](jvm-e-plataforma-java/i-a-jvm-por-dentro.md#4-o-motor-de-execução-interpretador--jit)
+- [5. Aquecimento (*warmup*)](jvm-e-plataforma-java/i-a-jvm-por-dentro.md#5-aquecimento-warmup)
+- [6. CDS e o cache AOT: diminuir o custo de subir](jvm-e-plataforma-java/i-a-jvm-por-dentro.md#6-cds-e-o-cache-aot-diminuir-o-custo-de-subir)
+- [7. Imagem nativa: o extremo oposto](jvm-e-plataforma-java/i-a-jvm-por-dentro.md#7-imagem-nativa-o-extremo-oposto)
+- [8. As quatro formas de executar Java hoje](jvm-e-plataforma-java/i-a-jvm-por-dentro.md#8-as-quatro-formas-de-executar-java-hoje)
+
+#### [II - MEMÓRIA E GARBAGE COLLECTOR](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md)
+
+O mapa da memória, RSS × heap, gerações, GC roots, os coletores, tuning, container e os OutOfMemoryError.
+
+- [1. O mapa completo da memória](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#1-o-mapa-completo-da-memória)
+- [2. Por que RSS ≠ heap (e por que isso mata pod)](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#2-por-que-rss--heap-e-por-que-isso-mata-pod)
+- [3. Dentro do heap: as gerações](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#3-dentro-do-heap-as-gerações)
+- [4. Como o GC decide o que é lixo](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#4-como-o-gc-decide-o-que-é-lixo)
+- [5. Os algoritmos](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#5-os-algoritmos)
+- [6. Os coletores](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#6-os-coletores)
+- [7. *Tuning*: as flags que importam](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#7-tuning-as-flags-que-importam)
+- [8. JVM em container](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#8-jvm-em-container)
+- [9. Os `OutOfMemoryError` e como ler cada um](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#9-os-outofmemoryerror-e-como-ler-cada-um)
+- [10. O log de GC e o que observar](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#10-o-log-de-gc-e-o-que-observar)
+- [Checklist de memória para produção](jvm-e-plataforma-java/ii-memoria-e-garbage-collector.md#checklist-de-memória-para-produção)
+
+#### [III - SUBIR E OPERAR EM PRODUÇÃO](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md)
+
+`java -jar` passo a passo, cold start, threads virtuais, imagem, flags, JFR, diagnóstico e Kubernetes.
+
+- [1. O que acontece em `java -jar app.jar`](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#1-o-que-acontece-em-java--jar-appjar)
+- [2. *Cold start* e *warmup*](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#2-cold-start-e-warmup)
+- [3. Threads: plataforma × virtuais](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#3-threads-plataforma--virtuais)
+- [4. Empacotamento e imagem de container](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#4-empacotamento-e-imagem-de-container)
+- [5. As flags mínimas de produção](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#5-as-flags-mínimas-de-produção)
+- [6. Observabilidade da JVM](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#6-observabilidade-da-jvm)
+- [7. Diagnóstico: os quatro incidentes clássicos](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#7-diagnóstico-os-quatro-incidentes-clássicos)
+  - [a) CPU em 100%](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#a-cpu-em-100)
+  - [b) Latência alta ou irregular](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#b-latência-alta-ou-irregular)
+  - [c) Memória crescendo](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#c-memória-crescendo)
+  - [d) Aplicação travada (não responde)](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#d-aplicação-travada-não-responde)
+- [8. Desligamento ordenado](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#8-desligamento-ordenado)
+- [9. Checklist de Java no Kubernetes](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#9-checklist-de-java-no-kubernetes)
+
+<br>
 
 ### SPRING E SPRING BOOT
 
