@@ -6,8 +6,6 @@ Esta é a matéria que fica **embaixo** das outras três de Spring: [MVC](../spr
 
 O Spring é, antes de qualquer coisa, **um container de objetos**. Tudo o que ele faz de mais famoso — transação declarativa, segurança por anotação, repositórios que você não implementa, autoconfiguração — é construído em cima de duas ideias apenas: **ele cria os seus objetos** e **ele pode embrulhá-los**. Quem entende essas duas, entende o framework; quem não entende, decora anotações.
 
-> A origem histórica (2002, Rod Johnson, os problemas dos EJBs) está nas anotações de aula em [I - Introdução sobre o Spring MVC](../spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc.md).
-
 ---
 
 ## 1. O problema: quem cria os objetos?
@@ -101,7 +99,39 @@ O item ③ é o que as pessoas chamam de "mágica do Spring" — e é o assunto 
 
 ---
 
-## 4. Spring × Spring Boot — a confusão mais comum
+## 4. De onde o Spring veio: o problema dos EJBs
+
+A seção 1 mostrou o problema **técnico** que o Spring resolve. Vale conhecer também o problema **histórico**, porque ele explica a personalidade do framework.
+
+Em **2002**, **Rod Johnson** publicou um livro com uma tese incômoda: o jeito oficial de construir aplicações corporativas em Java — o **J2EE** com **EJB** (*Enterprise JavaBeans*) — era mais complicado do que o problema que resolvia. O código que acompanhava o livro virou o **Spring**, cuja versão 1.0 saiu em **2004**.
+
+Os quatro problemas dos EJBs que ele atacou:
+
+| Problema | Por que doía |
+|---|---|
+| **Não rodava fora de um servidor de aplicação** | para executar ou depurar qualquer coisa era preciso subir um servidor pesado. **Testar ficava inviável** — e esse foi o argumento decisivo |
+| **Cerimônia desproporcional** | várias interfaces e descritores XML por componente, para pouca regra de negócio |
+| **Especificação ditada por comitê** | evoluía por consenso de fornecedores, não pela prática de quem escrevia aplicação |
+| **Generalidade que ninguém usava** | foi desenhado para suportar muitos tipos de cliente e cenários distribuídos; a maioria dos projetos precisava de muito menos |
+
+**A resposta do Spring** foi justamente a ausência de cerimônia: você escreve **POJOs** — *Plain Old Java Objects*, classes Java comuns, sem herdar nem implementar nada do framework — e um **container leve** cuida de criá-las, conectá-las e decorá-las. Como as suas classes não dependem do framework, elas rodam (e são testadas) **sem servidor nenhum**.
+
+### Os quatro pilares do Spring Framework
+
+A divisão que o framework tem até hoje, e que organiza esta matéria e as seguintes:
+
+| Pilar | O que faz | Onde está no repositório |
+|---|---|---|
+| **Container (IoC)** | gerencia o **ciclo de vida** e a configuração dos objetos da aplicação | [capítulo I](i-ioc-e-beans.md) |
+| **AOP e *aspects*** | separa as **preocupações transversais** — transação, segurança, log — da regra de negócio | [capítulo II](ii-aop-e-proxies.md) |
+| **Acesso a dados e integração** | abstrai JDBC, ORM, transações e mensageria | [SPRING DATA JPA](../spring-data-jpa/README.md) |
+| **Web MVC** | resolve URL, injeta parâmetros, valida entrada e serializa a saída | [Spring MVC - APIs RESTful](../spring-mvc-apis-restful/README.md) |
+
+> **A ironia que fecha o círculo:** o Spring venceu os EJBs por ser **leve e testável fora do servidor**. Vinte anos depois, ele é a plataforma estabelecida — e é acusado, por sua vez, de peso e de cerimônia por frameworks mais novos. É literalmente o argumento de abertura do [QUARKUS](../quarkus/README.md#2-o-problema-que-o-quarkus-resolve). Arquitetura é cíclica, e vale desconfiar de quem apresenta o incumbente como escolha óbvia — inclusive quando o incumbente é o Spring.
+
+---
+
+## 5. Spring × Spring Boot — a confusão mais comum
 
 **Spring Boot não é um framework diferente do Spring.** É o Spring com as decisões já tomadas.
 
@@ -136,7 +166,7 @@ Em uma frase: **o Framework dá os motores; o Boot já os ligou com o ajuste pad
 
 ---
 
-## 5. O ecossistema
+## 6. O ecossistema
 
 | Projeto | Para que serve |
 |---|---|
@@ -154,7 +184,7 @@ Em uma frase: **o Framework dá os motores; o Boot já os ligou com o ajuste pad
 
 ---
 
-## 6. Como uma aplicação Spring Boot sobe
+## 7. Como uma aplicação Spring Boot sobe
 
 Vale ver o boot desta vez em termos do Spring — é o mesmo [passo a passo genérico de uma aplicação Java](../quarkus/README.md#o-que-a-aplicação-faz-no-boot--o-passo-a-passo), agora com os nomes reais:
 
@@ -202,13 +232,17 @@ flowchart TB
 7. O que é o `ApplicationContext`?
 8. Explique: *component scan*, *stereotype*, *autowiring*, ponto de injeção, escopo.
 9. O que é um proxy e por que ele é a base da "mágica" do Spring?
-10. Spring Boot é um framework diferente do Spring? O que exatamente ele acrescenta?
-11. O que é um *starter* e por que se diz que ele não tem código?
-12. Para que serve a autoconfiguração e como você sobrescreve uma decisão dela?
-13. Cite seis projetos do ecossistema Spring e para que servem.
-14. Descreva os sete passos entre `SpringApplication.run()` e a primeira requisição atendida.
-15. Em quais desses passos está concentrado o tempo de inicialização? Por que o Quarkus discorda deles?
-
+10. Que tese Rod Johnson defendeu em 2002, e o que nasceu dela?
+11. Cite os quatro problemas dos EJBs e diga qual foi o decisivo.
+12. O que é um POJO e por que ele foi a resposta do Spring aos EJBs?
+13. Quais são os quatro pilares do Spring Framework?
+14. Qual é a ironia histórica entre Spring e Quarkus?
+15. Spring Boot é um framework diferente do Spring? O que exatamente ele acrescenta?
+16. O que é um *starter* e por que se diz que ele não tem código?
+17. Para que serve a autoconfiguração e como você sobrescreve uma decisão dela?
+18. Cite seis projetos do ecossistema Spring e para que servem.
+19. Descreva os sete passos entre `SpringApplication.run()` e a primeira requisição atendida.
+20. Em quais desses passos está concentrado o tempo de inicialização? Por que o Quarkus discorda deles?
 ---
 
 **Relacionados:** [Spring MVC - APIs RESTful](../spring-mvc-apis-restful/README.md) · [SPRING DATA JPA](../spring-data-jpa/README.md) · [SPRING SECURITY](../spring-security/README.md) · [QUARKUS](../quarkus/README.md) · [SOLID](../solid/README.md) · [DESIGN PATTERNS EM OO](../design-patterns-em-oo/README.md) · [JVM E PLATAFORMA JAVA](../jvm-e-plataforma-java/README.md)

@@ -22,7 +22,7 @@ flowchart TB
 | **2. Inicialização da JVM** | dezenas de ms | pouco — é o custo de existir |
 | **3. Núcleo da plataforma** | ms | **sim**: o CDS do JDK já faz isso por padrão |
 | **5. Suas classes** | de centenas de ms a segundos, conforme o tamanho | **sim**: AppCDS, cache AOT → [I](i-a-jvm-por-dentro.md#6-cds-e-o-cache-aot-diminuir-o-custo-de-subir) |
-| **7. O framework** | **normalmente a maior fatia** | **sim**: é aqui que [Spring](../spring-e-spring-boot/README.md#6-como-uma-aplicação-spring-boot-sobe) e [Quarkus](../quarkus/README.md#3-a-ideia-central-build-time-augmentation) divergem |
+| **7. O framework** | **normalmente a maior fatia** | **sim**: é aqui que [Spring](../spring-e-spring-boot/README.md#7-como-uma-aplicação-spring-boot-sobe) e [Quarkus](../quarkus/README.md#3-a-ideia-central-build-time-augmentation) divergem |
 | **Aquecimento** (depois do passo 8) | as primeiras requisições | **sim**: CRaC, nativo, ou aquecer antes de liberar tráfego |
 
 Um detalhe do passo 2 que confunde muita gente: a JVM **reserva** o espaço de endereços do heap no início (é o que `-Xmx` diz), mas só **compromete** a memória conforme precisa. Por isso o RSS cresce depois de subir, mesmo sem mudança de carga.

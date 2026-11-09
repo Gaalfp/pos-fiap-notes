@@ -19,6 +19,17 @@ Vantagens:
 | **I** | Interface Segregation | estou obrigando alguém a depender do que não usa? |
 | **D** | Dependency Inversion | quem depende de quem — a regra ou o detalhe? |
 
+### As duas palavras que atravessam os cinco
+
+Antes dos princípios, o par de conceitos em que todos eles se sustentam:
+
+| Termo | O que é |
+|---|---|
+| **Coesão** | o quanto as partes de uma classe **pertencem umas às outras**. Alta coesão = tudo ali existe pelo mesmo motivo. Baixa coesão = uma classe que faz validação, cálculo, e-mail e relatório |
+| **Acoplamento** | o quanto uma classe **depende** de outra. Alto acoplamento = mexer em A obriga a mexer em B. Baixo acoplamento = A conhece apenas uma abstração estável de B |
+
+> **A formulação curta de SOLID é esta:** *maximizar a coesão, minimizar o acoplamento.* **SRP é coesão**; **DIP é acoplamento**; os outros três protegem um ou outro. A discussão completa dos dois conceitos, com exemplos de código, está em [CONCEITOS DE POO](../poo/conceitos-de-poo.md#acoplamento-e-coesão).
+
 ---
 
 ## S — Single Responsibility
@@ -353,7 +364,7 @@ SOLID não cobre tudo. O vocabulário completo de design inclui:
 - **Tell, Don't Ask** — mande o objeto fazer, em vez de perguntar o estado e decidir por ele. É o antídoto do domínio anêmico: `conta.debitar(valor)` em vez de `if (conta.getSaldo() >= valor) conta.setSaldo(...)`.
 - **Lei de Demeter** (*princípio do menor conhecimento*) — fale só com os amigos imediatos. `pedido.getCliente().getEndereco().getCidade().getNome()` é o *train wreck* que denuncia a violação.
 - **Composição sobre herança** — herança acopla em tempo de compilação; composição troca a peça em runtime. → [POO](../poo/conceitos-de-poo.md)
-- **Alta coesão, baixo acoplamento** — a formulação mais antiga e mais geral: SRP é coesão, DIP é acoplamento.
+- **Alta coesão, baixo acoplamento** — a formulação mais antiga e mais geral, e a que [abre esta matéria](#as-duas-palavras-que-atravessam-os-cinco): SRP é coesão, DIP é acoplamento.
 
 ### Princípios de componentes (o "SOLID dos pacotes")
 

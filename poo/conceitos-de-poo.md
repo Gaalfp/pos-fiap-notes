@@ -6,7 +6,7 @@ Programa estruturado → Não segue os conceitos de programação orientada a ob
 
 Na Programacao orientada a objetos:
 
-A classe é como um template do seu objeto, uma vez que elas são definidas em instâncias, elas conseguem ser utilizadas. **A classe é como a forma e o objeto como o bolo.**
+A **classe** é o *template*: ela descreve quais dados e quais comportamentos aquele tipo de coisa tem, mas não é a coisa em si. Para usá-la, é preciso criar uma **instância** dela — um objeto concreto, com valores próprios, ocupando memória. Esse ato de criar a instância é a **instanciação** (`new`). **A classe é como a forma e o objeto como o bolo:** uma forma, muitos bolos; e é o bolo que se come, não a forma.
 
 - O objeto é uma entidade do mundo real, em technês, é como uma **unidade de estado e comportamento** que ocupa um lugar na memória (Heap).
     - **Identidade Única:** Mesmo que você tenha dois objetos `Usuario` com o mesmo nome e mesmo CPF, para o computador, eles são diferentes porque ocupam endereços de memória distintos.

@@ -47,6 +47,8 @@ Em março de 2015, a Google decidiu desenvolver uma nova versão do stubby e dis
 
 ## 3. Protocol Buffers
 
+> **Serializar** é transformar um objeto que está na memória em uma **sequência de bytes** que possa trafegar pela rede ou ser gravada em disco; **desserializar** é o caminho de volta. Todo protocolo precisa disso — a diferença entre eles está em **qual formato** de bytes se usa: texto legível (JSON, XML) ou binário compacto (protobuf). É essa escolha que o resto da seção discute.
+
 Caracteristicas de um protobuf:
 
 - Agnóstico a linguagem de programacao

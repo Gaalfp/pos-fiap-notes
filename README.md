@@ -52,6 +52,7 @@ Os cinco princípios com código violando/corrigido, code smells e princípios d
 
 **[Conteúdo da matéria →](solid/README.md)**
 
+- [As duas palavras que atravessam os cinco](solid/README.md#as-duas-palavras-que-atravessam-os-cinco)
 - [S — Single Responsibility](solid/README.md#s--single-responsibility)
 - [O — Open/Closed](solid/README.md#o--openclosed)
 - [L — Liskov Substitution](solid/README.md#l--liskov-substitution)
@@ -539,9 +540,11 @@ IoC e DI, o vocabulário mínimo, Spring × Spring Boot, o ecossistema e o boot 
 - [1. O problema: quem cria os objetos?](spring-e-spring-boot/README.md#1-o-problema-quem-cria-os-objetos)
 - [2. Inversão de controle e injeção de dependência](spring-e-spring-boot/README.md#2-inversão-de-controle-e-injeção-de-dependência)
 - [3. O vocabulário mínimo](spring-e-spring-boot/README.md#3-o-vocabulário-mínimo)
-- [4. Spring × Spring Boot — a confusão mais comum](spring-e-spring-boot/README.md#4-spring--spring-boot--a-confusão-mais-comum)
-- [5. O ecossistema](spring-e-spring-boot/README.md#5-o-ecossistema)
-- [6. Como uma aplicação Spring Boot sobe](spring-e-spring-boot/README.md#6-como-uma-aplicação-spring-boot-sobe)
+- [4. De onde o Spring veio: o problema dos EJBs](spring-e-spring-boot/README.md#4-de-onde-o-spring-veio-o-problema-dos-ejbs)
+  - [Os quatro pilares do Spring Framework](spring-e-spring-boot/README.md#os-quatro-pilares-do-spring-framework)
+- [5. Spring × Spring Boot — a confusão mais comum](spring-e-spring-boot/README.md#5-spring--spring-boot--a-confusão-mais-comum)
+- [6. O ecossistema](spring-e-spring-boot/README.md#6-o-ecossistema)
+- [7. Como uma aplicação Spring Boot sobe](spring-e-spring-boot/README.md#7-como-uma-aplicação-spring-boot-sobe)
 - [Capítulos](spring-e-spring-boot/README.md#capítulos)
 
 #### [I - IoC E BEANS](spring-e-spring-boot/i-ioc-e-beans.md)
@@ -607,7 +610,12 @@ _Só a apresentação da matéria, o índice dos capítulos e os links relaciona
 
 Origem do Spring, o problema dos EJBs e os componentes do framework.
 
-_Arquivo curto, sem subdivisões — leia direto._
+- [1. O que é um servlet](spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc.md#1-o-que-é-um-servlet)
+- [2. O padrão Front Controller](spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc.md#2-o-padrão-front-controller)
+- [3. O que "MVC" significa — e por que o nome confunde](spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc.md#3-o-que-mvc-significa--e-por-que-o-nome-confunde)
+- [4. As peças do Spring MVC](spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc.md#4-as-peças-do-spring-mvc)
+- [5. Onde o Spring MVC se encaixa](spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc.md#5-onde-o-spring-mvc-se-encaixa)
+- [6. MVC × WebFlux, em uma linha](spring-mvc-apis-restful/i-introducao-sobre-o-spring-mvc.md#6-mvc--webflux-em-uma-linha)
 
 #### [II - FUNDAMENTOS REST](spring-mvc-apis-restful/ii-fundamentos-rest.md)
 
