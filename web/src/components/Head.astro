@@ -5,40 +5,20 @@ import Default from '@astrojs/starlight/components/Head.astro';
 <Default><slot /></Default>
 
 <script>
-  import mermaid from 'mermaid';
-
-  const temaAtual = () =>
-    document.documentElement.dataset.theme === 'light' ? 'default' : 'dark';
-
-  async function desenhar() {
-    const blocos = document.querySelectorAll('pre.mermaid');
-    if (!blocos.length) return;
-
+  /* Os diagramas vêm desenhados do build (tools/renderizar-diagramas.mjs).
+     O Mermaid só é baixado se sobrar algum bloco não renderizado — o que
+     evita ~5 MB de JavaScript no caso normal. */
+  const pendentes = document.querySelectorAll('pre.mermaid');
+  if (pendentes.length) {
+    const { default: mermaid } = await import('mermaid');
+    const escuro = document.documentElement.dataset.theme !== 'light';
     mermaid.initialize({
       startOnLoad: false,
-      theme: temaAtual(),
-      securityLevel: 'strict',
-      fontFamily: 'inherit',
+      theme: escuro ? 'dark' : 'default',
+      fontFamily: "'Figtree Variable', system-ui, sans-serif",
       flowchart: { useMaxWidth: true, htmlLabels: true },
       sequence: { useMaxWidth: true },
     });
-
-    blocos.forEach((bloco) => {
-      const el = bloco as HTMLElement;
-      // guarda o código-fonte para conseguir redesenhar ao trocar de tema
-      if (!el.dataset.fonte) el.dataset.fonte = el.textContent ?? '';
-      el.innerHTML = el.dataset.fonte;
-      el.removeAttribute('data-processed');
-    });
-
-    await mermaid.run({ nodes: [...blocos] as HTMLElement[] });
+    await mermaid.run({ nodes: [...pendentes] as HTMLElement[] });
   }
-
-  desenhar();
-
-  // redesenha quando o visitante alterna claro/escuro
-  new MutationObserver(desenhar).observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-theme'],
-  });
 </script>

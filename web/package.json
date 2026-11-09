@@ -5,13 +5,20 @@
   "scripts": {
     "sync": "python3 ../tools/sincronizar-site.py && python3 ../tools/gerar-site.py",
     "dev": "npm run sync && astro dev",
-    "build": "npm run sync && astro build",
-    "preview": "astro preview"
+    "build": "npm run sync && rm -rf node_modules/.astro && astro build",
+    "preview": "astro preview",
+    "diagramas": "node ../tools/renderizar-diagramas.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.6",
     "@astrojs/starlight": "^0.42.10",
+    "@fontsource-variable/figtree": "^5.3.0",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource/dm-mono": "^5.3.0",
     "astro": "^7.4.8",
     "mermaid": "^12.3.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.65.0"
   }
 }

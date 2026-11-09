@@ -25,7 +25,24 @@ O site é construído de uma cópia transformada:
 |---|---|---|
 | 1 | `tools/sincronizar-site.py` | copia os `.md` para `web/src/content/docs/`, transforma `README.md` em `index.md`, usa o `# H1` como título da página e reescreve os links para as URLs do site |
 | 2 | `tools/gerar-site.py` | gera a barra lateral (`src/barra-lateral.json`) e o `base` (`src/site.json`) |
-| 3 | `astro build` | gera o HTML, otimiza as imagens e monta o índice de busca |
+| 3 | `astro build` | gera o HTML, embute os diagramas, otimiza as imagens e monta o índice de busca |
+
+### Diagramas
+
+Os 127 diagramas Mermaid são desenhados **em tempo de build**, não no navegador:
+desenhar no cliente custava **5,4 MB de JavaScript** por leitor (elk, cytoscape,
+katex). Agora cada diagrama é um SVG de alguns KB, embutido na página — aparece
+instantaneamente e funciona sem JavaScript.
+
+```bash
+npm run diagramas     # redesenha o que mudou (precisa do Playwright)
+npm run diagramas -- --forcar   # redesenha tudo (ex.: mudou a paleta)
+```
+
+O cache fica em `src/diagramas/<hash>-{claro,escuro}.svg`, **versionado no git** —
+o build normal não precisa de navegador. Só quem **cria ou altera** um diagrama
+roda o comando acima. Se faltar algum SVG, a página cai no desenho pelo
+navegador e o build avisa.
 
 Os três passos rodam juntos no `npm run build`.
 
@@ -36,8 +53,9 @@ Os três passos rodam juntos no `npm run build`.
 | O conteúdo | o `.md` na **raiz** do repositório |
 | A ordem/nome das matérias na barra lateral **e** no índice do README | `tools/estrutura.py` |
 | Tema, cores, recursos do Starlight | `astro.config.mjs` |
-| Aparência de tabelas e diagramas | `src/estilos.css` |
-| Como os diagramas Mermaid são desenhados | `src/components/Head.astro` |
+| Paleta, fontes e aparência | `src/estilos.css` |
+| A paleta dos diagramas | `tools/renderizar-diagramas.mjs` (e depois `npm run diagramas -- --forcar`) |
+| O mascote e o pixel art | `src/pixel/mascote.js` |
 
 Depois de mexer em `tools/estrutura.py`, rode:
 

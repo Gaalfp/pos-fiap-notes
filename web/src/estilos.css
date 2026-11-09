@@ -1,35 +1,153 @@
-/* Ajustes para leitura das anotações — principalmente no celular. */
+/* ───────────────────────────────────────────────────────────────────────────
+   Identidade do projeto.
+
+   A paleta, as fontes e o acento cromado vêm do convite de aniversário do
+   Gabriel — mesma mão, mesmo mundo. O pixel art (src/pixel/) usa a paleta
+   quente do mascote por cima desta base monocromática.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/figtree';
+@import '@fontsource/dm-mono/400.css';
+@import '@fontsource/dm-mono/500.css';
 
 :root {
-  --sl-content-width: 50rem;        /* as tabelas comparativas são largas */
+  --px-preto: #0A0A0A;
+  --px-painel: #141414;
+  --px-texto: #F5F5F2;
+  --px-suave: #9B9B97;
+  --px-creme: #F4F1E6;
+  --px-tinta: #050806;
+  --px-prata: #D6D6D1;
+  --px-cromo: linear-gradient(180deg, #FFF 0%, #EDEDED 34%, #6F6F6F 50%,
+                              #F6F6F6 64%, #B9B9B9 82%, #FFF 100%);
+
+  --sl-font: 'Figtree Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sl-font-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --px-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+
+  --sl-text-5xl: 2.6rem;
+  --sl-content-width: 50rem;
 }
 
-/* Tabelas: rolagem horizontal em vez de estourar a tela do celular. */
+/* ── tema escuro (o padrão, como no convite) ─────────────────────────────── */
+:root {
+  --sl-color-accent-low: #26262a;
+  --sl-color-accent: #8f8f99;
+  --sl-color-accent-high: #e6e6e2;
+  --sl-color-white: #ffffff;
+  --sl-color-gray-1: #f3f3f0;
+  --sl-color-gray-2: #c9c9c4;
+  --sl-color-gray-3: #9b9b97;
+  --sl-color-gray-4: #5a5a58;
+  --sl-color-gray-5: #2e2e2d;
+  --sl-color-gray-6: #1c1c1b;
+  --sl-color-black: #0a0a0a;
+  --sl-color-bg: var(--px-preto);
+  --sl-color-bg-nav: #0d0d0d;
+  --sl-color-bg-sidebar: #0d0d0d;
+  --sl-color-text: var(--px-texto);
+  --sl-color-hairline: color-mix(in oklab, white 10%, transparent);
+  --sl-color-hairline-light: color-mix(in oklab, white 16%, transparent);
+}
+
+/* ── tema claro: papel creme, não branco clínico ─────────────────────────── */
+:root[data-theme='light'] {
+  --sl-color-accent-low: #e4e2d8;
+  --sl-color-accent: #6b6b63;
+  --sl-color-accent-high: #2a2a26;
+  --sl-color-white: #0a0a0a;
+  --sl-color-gray-1: #14140f;
+  --sl-color-gray-2: #35352e;
+  --sl-color-gray-3: #6b6b63;
+  --sl-color-gray-4: #9b9b93;
+  --sl-color-gray-5: #d8d5c8;
+  --sl-color-gray-6: #ebe8dc;
+  --sl-color-gray-7: #f4f1e6;
+  --sl-color-black: var(--px-creme);
+  --sl-color-bg: var(--px-creme);
+  --sl-color-bg-nav: #efece0;
+  --sl-color-bg-sidebar: #efece0;
+  --sl-color-text: #16160f;
+  --sl-color-hairline: color-mix(in oklab, black 12%, transparent);
+}
+
+/* ── tipografia ──────────────────────────────────────────────────────────── */
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3,
+h1.sl-heading,
+.hero h1 {
+  font-family: var(--px-display);
+  font-variation-settings: 'SOFT' 20, 'opsz' 96;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.sl-markdown-content h2 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--sl-color-hairline);
+}
+
+/* números de seção ("## 3. ...") com cara de índice */
+.sl-markdown-content h2,
+.sl-markdown-content h3 { text-wrap: balance; }
+
+/* ── tabelas: a parte mais usada do material ─────────────────────────────── */
 .sl-markdown-content table {
   display: block;
   overflow-x: auto;
   white-space: normal;
+  font-size: 0.94em;
+  border-collapse: collapse;
+}
+.sl-markdown-content table th {
+  font-family: var(--sl-font);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.78em;
+  color: var(--sl-color-gray-2);
+  background: color-mix(in oklab, var(--sl-color-gray-6) 70%, transparent);
 }
 .sl-markdown-content table th,
-.sl-markdown-content table td {
-  min-width: 7rem;
+.sl-markdown-content table td { min-width: 7rem; }
+.sl-markdown-content table tr:hover td {
+  background: color-mix(in oklab, var(--sl-color-accent-low) 35%, transparent);
 }
 
-/* Diagramas Mermaid centralizados e sem fundo de bloco de código. */
-pre.mermaid {
-  background: none !important;
-  border: none !important;
-  padding: 0.5rem 0 !important;
+/* ── citações: onde moram as "pegadinhas" ───────────────────────────────── */
+.sl-markdown-content blockquote {
+  border-inline-start: 2px solid var(--sl-color-accent);
+  background: color-mix(in oklab, var(--sl-color-gray-6) 55%, transparent);
+  padding: 0.6rem 1rem;
+  border-radius: 0 6px 6px 0;
+}
+
+/* ── diagramas ───────────────────────────────────────────────────────────── */
+.diagrama {
+  margin: 1.5rem 0;
   text-align: center;
   overflow-x: auto;
 }
-pre.mermaid svg {
-  max-width: 100%;
-  height: auto;
+.diagrama svg { max-width: 100%; height: auto; }
+/* uma versão por tema; a outra fica fora do fluxo */
+.diagrama[data-tema='claro'] { display: none; }
+:root[data-theme='light'] .diagrama[data-tema='escuro'] { display: none; }
+:root[data-theme='light'] .diagrama[data-tema='claro'] { display: block; }
+
+/* enquanto o mermaid do cliente (fallback) não desenhou */
+pre.mermaid { background: none !important; border: none !important; text-align: center; }
+pre.mermaid:not([data-processed]) { visibility: hidden; min-height: 2rem; }
+
+/* ── toque cromado do convite, em doses pequenas ────────────────────────── */
+.px-cromo {
+  background: var(--px-cromo);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-/* Enquanto o desenho não acontece, não mostra o código cru piscando. */
-pre.mermaid:not([data-processed]) {
-  visibility: hidden;
-  min-height: 2rem;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

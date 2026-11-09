@@ -44,6 +44,16 @@ jobs:
         working-directory: web
         run: npm run build
 
+      - name: Conferir se todos os diagramas foram embutidos
+        working-directory: web
+        run: |
+          se_faltou=$(grep -rl 'class="mermaid"' dist --include='*.html' | wc -l)
+          if [ "$se_faltou" -gt 0 ]; then
+            echo "::warning::$se_faltou página(s) com diagrama não pré-renderizado — rode 'npm run diagramas' e commite o cache"
+          else
+            echo "todos os diagramas estão embutidos como SVG"
+          fi
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web/dist
