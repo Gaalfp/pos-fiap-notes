@@ -142,7 +142,169 @@ A boa fronteira vem do **domínio**, não da camada técnica. O vocabulário é 
 
 ---
 
-## 5. SOA × microsserviços
+## 5. Monólito × microsserviços — quando usar cada um
+
+As duas seções anteriores descreveram cada estilo. Esta responde à pergunta que de fato aparece no trabalho: **qual dos dois, neste projeto, agora?**
+
+O erro de partida é tratar isso como decisão técnica de tamanho de código. Não é:
+
+> **Microsserviço não é sobre ser pequeno — é sobre poder ser implantado sozinho.** Um serviço de 200 mil linhas que sobe sem coordenar com ninguém é microsserviço. Vinte serviços de 500 linhas que precisam subir juntos são um **monólito distribuído** — o pior dos dois mundos.
+
+### O comparativo lado a lado
+
+| Critério | **Monólito** | **Microsserviços** |
+|---|---|---|
+| Unidade de deploy | **uma** — tudo sobe junto | **uma por serviço**, independentes |
+| Chamada interna | chamada de método: nanossegundos, confiável | chamada de rede: milissegundos, **pode falhar no meio** |
+| Transação | **ACID nativo**, um `BEGIN/COMMIT` | Saga, compensação, consistência eventual → [III](iii-consistencia-e-dados.md#4-transações-distribuídas) |
+| Consulta entre domínios | `JOIN` | composição via API ou projeção/CQRS |
+| Banco de dados | um, compartilhado por todo o código | **um por serviço**, exclusivo |
+| Escala | replica-se **a aplicação inteira** | replica-se **só o serviço quente** |
+| Isolamento de falha | fraco: um vazamento de memória derruba tudo | forte — **se** houver timeout, circuit breaker e bulkhead → [IV](iv-resiliencia.md) |
+| Refatorar fronteira | **barato**: o compilador te ajuda | **caro**: contrato publicado, dados migrados, dois times envolvidos |
+| Teste | integração roda local, rápido | exige contrato, *mock* de serviço, ambiente → [TESTES](../testes-em-software/iii-testes-no-spring.md) |
+| Depuração | **um stack trace** | tracing distribuído e correlação → [V](v-observabilidade.md#5-tracing-distribuído) |
+| Autonomia de time | baixa: todos no mesmo *release* | **alta**: cada time entrega no seu ritmo |
+| Diversidade de stack | uma só | cada serviço pode escolher |
+| Custo operacional | **baixo** | multiplicado pelo número de serviços |
+| Onboarding de dev novo | um repositório, um `run` | precisa entender o mapa e subir dependências |
+| Custo de infraestrutura | geralmente **menor** | mais processos, mais rede, mais observabilidade |
+
+A assimetria importante dessa tabela: **as vantagens do monólito são de hoje; as dos microsserviços são de escala.** Monólito é mais barato enquanto o sistema e o time caibem nele.
+
+### A pergunta que decide
+
+A decisão é **organizacional antes de ser técnica**. Em ordem de peso:
+
+1. **Quantos times precisam entregar sem pedir licença um ao outro?** Se a resposta é "um", microsserviços resolvem um problema que você não tem.
+2. **O domínio já é conhecido?** Fronteira errada em monólito se corrige refatorando; em microsserviços, se corrige migrando dados e renegociando contrato.
+3. **A plataforma existe?** CI/CD, observabilidade, orquestração e automação **antes** do primeiro serviço extraído.
+4. **Há partes com perfis de escala ou de disponibilidade realmente diferentes?** Esse é o argumento técnico legítimo.
+
+```mermaid
+flowchart TD
+    Q1{"Quantos times precisam<br/>fazer deploy sem<br/>coordenar entre si?"}
+    Q1 -->|"1 time"| M["MONÓLITO<br/><i>de preferência MODULAR</i>"]
+    Q1 -->|"vários"| Q2{"O domínio e as<br/>fronteiras já são<br/>bem conhecidos?"}
+    Q2 -->|"não"| M2["MONÓLITO MODULAR<br/><i>descubra a fronteira primeiro</i>"]
+    Q2 -->|"sim"| Q3{"Já existe plataforma:<br/>CI/CD, observabilidade,<br/>orquestração?"}
+    Q3 -->|"não"| M3["MONÓLITO<br/>+ construir a plataforma<br/><i>distribuir sem ela = caos</i>"]
+    Q3 -->|"sim"| Q4{"Há partes com escala,<br/>criticidade ou ciclo de vida<br/>muito diferentes?"}
+    Q4 -->|"não"| M4["MONÓLITO MODULAR<br/><i>extraia quando doer</i>"]
+    Q4 -->|"sim"| MS["MICROSSERVIÇOS<br/><i>extraia essas partes primeiro</i>"]
+```
+
+### Em que situação cada um se encaixa
+
+| Situação concreta | Escolha | Por quê |
+|---|---|---|
+| *Startup* validando produto, 3 devs | **Monólito** | a fronteira do domínio muda toda semana; velocidade de mudança é tudo |
+| Sistema interno de RH, uso previsível | **Monólito** | não há problema de escala nem de autonomia a resolver |
+| MVP com prazo curto | **Monólito** | o imposto de distribuição não caberia no prazo |
+| Produto que cresceu e tem 6 times brigando pelo mesmo *release* | **Microsserviços** | o gargalo é **coordenação de deploy** — exatamente o que eles resolvem |
+| E-commerce em que só o catálogo e o carrinho sofrem no pico | **Híbrido**: extrair catálogo/carrinho | escala seletiva; o resto continua monólito |
+| Processamento de vídeo/relatório que consome muita CPU | **Extrair esse componente** | perfil de recurso diferente do resto |
+| Legado de 15 anos que ninguém quer tocar | **Strangler Fig** (abaixo) | extração incremental, sem *big bang* |
+| Parte do sistema precisa de 99,99% e o resto não | **Extrair a parte crítica** | isolamento de falha e de janela de manutenção |
+| Domínios de negócio genuinamente independentes (seguros × consórcio) | **Microsserviços** | o acoplamento era só o banco de dados |
+| Requisito de stack diferente (um módulo em Python para ML) | **Extrair esse módulo** | governança descentralizada é vantagem real aqui |
+| Equipe sem CI/CD, sem observabilidade, sem quem opere | **Monólito** | distribuir sem plataforma troca um problema por cinco |
+| "O CTO leu um artigo sobre microsserviços" | **Monólito** | não é requisito |
+
+### O imposto fixo de cada serviço
+
+O que se esquece de somar na conta: **cada** serviço novo precisa de tudo isto, e não de "um pouco disto".
+
+| Item | Por serviço |
+|---|---|
+| Pipeline de build, teste e deploy | próprio |
+| Versionamento de contrato e compatibilidade | próprio → [Contrato de mensagem](../mensageria/iv-padroes-de-uso-e-operacao.md#5-contrato-e-versionamento-de-mensagem) |
+| Logs estruturados, métricas, *health check*, tracing | próprio → [V - OBSERVABILIDADE](v-observabilidade.md) |
+| Timeout, retry, circuit breaker, idempotência | próprio → [IV - RESILIÊNCIA](iv-resiliencia.md) |
+| Banco, migrations e backup | próprios |
+| Autenticação serviço-a-serviço | própria → [SPRING SECURITY](../spring-security/README.md#111-autenticação-serviço-a-serviço) |
+| Alguém de plantão que entenda dele | próprio |
+
+É isso que Fowler chama de **"microservice premium"**: um custo fixo pago de entrada, que só se paga quando a escala de **time** e de **tráfego** justifica. Abaixo desse ponto, o monólito entrega mais rápido.
+
+### Sinais de que é hora de extrair — e de que não é
+
+**Sinais verdadeiros (o monólito já dói):**
+
+- A fila de *release* é o gargalo: times esperando uns pelos outros para subir.
+- Um módulo precisa escalar 20× e o resto não — e você paga réplica da aplicação inteira.
+- Uma parte derruba o resto por acoplamento de recurso (conexão, memória, CPU).
+- Ciclos de vida divergentes: um módulo muda diariamente, outro muda por ano.
+- O *build* e a suíte de testes já custam dezenas de minutos e travam o fluxo.
+- Um domínio precisa de conformidade, janela de manutenção ou SLA próprios.
+
+**Sinais falsos (não extraia por isso):**
+
+- "O código está confuso" → isso é **falta de módulo**, não falta de rede. Rede não organiza código.
+- "Está na moda" / "é o que o mercado usa".
+- "Vai ficar mais fácil de testar" → fica mais difícil.
+- "O deploy é lento" → investigue o pipeline antes de redesenhar a arquitetura.
+- "Queremos usar Kubernetes" → ferramenta não é requisito.
+
+> A pesquisa do **DORA/Accelerate** aponta arquitetura **fracamente acoplada** como preditora de desempenho de entrega — e "fracamente acoplada" **não** é sinônimo de "distribuída". Um monólito modular bem fatiado atende ao critério; vinte serviços que sobem juntos, não.
+
+### Como sair do monólito: Strangler Fig
+
+O padrão de **Martin Fowler** (*strangler fig*, a figueira que envolve a árvore até substituí-la): nada de reescrita *big bang*. Põe-se uma fachada na frente, extrai-se **uma** capacidade por vez e redireciona-se o tráfego.
+
+```mermaid
+flowchart LR
+    subgraph F1["① hoje"]
+        C1["clientes"] --> MONO1["Monólito"]
+    end
+    subgraph F2["② fachada na frente"]
+        C2["clientes"] --> GW["API Gateway / proxy"] --> MONO2["Monólito"]
+    end
+    subgraph F3["③ extrai uma capacidade"]
+        C3["clientes"] --> GW2["Gateway"]
+        GW2 -->|"/pagamentos"| S1["Serviço Pagamentos"]
+        GW2 -->|"resto"| MONO3["Monólito"]
+    end
+    F1 --> F2 --> F3
+```
+
+**A ordem de extração que costuma dar certo:** comece pelo que é **mais autônomo e menos central** — o módulo com menos dependências de dados, com time dono claro e com motivo real para sair (escala, SLA, stack). Nunca comece pelo núcleo transacional: ele é o mais acoplado e o mais arriscado.
+
+Os pontos de dor da migração são sempre os mesmos dois: **separar os dados** (quebrar `JOIN`, duplicar dado por evento, migrar sem downtime) e **manter as duas versões no ar** durante a transição, geralmente com [Outbox](iii-consistencia-e-dados.md#5-outbox--o-problema-da-escrita-dupla) e idempotência. → [III - CONSISTÊNCIA E DADOS](iii-consistencia-e-dados.md)
+
+### Os dois erros simétricos
+
+```mermaid
+flowchart TB
+    subgraph E1["❌ Big ball of mud"]
+        B["monólito sem fronteira interna<br/><i>tudo chama tudo</i>"]
+    end
+    subgraph E2["❌ Monólito distribuído"]
+        D["serviços separados<br/>SEM autonomia<br/><i>banco compartilhado, deploy coordenado</i>"]
+    end
+    subgraph OK["✅ Os dois caminhos saudáveis"]
+        M["Monólito MODULAR<br/><i>fronteira sem rede</i>"]
+        S["Microsserviços de verdade<br/><i>fronteira + autonomia</i>"]
+    end
+    E1 -->|"extrair módulos"| M
+    M -->|"quando a escala exigir"| S
+    E2 -->|"consolidar de volta"| M
+```
+
+| Erro | O que é | O que ele custa |
+|---|---|---|
+| **Big ball of mud** | monólito sem nenhuma fronteira interna | mudança imprevisível; é o que as pessoas odeiam quando dizem "odeio monólito" |
+| **Monólito distribuído** | serviços separados **sem** autonomia: banco compartilhado, deploy coordenado, contrato implícito | paga **toda** a complexidade da rede e não recebe **nenhuma** das vantagens |
+
+**O caminho saudável é o do meio:** monólito **modular** primeiro — fronteiras explícitas, módulos com contrato interno, dados segregados por esquema. Dali, extrair é mecânico quando houver motivo. É a rota que [CLEAN ARCHITECTURE](../clean-architecture/README.md) prepara: se as dependências já apontam para dentro e a fronteira está em uma *port*, trocar uma chamada local por uma chamada de rede mexe em um adapter — não no domínio.
+
+> **Dois movimentos públicos vale conhecer, porque desmontam a ideia de via única:** a Amazon mantém a cultura de *two-pizza teams* e microsserviços, e ainda assim o time do **Prime Video** relatou em 2023 ter consolidado um componente de monitoramento distribuído **de volta em um único processo**, com forte redução de custo; a **Segment** relatou em 2018 um movimento semelhante, voltando de dezenas de serviços para um monólito por causa do custo operacional. Arquitetura é reversível, e consolidar não é derrota — é resposta a medição.
+
+**Em uma frase:** *comece monolítico e modular, distribua quando a organização — não o ego técnico — exigir, e extraia pela fronteira do domínio, uma capacidade por vez.*
+
+---
+
+## 6. SOA × microsserviços
 
 | | **SOA** (anos 2000) | **Microsserviços** |
 |---|---|---|
@@ -157,7 +319,7 @@ A crítica histórica ao SOA é o **ESB**: concentrar regra de negócio no barra
 
 ---
 
-## 6. Arquitetura orientada a eventos (event-driven)
+## 7. Arquitetura orientada a eventos (event-driven)
 
 Em vez de "A chama B", **A publica um fato** e quem se interessar reage. É o padrão [Observer](../design-patterns-em-oo/iii-padroes-comportamentais.md) em escala de arquitetura.
 
@@ -200,7 +362,7 @@ Não há vencedor: orquestração para processos de negócio críticos que preci
 
 ---
 
-## 7. Serverless / FaaS
+## 8. Serverless / FaaS
 
 O provedor gerencia servidor, escala e disponibilidade; você entrega **funções** que respondem a eventos (AWS Lambda, Azure Functions, Cloud Run).
 
@@ -216,7 +378,7 @@ Em Java, o cold start é o ponto sensível — mitigado com GraalVM *native imag
 
 ---
 
-## 8. Comunicação: síncrona × assíncrona
+## 9. Comunicação: síncrona × assíncrona
 
 A decisão que mais afeta acoplamento e resiliência:
 
@@ -236,7 +398,7 @@ A decisão que mais afeta acoplamento e resiliência:
 
 ---
 
-## 9. A infraestrutura que a distribuição exige
+## 10. A infraestrutura que a distribuição exige
 
 | Componente | Problema que resolve |
 |---|---|
@@ -252,7 +414,7 @@ A decisão que mais afeta acoplamento e resiliência:
 
 ---
 
-## 10. Lei de Conway
+## 11. Lei de Conway
 
 > *"Organizações que projetam sistemas produzem projetos que são cópias da estrutura de comunicação dessas organizações."* — Melvin Conway, 1967
 
@@ -287,15 +449,26 @@ A **manobra inversa de Conway** é usar isso de propósito: organize os times co
 6. Por que compartilhar banco entre serviços produz um "monólito distribuído"?
 7. O que é um bounded context e por que ele é bom candidato a fronteira de serviço?
 8. Qual o teste prático para saber se a fronteira entre dois serviços está errada?
-9. Compare SOA e microsserviços — qual a crítica histórica ao ESB?
-10. Diferencie event notification, event-carried state transfer e event sourcing.
-11. Orquestração × coreografia: vantagens de cada uma e quando usar.
-12. Por que *at-least-once* torna a idempotência obrigatória?
-13. Quando escolher comunicação síncrona e quando escolher assíncrona?
-14. Por que chamadas síncronas encadeadas causam falha em cascata?
-15. O que um service mesh faz, e qual a alternativa em biblioteca?
-16. Enuncie a Lei de Conway e explique a manobra inversa.
-
+9. Por que "microsserviço não é sobre tamanho"? O que define de fato um microsserviço?
+10. Compare monólito e microsserviços em seis critérios.
+11. Por que se diz que as vantagens do monólito são "de hoje" e as dos microsserviços são "de escala"?
+12. Qual é a pergunta organizacional que decide entre os dois, e por que ela vem antes da técnica?
+13. Dê três situações concretas em que o monólito é a escolha certa e três em que microsserviços são.
+14. O que é o *microservice premium* e o que compõe o imposto fixo de cada serviço novo?
+15. Cite três sinais verdadeiros e três sinais falsos de que é hora de extrair um serviço.
+16. "Fracamente acoplado" é sinônimo de "distribuído"? O que a pesquisa do DORA permite concluir?
+17. Explique o Strangler Fig, por qual módulo começar a extração — e por qual nunca começar.
+18. Quais são os dois pontos de dor de toda migração de monólito para serviços?
+19. Diferencie *big ball of mud* e monólito distribuído. Por que o segundo é o pior dos dois mundos?
+20. Por que consolidar serviços de volta num processo único não é um fracasso de arquitetura?
+21. Compare SOA e microsserviços — qual a crítica histórica ao ESB?
+22. Diferencie event notification, event-carried state transfer e event sourcing.
+23. Orquestração × coreografia: vantagens de cada uma e quando usar.
+24. Por que *at-least-once* torna a idempotência obrigatória?
+25. Quando escolher comunicação síncrona e quando escolher assíncrona?
+26. Por que chamadas síncronas encadeadas causam falha em cascata?
+27. O que um service mesh faz, e qual a alternativa em biblioteca?
+28. Enuncie a Lei de Conway e explique a manobra inversa.
 ---
 
 > [← Voltar para ARQUITETURA DISTRIBUÍDA](README.md) · Próximo: [II - LATÊNCIA E PERFORMANCE](ii-latencia-e-performance.md)

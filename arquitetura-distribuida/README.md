@@ -127,7 +127,7 @@ Os três eixos se **tensionam**: cache reduz latência e **piora** consistência
 
 ## Capítulos
 
-- [I - ESTILOS ARQUITETURAIS](i-estilos-arquiteturais.md) — cliente-servidor, P2P, microsserviços, monólito modular, SOA, event-driven e serverless; comunicação síncrona × assíncrona, service discovery, API gateway e Lei de Conway
+- [I - ESTILOS ARQUITETURAIS](i-estilos-arquiteturais.md) — cliente-servidor, P2P, **monólito × microsserviços e quando usar cada um**, SOA, event-driven e serverless; comunicação síncrona × assíncrona, service discovery, API gateway e Lei de Conway
 - [II - LATÊNCIA E PERFORMANCE](ii-latencia-e-performance.md) — os números da latência, CDN, cache em camadas e suas estratégias, invalidação, N+1 de rede e backpressure
 - [III - CONSISTÊNCIA E DADOS](iii-consistencia-e-dados.md) — replicação síncrona × assíncrona, quórum, database per service, Saga, Outbox, CQRS, event sourcing, idempotência e relógios
 - [IV - RESILIÊNCIA](iv-resiliencia.md) — timeout, retry com backoff e jitter, circuit breaker, bulkhead, fallback, rate limiting, degradação graciosa e chaos engineering
