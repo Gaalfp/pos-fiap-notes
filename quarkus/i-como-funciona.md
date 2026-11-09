@@ -4,59 +4,147 @@
 
 ## 1. As três fases: build, static init e runtime init
 
-O Quarkus divide em **três momentos** o que um framework tradicional faz em um só (o boot). Entender esses três momentos é entender o framework.
+A palavra que o Quarkus usa para o que ele faz no build é ***augmentation*** — literalmente **aumentar**: ele pega o seu código compilado e o **acrescenta** de tudo aquilo que o framework normalmente montaria durante o boot. O resultado do build não é só o seu código: é o seu código **mais classes novas**, escritas pelo próprio Quarkus.
+
+Antes das três fases, vale abrir a expressão que vai reaparecer o tempo todo.
+
+### O que significa "gerar bytecode"
+
+Você escreve `.java`; o compilador traduz para **bytecode** (`.class`), que é o que a JVM executa. → [fundamentos](README.md#o-vocabulário-mínimo)
+
+"Gerar bytecode" significa que, durante o build, **o Quarkus escreve classes `.class` novas** — classes que ninguém digitou, montadas instrução por instrução por uma biblioteca de geração de código (no caso dele, a Gizmo). Para a JVM, elas são indistinguíveis de classes que você tivesse escrito à mão.
+
+Um exemplo do que isso quer dizer na prática. Você escreve:
+
+```java
+@ApplicationScoped
+public class PedidoService {
+    @Inject PedidoRepository repository;      // "alguém me entregue um PedidoRepository"
+}
+```
+
+Um framework tradicional resolve esse `@Inject` **no boot**: descobre por reflexão que o campo existe, procura quem sabe fabricar um `PedidoRepository`, e preenche o campo. Toda vez que a aplicação sobe.
+
+O Quarkus resolve **no build** e escreve o equivalente a isto no artefato (nomes ilustrativos):
+
+```java
+// classe GERADA no build — você nunca vê esse arquivo
+public class PedidoService_Bean {
+    public PedidoService create() {
+        PedidoService instancia = new PedidoService();
+        instancia.repository = PedidoRepository_Bean.get();   // já sabe quem é, sem procurar
+        return instancia;
+    }
+}
+```
+
+Não há mais nada a descobrir no boot: existe uma classe pronta que **chama o construtor e preenche o campo**. A busca, a reflexão e a dúvida foram resolvidas uma vez, na sua máquina de build. É isso — repetido para cada bean, cada rota, cada entidade — que o Quarkus faz de diferente.
+
+O mesmo vale para a palavra **proxy**: é uma classe "embrulho", gerada automaticamente, que fica **no lugar** da sua e executa algo em volta do seu método (abrir e fechar transação, verificar permissão, consultar cache) antes de delegar para o seu código. → [padrão Proxy](../design-patterns-em-oo/ii-padroes-estruturais.md#7-proxy) O framework tradicional cria esse embrulho no boot; o Quarkus o escreve no build.
+
+### As três fases
+
+Com isso claro: o Quarkus divide em **três momentos** o que um framework tradicional faz em um só (o boot).
 
 ```mermaid
 flowchart LR
     subgraph B["① AUGMENTATION — na máquina de build"]
-        B1["processa anotações<br/>e o classpath"] --> B2["resolve o grafo<br/>de injeção"] --> B3["gera bytecode<br/>e remove bean<br/>não usado"]
+        B1["lê suas anotações<br/>e o classpath"] --> B2["resolve quem<br/>depende de quem"] --> B3["ESCREVE as classes<br/>novas e descarta<br/>o que ninguém usa"]
     end
-    subgraph S["② STATIC INIT"]
-        S1["executa o que<br/>pode ser pré-computado<br/><i>no nativo, roda no BUILD<br/>e o estado vai para a imagem</i>"]
+    subgraph S["② STATIC INIT — o que dá para pré-computar"]
+        S1["monta objetos que não<br/>dependem do ambiente<br/><i>no nativo, isso roda no BUILD<br/>e o objeto pronto vai<br/>dentro do binário</i>"]
     end
     subgraph R["③ RUNTIME INIT — quando o processo sobe"]
-        R1["lê config de runtime<br/>abre socket e pool<br/>conecta no broker"]
+        R1["lê variáveis de ambiente<br/>abre a porta e o pool<br/>conecta no broker"]
     end
     B --> S --> R
 ```
 
 | Fase | Quando roda | O que pertence a ela |
 |---|---|---|
-| **Augmentation** | no `build`, na máquina de CI | leitura do classpath, processamento de anotações, resolução de CDI, geração de proxies, validação do mapeamento ORM, geração de bytecode |
-| **Static init** | na inicialização da classe gerada — **no nativo, durante o build**, e o resultado é serializado dentro da imagem | objetos que não dependem do ambiente: metamodelo do Hibernate, rotas REST registradas, *mappers* do Jackson |
-| **Runtime init** | a cada inicialização do processo | o que **só** existe no ambiente: variáveis de ambiente, segredos, abrir porta TCP, criar pool de conexão, conectar no Kafka |
+| **Augmentation** | no **build**, na sua máquina ou no servidor de CI | ler o classpath e as anotações, resolver a injeção de dependência, escrever as classes geradas e os proxies, validar o mapeamento das entidades |
+| **Static init** | na **inicialização das classes geradas**; no modo nativo, isso acontece durante o **build** | objetos que dão sempre o mesmo resultado: o metamodelo do Hibernate, a tabela de rotas REST, os conversores de JSON |
+| **Runtime init** | a **cada** vez que o processo sobe | tudo o que só existe no ambiente: variáveis de ambiente, segredos, abrir porta TCP, criar o pool de conexões, conectar no Kafka |
 
-O mecanismo que liga build e runtime é o **bytecode recorder**: durante a augmentation, as chamadas que a extensão faz a uma classe `@Recorder` não são executadas — são **gravadas** e transformadas em bytecode, que depois roda no static ou no runtime init. É assim que uma decisão tomada no build "vira código" no artefato final.
+### Static init × runtime init: qual é o critério
 
-> **Por que isso importa para você:** se o Hibernate valida o mapeamento no build, um `@Column` errado **quebra a compilação**, não a inicialização em produção. Boa parte do que no Spring é erro de boot, no Quarkus é erro de build.
+A separação entre as duas últimas fases responde a uma pergunta só: **isto dá o mesmo resultado em qualquer máquina, ou depende de onde a aplicação está rodando?**
+
+| | **Static init** | **Runtime init** |
+|---|---|---|
+| Critério | o resultado não depende do ambiente | **depende** do ambiente |
+| Exemplos | "quais são as rotas da API", "como esta entidade mapeia para a tabela" | "qual é a senha do banco", "qual porta escutar", "abrir a conexão" |
+| No modo JVM | roda no **boot**, muito rápido (só executa o bytecode) | roda no **boot** |
+| No modo nativo | roda no **build** — e o objeto já montado é **gravado dentro do binário** | roda no **boot** |
+
+Dois termos dessa tabela merecem tradução:
+
+- ***Static init*** vem do Java: toda classe pode ter um bloco `static { ... }` que roda **uma única vez**, quando a classe é usada pela primeira vez. O Quarkus põe nesse bloco o código gerado que monta a aplicação.
+- **"Gravado dentro do binário"**: no modo nativo, o objeto é construído na máquina de build e seu estado é **serializado para dentro do executável**. Quando o binário sobe, o objeto não é criado — ele já **está lá**, pronto, como um dado do arquivo. É o limite do modelo: trabalho zero no boot.
+
+### O *bytecode recorder* — a ponte entre as duas pontas
+
+Falta um problema a resolver: a extensão roda no **build**, mas precisa que certas coisas aconteçam no **boot**. Como é que um código que já terminou de executar manda outro executar depois?
+
+A resposta é o **bytecode recorder**, e a analogia é a de **gravar uma macro**. Durante o build, as chamadas que a extensão faz a um objeto marcado como `@Recorder` **não são executadas**: elas são **anotadas numa lista** ("chame `iniciar("jdbc://...")`"). No fim do build, essa lista é convertida em bytecode — e é esse bytecode que executa no static ou no runtime init.
+
+```mermaid
+flowchart LR
+    A["<b>no build</b><br/>a extensão chama<br/>recorder.iniciar(url)"] -->|"não executa:<br/>apenas ANOTA"| B["📝 lista de chamadas<br/>gravadas"]
+    B -->|"vira código<br/>no artefato"| C["<b>no boot</b><br/>a chamada<br/>finalmente executa"]
+```
+
+É assim que uma decisão tomada no build "vira código" no artefato final — o mecanismo que permite ao Quarkus decidir cedo sem perder a capacidade de agir tarde.
+
+> **Por que isso importa para você:** se o Hibernate valida o mapeamento das entidades durante o build, uma `@Column` escrita errado **quebra a compilação** — e não a inicialização em produção, às três da manhã. Boa parte do que no Spring é erro de boot, no Quarkus é erro de build.
 
 ---
 
-## 2. ArC — CDI resolvido em tempo de build
+## 2. ArC — o container de injeção resolvido no build
 
-**ArC** é o container de injeção de dependência do Quarkus: uma implementação de **Jakarta CDI** que faz no build o que o CDI tradicional faz em runtime.
+Três palavras antes de qualquer coisa, porque elas se repetem em toda a documentação do Quarkus:
+
+| Termo | O que é |
+|---|---|
+| **Bean** | qualquer objeto cuja criação **não é sua**: você não dá `new`, o framework cria, guarda e entrega quando alguém pede. Um `PedidoService` anotado é um bean |
+| **Container de injeção de dependência** | o componente que **fabrica** esses objetos e os **entrega** a quem declarou precisar deles. É quem responde ao `@Inject` |
+| **CDI** | *Contexts and Dependency Injection*: a **especificação padrão** do Jakarta EE para isso. O Spring tem o seu container próprio; o Quarkus implementa o padrão CDI |
+
+**ArC** é o nome do container do Quarkus: uma implementação de CDI que faz **no build** o que os outros fazem no boot.
+
+### O que é "o grafo de dependências"
+
+A tarefa do container é resolver uma cadeia. Se `PedidoResource` precisa de `PedidoService`, que precisa de `PedidoRepository`, que precisa de `DataSource`, então existe uma **ordem obrigatória de construção**: o `DataSource` primeiro, o `PedidoResource` por último. Esse mapa de "quem precisa de quem" é o **grafo de dependências**, e montá-lo é o trabalho central do container.
+
+```mermaid
+flowchart RL
+    R["PedidoResource"] --> S["PedidoService"] --> P["PedidoRepository"] --> D["DataSource"]
+    N["constrói-se nesta ordem: ⟶"]
+```
+
+A diferença entre os dois modelos é **quando** esse grafo é montado:
 
 ```mermaid
 flowchart TB
     subgraph RT["Container em runtime (modelo tradicional)"]
-        A1["sobe o processo"] --> A2["varre o classpath<br/>com reflexão"] --> A3["monta as definições<br/>de bean em memória"] --> A4["cria proxies<br/>dinamicamente"] --> A5["injeta"]
+        A1["o processo sobe"] --> A2["varre o classpath<br/>com reflexão,<br/>procurando anotações"] --> A3["monta o grafo<br/>e guarda em memória"] --> A4["cria os proxies<br/>ali na hora"] --> A5["injeta e entrega"]
     end
     subgraph BT["ArC — container em build time"]
-        C1["no build:<br/>descobre os beans"] --> C2["valida o grafo:<br/>falta bean? ambíguo?"] --> C3["GERA uma classe<br/>por ponto de injeção"] --> C4["no boot:<br/>só executa o bytecode"]
+        C1["no build:<br/>descobre os beans"] --> C2["valida o grafo:<br/>falta algum?<br/>está ambíguo?"] --> C3["ESCREVE uma classe<br/>para cada bean e<br/>cada ponto de injeção"] --> C4["no boot:<br/>só executa<br/>o que já está escrito"]
     end
 ```
 
-O que muda, na prática:
-
 | | CDI/Spring em runtime | ArC em build time |
 |---|---|---|
-| Descoberta de bean | escaneando o classpath no boot | **no build** |
-| Erro de dependência faltando | explode no **boot** | explode na **compilação** |
-| Reflexão | central ao funcionamento | quase eliminada |
-| Metadados em memória | `BeanDefinition` e caches vivos no heap | **nada** — virou bytecode |
-| Bean declarado e não usado | é construído e fica no container | é **removido** do artefato (*dead code elimination*) |
+| Descoberta dos beans | varrendo o classpath no boot | **no build** |
+| Dependência faltando ou ambígua | o erro aparece no **start** da aplicação | o erro aparece na **compilação** |
+| Reflexão | é o mecanismo central | quase eliminada |
+| Metadados na memória | o catálogo de beans e os caches de reflexão ficam vivos no *heap* | **nada** — virou classe gerada |
+| Bean declarado e nunca injetado | é construído e fica ocupando lugar no container | é **removido do artefato** |
 
-Essa última linha é uma pegadinha prática: o ArC **remove beans que ninguém injeta**. Se um bean só é usado de forma indireta (por nome, por reflexão, por um framework externo), ele desaparece — e é para isso que existe a anotação `@Unremovable`.
+A última linha é uma pegadinha prática. Esse descarte se chama *dead code elimination* — "eliminação de código morto": se o Quarkus não vê **ninguém** pedindo aquele bean, ele conclui que é peso morto e o deixa fora. O problema é quando o bean **é** usado, mas de um jeito que a análise não vê (por nome, por reflexão, por uma biblioteca externa) — nesse caso ele desaparece e a aplicação falha. É para isso que existe a anotação `@Unremovable`: "não tire este, mesmo que pareça inútil".
+
+### Declarando um bean
 
 O vocabulário é o do CDI, não o do Spring:
 
@@ -76,42 +164,65 @@ public class CobrancaService {
 }
 ```
 
-| Escopo CDI | Significado |
-|---|---|
-| `@ApplicationScoped` | uma instância por aplicação, **criada sob demanda** (proxy *lazy*) — o padrão |
-| `@Singleton` | uma instância por aplicação, **sem proxy** (um pouco mais rápido, sem *lazy*) |
-| `@RequestScoped` | uma instância por requisição |
-| `@Dependent` | uma instância por ponto de injeção (o escopo padrão do CDI quando nada é dito) |
+A anotação de **escopo** (`@ApplicationScoped` acima) é o que responde a duas perguntas: **quantas instâncias** desse objeto existem e **por quanto tempo** cada uma vive.
+
+| Escopo CDI | Quantas instâncias | Observação |
+|---|---|---|
+| `@ApplicationScoped` | **uma** para toda a aplicação | criada **sob demanda** — no primeiro uso, não no boot. Para isso, o que é injetado é um **proxy** que só constrói o objeto real quando alguém o chama (*lazy*). É o escopo padrão do dia a dia |
+| `@Singleton` | **uma** para toda a aplicação | **sem proxy**: um pouco mais rápido, mas criada de imediato e sem o comportamento *lazy* |
+| `@RequestScoped` | **uma por requisição** HTTP | morre quando a requisição termina. Para guardar dados do usuário da chamada atual |
+| `@Dependent` | **uma por lugar que pede** | cada ponto de injeção recebe a sua. É o escopo assumido quando você não anota nada |
+
+> **Ponto de injeção** é só o nome do lugar onde um objeto é pedido: um campo com `@Inject`, um parâmetro de construtor. Dez classes que injetam `CobrancaService` são dez pontos de injeção para um mesmo bean.
 
 ---
 
 ## 3. Anatomia de uma extensão
 
-**Extensão** é a unidade de integração do Quarkus. Toda tecnologia entra por ela: `quarkus-hibernate-orm`, `quarkus-rest`, `quarkus-messaging-kafka`, `quarkus-redis-client`. Cada extensão tem **dois módulos**, e essa separação é a materialização do modelo:
+**Extensão** é a unidade de integração do Quarkus: a forma como cada tecnologia (banco, fila, cache, cliente HTTP) entra na aplicação — `quarkus-hibernate-orm`, `quarkus-rest`, `quarkus-messaging-kafka`, `quarkus-redis-client`.
 
-| Módulo | Roda | Contém |
-|---|---|---|
-| **deployment** | só no **build** | os `@BuildStep` que leem anotações, geram classes e produzem os *build items*. Nada disso vai para o artefato final |
-| **runtime** | no **processo** | as classes que de fato executam, e os `@Recorder` cujas chamadas foram gravadas no build |
+Uma extensão não é uma biblioteca comum: ela são **dois módulos** — dois JARs separados — e essa divisão é a materialização de tudo o que foi dito até aqui.
+
+| Módulo | Roda | Contém | Vai para o artefato final? |
+|---|---|---|---|
+| **deployment** | só no **build** | o código que lê as suas anotações, decide o que ligar e **escreve as classes geradas** | **não** — cumpriu o papel no build e fica para trás |
+| **runtime** | no **processo**, de verdade | as classes que realmente executam quando a aplicação está no ar | **sim** |
+
+Essa é a razão pela qual as extensões do Quarkus são leves em produção: **metade do código da extensão nunca é embarcada**. O trabalho de decidir fica na máquina de build; só o resultado viaja.
+
+### As duas peças do módulo de deployment
+
+```mermaid
+flowchart LR
+    subgraph D["módulo DEPLOYMENT — só no build"]
+        BS1["@BuildStep<br/><i>um método que roda<br/>durante o build</i>"] -->|"produz"| BI["📋 build item<br/><i>um recado tipado:<br/>'achei estas entidades',<br/>'registre esta rota'</i>"]
+        BI -->|"outro passo consome"| BS2["@BuildStep<br/><i>de outra extensão</i>"]
+    end
+```
+
+- **`@BuildStep`** é um **método que roda durante o build**. Nada mais: um método comum, executado pelo Quarkus na augmentation em vez de em runtime.
+- **Build item** é a forma como esses métodos **conversam entre si**: um recado tipado que um passo produz e outro consome ("estas são as classes com `@Entity`", "registre esta rota", "esta classe precisa de reflexão no nativo"). O Quarkus lê quem produz e quem consome o quê e **descobre sozinho a ordem** de executar os passos.
 
 ```java
 // módulo deployment — este código NÃO vai para o artefato final
 public class MinhaExtensaoProcessor {
 
-    @BuildStep                                   // roda durante a augmentation
+    @BuildStep                                   // roda durante o build
     FeatureBuildItem feature() {
-        return new FeatureBuildItem("minha-extensao");
+        return new FeatureBuildItem("minha-extensao");   // recado: "esta extensão está ativa"
     }
 
     @BuildStep
-    @Record(ExecutionTime.RUNTIME_INIT)          // grava a chamada para o boot
+    @Record(ExecutionTime.RUNTIME_INIT)          // o que este método "chamar" vira código do boot
     void configurar(MinhaExtensaoRecorder recorder, MinhaConfig config) {
-        recorder.iniciar(config.url());          // não executa agora: vira bytecode
+        recorder.iniciar(config.url());          // NÃO executa agora — é gravado (ver seção 1)
     }
 }
 ```
 
-É por isso que **"existe extensão?" é a pergunta decisiva** ao avaliar o Quarkus para um projeto. Uma biblioteca Java qualquer funciona no modo JVM, mas sem extensão ela não participa da augmentation — não tem configuração integrada, não entra no *dev mode* e, no modo nativo, provavelmente precisará de registro manual de reflexão.
+Lendo a segunda linha com o vocabulário já montado: o método roda no build; a chamada `recorder.iniciar(...)` é **gravada** em vez de executada; e o `@Record(RUNTIME_INIT)` diz em que momento essa chamada gravada deve rodar — quando o processo subir.
+
+É por isso que **"existe extensão para isso?" é a pergunta decisiva** ao avaliar o Quarkus num projeto. Uma biblioteca Java qualquer continua funcionando no modo JVM — ela é só um JAR no classpath. Mas sem extensão ela fica **fora do modelo**: não participa da augmentation, não tem configuração integrada, não aparece no *dev mode* e, no modo nativo, provavelmente vai exigir registro manual de reflexão. → [seção 4](#4-graalvm-mandrel-e-a-hipótese-do-mundo-fechado)
 
 ---
 
@@ -250,25 +361,34 @@ Nada disso é de graça. Os custos, na ordem em que você vai encontrá-los:
 
 ## Perguntas para autoavaliação
 
-1. Quais são as três fases do Quarkus e o que pertence a cada uma?
-2. O que é um *bytecode recorder* e qual problema ele resolve?
-3. Por que no Quarkus um erro de mapeamento JPA tende a aparecer na compilação e não no boot?
-4. O que o ArC faz no build que um container de DI tradicional faz em runtime?
-5. Por que o ArC remove beans não utilizados, e qual anotação impede isso?
-6. Diferencie `@ApplicationScoped`, `@Singleton`, `@RequestScoped` e `@Dependent`.
-7. Por que uma extensão tem dois módulos? O que roda em cada um?
-8. Por que "existe extensão para isso?" é a pergunta decisiva ao adotar o Quarkus?
-9. Enuncie a hipótese do mundo fechado e dê três recursos que ela quebra.
-10. Por que a reflexão precisa ser registrada no modo nativo?
-11. Em que cenário o modo JVM supera o nativo em desempenho? Por quê?
-12. Compare JIT e AOT em quatro critérios.
-13. O que são Dev Services e que papel eles cumprem em `dev` e em `test`?
-14. Como o Quarkus decide se o seu método roda no event loop ou numa worker thread?
-15. Qual é a regra de ouro do event loop e o que acontece quando ela é violada?
-16. O que significa dizer que o `Uni` do Mutiny é preguiçoso?
-17. Cite quatro custos do modelo de build-time augmentation.
-18. Por que uma propriedade de build time é uma pegadinha operacional?
-
+1. O que a palavra *augmentation* quer dizer, literalmente?
+2. O que significa "gerar bytecode"? Quem escreve essas classes e quando?
+3. O que é um proxy e para que serve? Quando ele é criado no Spring e quando no Quarkus?
+4. O que é um bean? E um container de injeção de dependência? E o CDI?
+5. O que é o grafo de dependências e por que montá-lo impõe uma ordem de construção?
+6. O que é um ponto de injeção?
+7. O que é *dead code elimination* no ArC e em que caso ela te prejudica?
+8. O que um escopo decide? Diferencie os quatro.
+9. O que é um `@BuildStep` e o que é um *build item*?
+10. Por que metade do código de uma extensão nunca chega ao artefato final?
+11. Quais são as três fases do Quarkus e o que pertence a cada uma?
+12. O que é um *bytecode recorder* e qual problema ele resolve?
+13. Por que no Quarkus um erro de mapeamento JPA tende a aparecer na compilação e não no boot?
+14. O que o ArC faz no build que um container de DI tradicional faz em runtime?
+15. Por que o ArC remove beans não utilizados, e qual anotação impede isso?
+16. Diferencie `@ApplicationScoped`, `@Singleton`, `@RequestScoped` e `@Dependent`.
+17. Por que uma extensão tem dois módulos? O que roda em cada um?
+18. Por que "existe extensão para isso?" é a pergunta decisiva ao adotar o Quarkus?
+19. Enuncie a hipótese do mundo fechado e dê três recursos que ela quebra.
+20. Por que a reflexão precisa ser registrada no modo nativo?
+21. Em que cenário o modo JVM supera o nativo em desempenho? Por quê?
+22. Compare JIT e AOT em quatro critérios.
+23. O que são Dev Services e que papel eles cumprem em `dev` e em `test`?
+24. Como o Quarkus decide se o seu método roda no event loop ou numa worker thread?
+25. Qual é a regra de ouro do event loop e o que acontece quando ela é violada?
+26. O que significa dizer que o `Uni` do Mutiny é preguiçoso?
+27. Cite quatro custos do modelo de build-time augmentation.
+28. Por que uma propriedade de build time é uma pegadinha operacional?
 ---
 
 > [← Voltar para QUARKUS](README.md) · Próximo: [II - QUARKUS NA PRÁTICA](ii-quarkus-na-pratica.md)

@@ -791,8 +791,15 @@ O problema que resolve, build-time augmentation, modos JVM e nativo, onde é usa
 As três fases, ArC, extensões, GraalVM e mundo fechado, JIT × AOT, dev mode, threads.
 
 - [1. As três fases: build, static init e runtime init](quarkus/i-como-funciona.md#1-as-três-fases-build-static-init-e-runtime-init)
-- [2. ArC — CDI resolvido em tempo de build](quarkus/i-como-funciona.md#2-arc--cdi-resolvido-em-tempo-de-build)
+  - [O que significa "gerar bytecode"](quarkus/i-como-funciona.md#o-que-significa-gerar-bytecode)
+  - [As três fases](quarkus/i-como-funciona.md#as-três-fases)
+  - [Static init × runtime init: qual é o critério](quarkus/i-como-funciona.md#static-init--runtime-init-qual-é-o-critério)
+  - [O *bytecode recorder* — a ponte entre as duas pontas](quarkus/i-como-funciona.md#o-bytecode-recorder--a-ponte-entre-as-duas-pontas)
+- [2. ArC — o container de injeção resolvido no build](quarkus/i-como-funciona.md#2-arc--o-container-de-injeção-resolvido-no-build)
+  - [O que é "o grafo de dependências"](quarkus/i-como-funciona.md#o-que-é-o-grafo-de-dependências)
+  - [Declarando um bean](quarkus/i-como-funciona.md#declarando-um-bean)
 - [3. Anatomia de uma extensão](quarkus/i-como-funciona.md#3-anatomia-de-uma-extensão)
+  - [As duas peças do módulo de deployment](quarkus/i-como-funciona.md#as-duas-peças-do-módulo-de-deployment)
 - [4. GraalVM, Mandrel e a hipótese do mundo fechado](quarkus/i-como-funciona.md#4-graalvm-mandrel-e-a-hipótese-do-mundo-fechado)
 - [5. JIT × AOT — por que o nativo pode ser mais lento](quarkus/i-como-funciona.md#5-jit--aot--por-que-o-nativo-pode-ser-mais-lento)
 - [6. Dev mode — o que mais impressiona na prática](quarkus/i-como-funciona.md#6-dev-mode--o-que-mais-impressiona-na-prática)
