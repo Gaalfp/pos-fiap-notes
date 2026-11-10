@@ -1,9 +1,9 @@
 /**
- * O mascote do caderno e a paleta do projeto.
+ * Paleta e conversor de sprite para SVG.
  *
  * Sprites são arrays de strings: um caractere por pixel, cada caractere é uma
- * chave da paleta. '.' é transparente. O mesmo sistema vale para os ícones de
- * matéria (icones.js).
+ * chave da paleta. '.' é transparente. É assim que os ícones de matéria
+ * (icones.js) são desenhados. O mascote tem motor próprio: computador.js.
  */
 
 export const PALETA = {
@@ -21,40 +21,6 @@ export const PALETA = {
   t: '#0E0E10', z: '#C9C9D1',   // 'z' é o metal da espiral
   n: '#151517', a: '#2A2A30',
 };
-
-/**
- * O mascote — 22 × 20.
- * Um computador de tubo, de óculos: a tela é o rosto, o aro prateado é a
- * armação, e embaixo tem o slot de disquete e o LED de energia.
- */
-export const COMPUTADOR = [
-  '......................',
-  '..kkkkkkkkkkkkkkkkkk..',
-  '..kcccccccccccccccck..',
-  '..kckkkkkkkkkkkkkkck..',
-  '..kcktttttttttttttkck.',
-  '..kcktttttttttttttkck.',
-  '..kckzzzzzttzzzzzzkck.',
-  '..kckztttzzzztttztkck.',
-  '..kckztwtzttztwtztkck.',
-  '..kckztttzttztttztkck.',
-  '..kckzzzzzttzzzzzzkck.',
-  '..kcktttttttttttttkck.',
-  '..kckkkkkkkkkkkkkkck..',
-  '..kccckkkkkkkccgccck..',
-  '..kkkkkkkkkkkkkkkkkk..',
-  '........kkkkkk........',
-  '........kcccck........',
-  '........kcccck........',
-  '....kkkkkkkkkkkkkk....',
-  '....kcccccccccccck....',
-  '....kkkkkkkkkkkkkk....',
-];
-
-/** O mesmo computador de olhos fechados, para a piscada. */
-export const COMPUTADOR_PISCANDO = COMPUTADOR.map((linha, i) =>
-  i === 8 ? '..kckztttzttztttztkck.' : linha,
-);
 
 /** Converte um sprite em SVG (um <rect> por corrida de pixels iguais). */
 export function paraSvg(linhas, { escala = 1, paleta = PALETA } = {}) {

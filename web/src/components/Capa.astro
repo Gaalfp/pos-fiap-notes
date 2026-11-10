@@ -1,10 +1,10 @@
 ---
 /** Capa da home: mascote, o que é isto, e os números do material. */
-import { COMPUTADOR, COMPUTADOR_PISCANDO, paraSvg } from '../pixel/mascote.js';
+import { svgDoQuadro } from '../pixel/computador.js';
 import materias from '../materias.json';
 
-const mascote = paraSvg(COMPUTADOR, { escala: 1 });
-const piscando = paraSvg(COMPUTADOR_PISCANDO, { escala: 1 });
+// o quadro parado vai no HTML: o mascote aparece mesmo sem JavaScript
+const mascote = svgDoQuadro('idle', 0);
 
 const totalMinutos = materias.reduce((s, m) => s + m.minutos, 0);
 const totalCapitulos = materias.reduce((s, m) => s + m.capitulos.length, 0);
@@ -12,10 +12,7 @@ const horas = Math.floor(totalMinutos / 60);
 ---
 
 <header class="capa">
-  <div class="mascote">
-    <div class="quadro aberto" set:html={mascote} />
-    <div class="quadro fechado" set:html={piscando} />
-  </div>
+  <div class="mascote" data-mascote title="clique para ele ajustar os óculos" set:html={mascote} />
 
   <div class="texto">
     <p class="sobrescrito">Arquitetura e Desenvolvimento Java · PÓSTECH FIAP</p>
@@ -50,35 +47,14 @@ const horas = Math.floor(totalMinutos / 60);
     border-bottom: 1px solid var(--sl-color-hairline);
     margin-bottom: 2.5rem;
   }
-  .mascote { position: relative; animation: balanco 3.2s steps(2, end) infinite; }
-  .mascote .quadro { grid-area: 1 / 1; }
-  .mascote .fechado { position: absolute; inset: 0; animation: piscar 5.4s steps(1, end) infinite; }
-  .mascote .aberto { animation: piscar-inverso 5.4s steps(1, end) infinite; }
-  .mascote :global(svg) {
-    width: clamp(96px, 13vw, 148px);
+  .mascote { cursor: pointer; line-height: 0; }
+  .mascote :global(svg),
+  .mascote :global(canvas) {
+    width: clamp(120px, 17vw, 196px);
     height: auto;
     display: block;
     image-rendering: pixelated;
-    filter: drop-shadow(0 6px 0 color-mix(in oklab, var(--sl-color-black) 35%, transparent));
-  }
-
-  /* o personagem respira: 1px para cima e para baixo, sem suavização */
-  @keyframes balanco {
-    0%, 50% { transform: translateY(0); }
-    50.01%, 100% { transform: translateY(2px); }
-  }
-  /* pisca por um instante a cada volta */
-  @keyframes piscar {
-    0%, 96% { opacity: 0; }
-    96.01%, 100% { opacity: 1; }
-  }
-  @keyframes piscar-inverso {
-    0%, 96% { opacity: 1; }
-    96.01%, 100% { opacity: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .mascote, .mascote .fechado, .mascote .aberto { animation: none; }
-    .mascote .fechado { opacity: 0; }
+    filter: drop-shadow(0 7px 0 color-mix(in oklab, var(--sl-color-black) 40%, transparent));
   }
   .sobrescrito {
     font-family: var(--sl-font-mono);
@@ -147,3 +123,63 @@ const horas = Math.floor(totalMinutos / 60);
     .numeros { gap: 1.1rem; }
   }
 </style>
+
+<script>
+  /* O quadro parado já está no HTML. Com JavaScript, um canvas assume e o
+     mascote ganha vida: pisca sozinho e, ao receber um clique, ajusta os
+     óculos. Quem pediu menos movimento continua com a figura parada. */
+  import { ANIMACOES, LARGURA, ALTURA, corridas, quadro } from '../pixel/computador.js';
+
+  const alvo = document.querySelector<HTMLElement>('[data-mascote]');
+  const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (alvo && !calmo) {
+    const ESCALA = 4;
+    const canvas = document.createElement('canvas');
+    canvas.width = LARGURA * ESCALA;
+    canvas.height = ALTURA * ESCALA;
+    const ctx = canvas.getContext('2d')!;
+
+    // desenha cada quadro uma vez e guarda as corridas (não recalcula depois)
+    const cache = new Map<string, ReturnType<typeof corridas>>();
+    const corridasDe = (anim: string, i: number) => {
+      const chave = `${anim}:${i}`;
+      if (!cache.has(chave)) cache.set(chave, corridas(quadro(anim, i)));
+      return cache.get(chave)!;
+    };
+
+    let animacao = 'idle';
+    let indice = 0;
+
+    const desenhar = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const [x, y, w, cor] of corridasDe(animacao, indice)) {
+        ctx.fillStyle = cor as string;
+        ctx.fillRect(x * ESCALA, y * ESCALA, w * ESCALA, ESCALA);
+      }
+    };
+
+    const avancar = () => {
+      const total = ANIMACOES[animacao].length;
+      indice = (indice + 1) % total;
+      // a sequência dos óculos roda uma vez e volta ao repouso
+      if (animacao === 'ajustar_oculos' && indice === 0) animacao = 'idle';
+      desenhar();
+    };
+
+    alvo.replaceChildren(canvas);
+    desenhar();
+
+    let relogio = setInterval(avancar, 1000 / 7);
+    addEventListener('visibilitychange', () => {
+      clearInterval(relogio);
+      if (!document.hidden) relogio = setInterval(avancar, 1000 / 7);
+    });
+
+    alvo.addEventListener('click', () => {
+      animacao = 'ajustar_oculos';
+      indice = 0;
+      desenhar();
+    });
+  }
+</script>
