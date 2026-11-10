@@ -3,6 +3,16 @@
 import materias from '../materias.json';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const CORES = {
+  'Arquitetura e design': '#B9DFA0',
+  'Sistemas distribuídos e integração': '#F4B6C6',
+  'Java e frameworks': '#F6D365',
+  'Dados': '#F2994A',
+  'Infraestrutura': '#C9C9D1',
+  'Referência rápida': '#F4F1E6',
+};
+
 const grupos = [];
 for (const m of materias) {
   let g = grupos.find((x) => x.nome === m.grupo);
@@ -16,9 +26,9 @@ for (const m of materias) {
 
   <div class="grade">
     {grupos.map((g) => (
-      <article data-grupo={g.nome}>
+      <article data-grupo={g.nome} style={`--cor-grupo:${CORES[g.nome] ?? '#C9C9D1'}`}>
         <header>
-          <h3>{g.nome}</h3>
+          <h3><span class="ponto" aria-hidden="true"></span>{g.nome}</h3>
           <span class="barra"><i></i></span>
         </header>
         <ul>
@@ -74,8 +84,16 @@ for (const m of materias) {
     display: block;
     height: 100%;
     width: 0;
-    background: var(--sl-color-text);
+    background: var(--cor-grupo, var(--sl-color-text));
     transition: width 0.4s ease;
+  }
+  .ponto {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--cor-grupo);
+    margin-right: 0.45rem;
   }
   ul { list-style: none; margin: 0; padding: 0; }
   li a {

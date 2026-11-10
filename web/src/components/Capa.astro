@@ -7,13 +7,22 @@ import materias from '../materias.json';
 const personagem = [...CABECA.map((l) => `.${l}.`), ...CORPO];
 const mascote = paraSvg(personagem, { escala: 1 });
 
+// o mesmo personagem de olhos fechados: a linha dos olhos ('e') vira pele
+const piscando = paraSvg(
+  personagem.map((linha, i) => (i === 5 ? linha.replace(/e/g, 's') : linha)),
+  { escala: 1 },
+);
+
 const totalMinutos = materias.reduce((s, m) => s + m.minutos, 0);
 const totalCapitulos = materias.reduce((s, m) => s + m.capitulos.length, 0);
 const horas = Math.floor(totalMinutos / 60);
 ---
 
 <header class="capa">
-  <div class="mascote" set:html={mascote} />
+  <div class="mascote">
+    <div class="quadro aberto" set:html={mascote} />
+    <div class="quadro fechado" set:html={piscando} />
+  </div>
 
   <div class="texto">
     <p class="sobrescrito">Arquitetura e Desenvolvimento Java · PÓSTECH FIAP</p>
@@ -46,11 +55,35 @@ const horas = Math.floor(totalMinutos / 60);
     border-bottom: 1px solid var(--sl-color-hairline);
     margin-bottom: 2.5rem;
   }
+  .mascote { position: relative; animation: balanco 3.2s steps(2, end) infinite; }
+  .mascote .quadro { grid-area: 1 / 1; }
+  .mascote .fechado { position: absolute; inset: 0; animation: piscar 5.4s steps(1, end) infinite; }
+  .mascote .aberto { animation: piscar-inverso 5.4s steps(1, end) infinite; }
   .mascote :global(svg) {
     width: clamp(88px, 12vw, 132px);
     height: auto;
+    display: block;
     image-rendering: pixelated;
     filter: drop-shadow(0 6px 0 color-mix(in oklab, var(--sl-color-black) 35%, transparent));
+  }
+
+  /* o personagem respira: 1px para cima e para baixo, sem suavização */
+  @keyframes balanco {
+    0%, 50% { transform: translateY(0); }
+    50.01%, 100% { transform: translateY(2px); }
+  }
+  /* pisca por um instante a cada volta */
+  @keyframes piscar {
+    0%, 96% { opacity: 0; }
+    96.01%, 100% { opacity: 1; }
+  }
+  @keyframes piscar-inverso {
+    0%, 96% { opacity: 1; }
+    96.01%, 100% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mascote, .mascote .fechado, .mascote .aberto { animation: none; }
+    .mascote .fechado { opacity: 0; }
   }
   .sobrescrito {
     font-family: var(--sl-font-mono);

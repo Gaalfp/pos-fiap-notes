@@ -1,0 +1,106 @@
+---
+/**
+ * Título da página. Quando a página é a porta de entrada de uma matéria, vira
+ * uma capa: ícone em pixel art, o grupo, e os números daquela matéria.
+ * Nas demais páginas, o título padrão do Starlight.
+ */
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import materias from '../materias.json';
+import { ICONES } from '../pixel/icones.js';
+import { paraSvg } from '../pixel/mascote.js';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const atual = Astro.url.pathname.toLowerCase().replace(/\/+$/, '');
+
+const materia = materias.find(
+  (m) => `${base}${m.url}`.toLowerCase().replace(/\/+$/, '') === atual,
+);
+
+const CORES: Record<string, string> = {
+  'Arquitetura e design': '#B9DFA0',
+  'Sistemas distribuídos e integração': '#F4B6C6',
+  'Java e frameworks': '#F6D365',
+  'Dados': '#F2994A',
+  'Infraestrutura': '#C9C9D1',
+  'Referência rápida': '#F4F1E6',
+};
+
+const sprite = materia ? ICONES[materia.nome] : null;
+const icone = sprite ? paraSvg(sprite) : null;
+const cor = materia ? (CORES[materia.grupo] ?? '#C9C9D1') : null;
+---
+
+{materia ? (
+  <div class="capa-materia" style={`--cor-grupo:${cor}`}>
+    {icone && <div class="icone" set:html={icone} />}
+    <div class="info">
+      <p class="grupo">
+        <span class="ponto" aria-hidden="true"></span>{materia.grupo}
+        {materia.trilha && <span class="posicao">· {materia.trilha}ª da trilha</span>}
+      </p>
+      <Default {...Astro.props}><slot /></Default>
+      <p class="numeros">
+        {materia.capitulos.length > 1
+          ? `${materia.capitulos.length} capítulos · ${materia.minutos} min de leitura`
+          : `${materia.minutos} min de leitura`}
+      </p>
+    </div>
+  </div>
+) : (
+  <Default {...Astro.props}><slot /></Default>
+)}
+
+<style>
+  .capa-materia {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .icone {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 12px;
+    background: color-mix(in oklab, var(--cor-grupo) 10%, transparent);
+  }
+  .icone :global(svg) {
+    width: 40px;
+    height: 40px;
+    image-rendering: pixelated;
+  }
+  .grupo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 0.15rem;
+    font-family: var(--sl-font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-3);
+  }
+  .ponto {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--cor-grupo);
+  }
+  .posicao { color: var(--sl-color-gray-4); }
+  .numeros {
+    margin: 0.2rem 0 0;
+    font-family: var(--sl-font-mono);
+    font-size: 0.72rem;
+    color: var(--sl-color-gray-4);
+  }
+  .info :global(h1) { margin: 0; }
+
+  @media (max-width: 34rem) {
+    .capa-materia { gap: 0.75rem; }
+    .icone { width: 44px; height: 44px; border-radius: 10px; }
+    .icone :global(svg) { width: 30px; height: 30px; }
+  }
+</style>
