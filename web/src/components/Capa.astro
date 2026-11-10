@@ -4,7 +4,7 @@ import { svgDoQuadro } from '../pixel/computador.js';
 import materias from '../materias.json';
 
 // o quadro parado vai no HTML: o mascote aparece mesmo sem JavaScript
-const mascote = svgDoQuadro('idle', 0);
+const mascote = svgDoQuadro('focus', 0, 'blue');
 
 const totalMinutos = materias.reduce((s, m) => s + m.minutos, 0);
 const totalCapitulos = materias.reduce((s, m) => s + m.capitulos.length, 0);
@@ -144,11 +144,13 @@ const horas = Math.floor(totalMinutos / 60);
     const cache = new Map<string, ReturnType<typeof corridas>>();
     const corridasDe = (anim: string, i: number) => {
       const chave = `${anim}:${i}`;
-      if (!cache.has(chave)) cache.set(chave, corridas(quadro(anim, i)));
+      if (!cache.has(chave)) cache.set(chave, corridas(quadro(anim, i, IRIS)));
       return cache.get(chave)!;
     };
 
-    let animacao = 'idle';
+    const IRIS = 'blue';
+    const REPOUSO = 'focus';     // expressão concentrada, não o olhar vago
+    let animacao = REPOUSO;
     let indice = 0;
 
     const desenhar = () => {
@@ -163,7 +165,7 @@ const horas = Math.floor(totalMinutos / 60);
       const total = ANIMACOES[animacao].length;
       indice = (indice + 1) % total;
       // a sequência dos óculos roda uma vez e volta ao repouso
-      if (animacao === 'ajustar_oculos' && indice === 0) animacao = 'idle';
+      if (animacao === 'ajustar_oculos' && indice === 0) animacao = REPOUSO;
       desenhar();
     };
 
