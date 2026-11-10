@@ -13,6 +13,11 @@ import type { Props } from '@astrojs/starlight/props';
 
 <Default {...Astro.props}><slot /></Default>
 
+<p class="assinatura">
+  Caderno de anotações da pós em Arquitetura e Desenvolvimento Java ·
+  criado por <strong>Gabriel Pinto</strong>
+</p>
+
 <script>
   const botao = document.getElementById('marcar-lida');
   if (botao) {
@@ -37,6 +42,17 @@ import type { Props } from '@astrojs/starlight/props';
 </script>
 
 <style>
+  .assinatura {
+    margin: 1.5rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    font-family: var(--sl-font-mono);
+    font-size: 0.7rem;
+    line-height: 1.5;
+    color: var(--sl-color-gray-4);
+    text-wrap: pretty;
+  }
+  .assinatura strong { color: var(--sl-color-gray-3); font-weight: 600; }
   .marcar { display: flex; justify-content: flex-end; margin-top: 2rem; }
   button {
     display: inline-flex;

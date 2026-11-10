@@ -94,13 +94,36 @@ h1.sl-heading,
 .sl-markdown-content h3 { text-wrap: balance; }
 
 /* ── tabelas: a parte mais usada do material ─────────────────────────────── */
+/* A rolagem fica na moldura, não na tabela: assim a primeira coluna pode
+   grudar e o leitor não perde a linha de referência ao arrastar. */
+.tabela { position: relative; overflow-x: auto; margin: 1rem 0; }
 .sl-markdown-content table {
-  display: block;
-  overflow-x: auto;
+  width: 100%;
   white-space: normal;
   font-size: 0.94em;
   border-collapse: collapse;
 }
+.sl-markdown-content table :is(td, th):first-child {
+  position: sticky;
+  left: 0;
+  background: var(--sl-color-bg);
+  box-shadow: 1px 0 0 var(--sl-color-hairline);
+}
+.sl-markdown-content table th:first-child {
+  background: color-mix(in oklab, var(--sl-color-gray-6) 92%, var(--sl-color-bg));
+}
+/* a sombra na borda avisa que há mais coisa para o lado */
+.tabela[data-rola]::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 2rem;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, var(--sl-color-bg));
+}
+.tabela-vista { display: none; }
 .sl-markdown-content table th {
   font-family: var(--sl-font);
   font-weight: 600;
@@ -288,4 +311,71 @@ pre.mermaid:not([data-processed]) { visibility: hidden; min-height: 2rem; }
   background: var(--sl-color-text);
   color: var(--sl-color-bg);
   border-color: transparent;
+}
+
+
+/* ── tabela como lista, em tela estreita ─────────────────────────────────── */
+@media (max-width: 48rem) {
+  .tabela-vista {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    background: none;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    color: var(--sl-color-gray-3);
+    font: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  .tabela:not([data-vista='tabela']) { overflow-x: visible; }
+  .tabela:not([data-vista='tabela'])::after { display: none; }
+  .tabela:not([data-vista='tabela']) :is(table, tbody, tr, td) { display: block; }
+  .tabela:not([data-vista='tabela']) thead { display: none; }
+  .tabela:not([data-vista='tabela']) tr {
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 0.6rem;
+    background: color-mix(in oklab, var(--sl-color-gray-6) 40%, transparent);
+  }
+  .tabela:not([data-vista='tabela']) td { border: none; padding: 0.25rem 0; }
+  .tabela:not([data-vista='tabela']) td:first-child {
+    position: static;
+    box-shadow: none;
+    background: none;
+    font-weight: 600;
+    font-size: 1.02em;
+    padding-bottom: 0.45rem;
+    margin-bottom: 0.3rem;
+    border-bottom: 1px solid var(--sl-color-hairline);
+  }
+  .tabela:not([data-vista='tabela']) td[data-rotulo]::before {
+    content: attr(data-rotulo);
+    display: block;
+    font-family: var(--sl-font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-4);
+    margin-bottom: 0.1rem;
+  }
+}
+
+/* ── barra de progresso de leitura ───────────────────────────────────────── */
+.progresso-leitura {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  pointer-events: none;
+}
+.progresso-leitura i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--sl-color-text);
+  opacity: 0.55;
 }

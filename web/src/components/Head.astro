@@ -22,6 +22,58 @@ import Default from '@astrojs/starlight/components/Head.astro';
     await mermaid.run({ nodes: [...pendentes] as HTMLElement[] });
   }
 
+  /* Tabelas: o material é cheio de comparativos de 3 e 4 colunas, que no
+     celular viram rolagem lateral sem contexto. Em tela estreita cada linha
+     vira um cartão com o nome da coluna ao lado do valor; quem preferir a
+     tabela pode voltar no botão. Em tela larga, a primeira coluna gruda. */
+  for (const tabela of document.querySelectorAll<HTMLTableElement>('.sl-markdown-content table')) {
+    const cabecalhos = [...tabela.querySelectorAll('thead th')].map((th) => th.textContent?.trim() ?? '');
+    if (cabecalhos.length < 3) continue;
+
+    for (const linha of tabela.querySelectorAll('tbody tr')) {
+      [...linha.children].forEach((celula, i) => {
+        if (i > 0 && cabecalhos[i]) celula.setAttribute('data-rotulo', cabecalhos[i]);
+      });
+    }
+
+    const moldura = document.createElement('div');
+    moldura.className = 'tabela';
+    tabela.parentNode?.insertBefore(moldura, tabela);
+
+    const botao = document.createElement('button');
+    botao.type = 'button';
+    botao.className = 'tabela-vista';
+    botao.textContent = 'ver como tabela';
+    botao.addEventListener('click', () => {
+      const comoTabela = moldura.getAttribute('data-vista') === 'tabela';
+      moldura.setAttribute('data-vista', comoTabela ? 'cartao' : 'tabela');
+      botao.textContent = comoTabela ? 'ver como tabela' : 'ver como lista';
+    });
+
+    moldura.append(botao, tabela);
+
+    // avisa que dá para arrastar, quando de fato há o que arrastar
+    const medir = () => moldura.toggleAttribute('data-rola', tabela.scrollWidth > moldura.clientWidth + 4);
+    medir();
+    addEventListener('resize', medir);
+  }
+
+  /* Barra de progresso de leitura: os capítulos passam de 400 linhas. */
+  if (document.querySelector('.sl-markdown-content')) {
+    const barra = document.createElement('div');
+    barra.className = 'progresso-leitura';
+    barra.innerHTML = '<i></i>';
+    document.body.append(barra);
+    const marca = barra.firstElementChild as HTMLElement;
+    const medir = () => {
+      const total = document.documentElement.scrollHeight - innerHeight;
+      marca.style.width = `${total > 0 ? Math.min(100, (scrollY / total) * 100) : 0}%`;
+    };
+    addEventListener('scroll', medir, { passive: true });
+    addEventListener('resize', medir);
+    medir();
+  }
+
   /* Animações: cada uma é um módulo próprio, baixado só na página que a usa.
      O marcador <!--animacao: nome--> do markdown virou <div data-animacao>. */
   for (const alvo of document.querySelectorAll<HTMLElement>('[data-animacao]')) {

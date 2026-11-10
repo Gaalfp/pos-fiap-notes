@@ -1,62 +1,60 @@
 /**
- * Mascote e paleta do projeto.
+ * O mascote do caderno e a paleta do projeto.
  *
- * O estilo vem do convite de aniversário do Gabriel (artefato "Festa de 23"):
- * sprites são arrays de strings, um caractere por pixel, cada caractere é uma
- * chave da paleta. '.' é transparente. É o mesmo sistema, para que o site e o
- * convite pareçam da mesma mão.
+ * Sprites são arrays de strings: um caractere por pixel, cada caractere é uma
+ * chave da paleta. '.' é transparente. O mesmo sistema vale para os ícones de
+ * matéria (icones.js).
  */
 
 export const PALETA = {
   k: '#050806',  // contorno (quase preto)
-  c: '#F4F1E6',  // creme — fundo claro
+  c: '#F4F1E6',  // creme — a capa do caderno
   w: '#FFFFFF',
   p: '#F4B6C6', P: '#D98CA3',   // rosa
-  y: '#F6D365', o: '#F2994A',   // amarelo / laranja
+  y: '#F6D365', o: '#F2994A',   // amarelo (o elástico) / laranja
   g: '#B9DFA0', G: '#5E8F55',   // verde
   b: '#7A4B33', B: '#9C6444',   // madeira
-  s: '#E3AE8B', S: '#C78A69', h: '#F6CFB3',   // pele: base, sombra, luz
-  d: '#3A281D', e: '#1A1411', l: '#9A7552',   // cabelo/barba, olho, cabelo claro
-  m: '#B5675C',                 // boca
-  j: '#1E1E22', J: '#5A5A64',   // jaqueta
-  t: '#0E0E10', z: '#C9C9D1',   // camiseta escura / detalhe claro
-  n: '#151517', a: '#2A2A30',   // sapato / calça
+  s: '#E3AE8B', S: '#C78A69', h: '#F6CFB3',
+  d: '#3A281D', e: '#1A1411', l: '#9A7552',   // 'e' é o olho
+  m: '#B5675C',                 // a boca
+  j: '#1E1E22', J: '#5A5A64',
+  t: '#0E0E10', z: '#C9C9D1',   // 'z' é o metal da espiral
+  n: '#151517', a: '#2A2A30',
 };
 
-/** Cabeça — 14 × 13 */
-export const CABECA = [
-  '...kkkkkkkk...',
-  '.kshhsssssssk.',
-  'kshhsssssssssk',
-  'kssssssssssssk',
-  'slllllllllllls',
-  'slseslsslsesls',
-  'klllllsslllllk',
-  'ksssssSSsssssk',
-  'kdssssssssssdk',
-  'kdssddddddssdk',
-  'kdddsmmmmsdddk',
-  '.kddddddddddk.',
-  '...kkkkkkkk...',
+/**
+ * O mascote — 22 × 20.
+ * Um computador de tubo, de óculos: a tela é o rosto, o aro prateado é a
+ * armação, e embaixo tem o slot de disquete e o LED de energia.
+ */
+export const COMPUTADOR = [
+  '......................',
+  '..kkkkkkkkkkkkkkkkkk..',
+  '..kcccccccccccccccck..',
+  '..kckkkkkkkkkkkkkkck..',
+  '..kcktttttttttttttkck.',
+  '..kcktttttttttttttkck.',
+  '..kckzzzzzttzzzzzzkck.',
+  '..kckztttzzzztttztkck.',
+  '..kckztwtzttztwtztkck.',
+  '..kckztttzttztttztkck.',
+  '..kckzzzzzttzzzzzzkck.',
+  '..kcktttttttttttttkck.',
+  '..kckkkkkkkkkkkkkkck..',
+  '..kccckkkkkkkccgccck..',
+  '..kkkkkkkkkkkkkkkkkk..',
+  '........kkkkkk........',
+  '........kcccck........',
+  '........kcccck........',
+  '....kkkkkkkkkkkkkk....',
+  '....kcccccccccccck....',
+  '....kkkkkkkkkkkkkk....',
 ];
 
-/** Corpo — 16 × 14 */
-export const CORPO = [
-  '......ssss......',
-  '.kjjjJttttJjjjk.',
-  'kjjjjJttttJjjjjk',
-  'kjJjjjzttzjjjJjk',
-  'kjJjjjzttzjjjJjk',
-  'kjJjjjzttzjjjJjk',
-  'kjjjjjzttzjjjjjk',
-  'sjjjjjzttzjjjjjs',
-  '.kjjjjjjjjjjjjk.',
-  '..kaaaakkaaaak..',
-  '..kaaak..kaaak..',
-  '..kaaak..kaaak..',
-  '.knnnnk..knnnnk.',
-  '.kwwwwk..kwwwwk.',
-];
+/** O mesmo computador de olhos fechados, para a piscada. */
+export const COMPUTADOR_PISCANDO = COMPUTADOR.map((linha, i) =>
+  i === 8 ? '..kckztttzttztttztkck.' : linha,
+);
 
 /** Converte um sprite em SVG (um <rect> por corrida de pixels iguais). */
 export function paraSvg(linhas, { escala = 1, paleta = PALETA } = {}) {

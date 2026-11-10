@@ -1,17 +1,10 @@
 ---
 /** Capa da home: mascote, o que é isto, e os números do material. */
-import { CABECA, CORPO, paraSvg } from '../pixel/mascote.js';
+import { COMPUTADOR, COMPUTADOR_PISCANDO, paraSvg } from '../pixel/mascote.js';
 import materias from '../materias.json';
 
-// cabeça (14 de largura) centralizada sobre o corpo (16)
-const personagem = [...CABECA.map((l) => `.${l}.`), ...CORPO];
-const mascote = paraSvg(personagem, { escala: 1 });
-
-// o mesmo personagem de olhos fechados: a linha dos olhos ('e') vira pele
-const piscando = paraSvg(
-  personagem.map((linha, i) => (i === 5 ? linha.replace(/e/g, 's') : linha)),
-  { escala: 1 },
-);
+const mascote = paraSvg(COMPUTADOR, { escala: 1 });
+const piscando = paraSvg(COMPUTADOR_PISCANDO, { escala: 1 });
 
 const totalMinutos = materias.reduce((s, m) => s + m.minutos, 0);
 const totalCapitulos = materias.reduce((s, m) => s + m.capitulos.length, 0);
@@ -38,6 +31,8 @@ const horas = Math.floor(totalMinutos / 60);
       <div><dt>de leitura</dt><dd>{horas}h</dd></div>
     </dl>
 
+    <p class="credito">criado por <strong>Gabriel Pinto</strong></p>
+
     <nav class="acoes">
       <a class="principal" href="#trilha">Seguir a trilha</a>
       <a class="secundaria" href={`${import.meta.env.BASE_URL}indice/`}>Índice completo</a>
@@ -60,7 +55,7 @@ const horas = Math.floor(totalMinutos / 60);
   .mascote .fechado { position: absolute; inset: 0; animation: piscar 5.4s steps(1, end) infinite; }
   .mascote .aberto { animation: piscar-inverso 5.4s steps(1, end) infinite; }
   .mascote :global(svg) {
-    width: clamp(88px, 12vw, 132px);
+    width: clamp(96px, 13vw, 148px);
     height: auto;
     display: block;
     image-rendering: pixelated;
@@ -124,6 +119,14 @@ const horas = Math.floor(totalMinutos / 60);
     text-transform: uppercase;
     color: var(--sl-color-gray-3);
   }
+  .credito {
+    margin: 0 0 1rem;
+    font-family: var(--sl-font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--sl-color-gray-4);
+  }
+  .credito strong { color: var(--sl-color-gray-2); font-weight: 600; }
   .acoes { display: flex; flex-wrap: wrap; gap: 0.6rem; }
   .acoes a {
     display: inline-block;
