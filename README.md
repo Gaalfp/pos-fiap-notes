@@ -13,7 +13,7 @@ item leva direto à seção correspondente. Todo arquivo de conteúdo termina co
 
 - **[Arquitetura e design](#arquitetura-e-design)** — [CLEAN ARCHITECTURE](#clean-architecture) · [SOLID](#solid) · [DESIGN PATTERNS EM OO](#design-patterns-em-oo) · [POO](#poo)
 - **[Sistemas distribuídos e integração](#sistemas-distribuídos-e-integração)** — [ARQUITETURA DISTRIBUÍDA](#arquitetura-distribuída) · [FUNDAMENTOS DE MENSAGERIA](#fundamentos-de-mensageria) · [TEOREMA CAP](#teorema-cap) · [gRPC e GRAPHQL](#grpc-e-graphql)
-- **[Java e frameworks](#java-e-frameworks)** — [JVM E PLATAFORMA JAVA](#jvm-e-plataforma-java) · [SPRING E SPRING BOOT](#spring-e-spring-boot) · [Spring MVC - APIs RESTful](#spring-mvc---apis-restful) · [SPRING DATA JPA](#spring-data-jpa) · [SPRING SECURITY](#spring-security) · [TESTES EM SOFTWARE](#testes-em-software) · [QUARKUS](#quarkus)
+- **[Java e frameworks](#java-e-frameworks)** — [JVM E PLATAFORMA JAVA](#jvm-e-plataforma-java) · [THREADS E CONCORRÊNCIA](#threads-e-concorrência) · [SPRING E SPRING BOOT](#spring-e-spring-boot) · [Spring MVC - APIs RESTful](#spring-mvc---apis-restful) · [SPRING DATA JPA](#spring-data-jpa) · [SPRING SECURITY](#spring-security) · [TESTES EM SOFTWARE](#testes-em-software) · [QUARKUS](#quarkus)
 - **[Dados](#dados)** — [FUNDAMENTOS DE MODELAGEM DE DADOS](#fundamentos-de-modelagem-de-dados)
 - **[Infraestrutura](#infraestrutura)** — [DOCKER](#docker)
 - **[Referência rápida](#referência-rápida)** — [RESUMO DE PROVA](#resumo-de-prova) · [UTEIS](#uteis)
@@ -526,6 +526,79 @@ O que é um GC, o mapa da memória, RSS × heap, gerações, os coletores, tunin
   - [d) Aplicação travada (não responde)](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#d-aplicação-travada-não-responde)
 - [8. Desligamento ordenado](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#8-desligamento-ordenado)
 - [9. Checklist de Java no Kubernetes](jvm-e-plataforma-java/iii-subir-e-operar-em-producao.md#9-checklist-de-java-no-kubernetes)
+
+<br>
+
+### THREADS E CONCORRÊNCIA
+
+Do zero: o que é uma thread, os métodos da classe Thread, o que quebra quando elas compartilham memória e o que o java.util.concurrent já resolve.
+
+#### [Visão geral](threads-e-concorrencia/README.md)
+
+Processo × thread, concorrência × paralelismo, a primeira thread, os métodos essenciais e os três problemas.
+
+- [1. O problema: um programa faz uma coisa de cada vez](threads-e-concorrencia/README.md#1-o-problema-um-programa-faz-uma-coisa-de-cada-vez)
+- [2. Processo × thread](threads-e-concorrencia/README.md#2-processo--thread)
+- [3. Concorrência × paralelismo](threads-e-concorrencia/README.md#3-concorrência--paralelismo)
+- [4. Sua primeira thread](threads-e-concorrencia/README.md#4-sua-primeira-thread)
+- [5. Os métodos que você precisa saber de cor](threads-e-concorrencia/README.md#5-os-métodos-que-você-precisa-saber-de-cor)
+- [6. Os três problemas que a concorrência cria](threads-e-concorrencia/README.md#6-os-três-problemas-que-a-concorrência-cria)
+- [7. Quando usar thread (e quando não)](threads-e-concorrencia/README.md#7-quando-usar-thread-e-quando-não)
+- [Capítulos](threads-e-concorrencia/README.md#capítulos)
+
+#### [I - CRIANDO E CONTROLANDO THREADS](threads-e-concorrencia/i-criando-e-controlando-threads.md)
+
+`Runnable` × `Thread`, `start()` × `run()`, `sleep`/`join`/`interrupt`, daemon, os seis estados.
+
+- [1. As três formas de criar uma thread](threads-e-concorrencia/i-criando-e-controlando-threads.md#1-as-três-formas-de-criar-uma-thread)
+  - [a) Implementando `Runnable` — a forma recomendada](threads-e-concorrencia/i-criando-e-controlando-threads.md#a-implementando-runnable--a-forma-recomendada)
+  - [b) Com lambda — o mesmo, mais curto](threads-e-concorrencia/i-criando-e-controlando-threads.md#b-com-lambda--o-mesmo-mais-curto)
+  - [c) Estendendo `Thread` — evite](threads-e-concorrencia/i-criando-e-controlando-threads.md#c-estendendo-thread--evite)
+- [2. `Runnable` × `Callable`](threads-e-concorrencia/i-criando-e-controlando-threads.md#2-runnable--callable)
+- [3. `start()` × `run()` — a pegadinha número um](threads-e-concorrencia/i-criando-e-controlando-threads.md#3-start--run--a-pegadinha-número-um)
+- [4. Os métodos essenciais](threads-e-concorrencia/i-criando-e-controlando-threads.md#4-os-métodos-essenciais)
+  - [`sleep(ms)` — dormir](threads-e-concorrencia/i-criando-e-controlando-threads.md#sleepms--dormir)
+  - [`join()` — esperar terminar](threads-e-concorrencia/i-criando-e-controlando-threads.md#join--esperar-terminar)
+  - [`isAlive()` — ainda está viva?](threads-e-concorrencia/i-criando-e-controlando-threads.md#isalive--ainda-está-viva)
+  - [`setDaemon(true)` — thread de serviço](threads-e-concorrencia/i-criando-e-controlando-threads.md#setdaemontrue--thread-de-serviço)
+  - [`setPriority(n)` e `yield()` — dicas, não ordens](threads-e-concorrencia/i-criando-e-controlando-threads.md#setpriorityn-e-yield--dicas-não-ordens)
+- [5. O ciclo de vida: os seis estados](threads-e-concorrencia/i-criando-e-controlando-threads.md#5-o-ciclo-de-vida-os-seis-estados)
+- [6. Interrupção: como se pede para uma thread parar](threads-e-concorrencia/i-criando-e-controlando-threads.md#6-interrupção-como-se-pede-para-uma-thread-parar)
+- [7. Exceções em threads](threads-e-concorrencia/i-criando-e-controlando-threads.md#7-exceções-em-threads)
+- [8. Exemplo completo](threads-e-concorrencia/i-criando-e-controlando-threads.md#8-exemplo-completo)
+
+#### [II - COMPARTILHANDO MEMÓRIA](threads-e-concorrencia/ii-compartilhando-memoria.md)
+
+Race condition, atomicidade × visibilidade, `synchronized`, `volatile`, `wait`/`notify`, deadlock.
+
+- [1. A race condition, passo a passo](threads-e-concorrencia/ii-compartilhando-memoria.md#1-a-race-condition-passo-a-passo)
+- [2. Os dois problemas por trás: atomicidade e visibilidade](threads-e-concorrencia/ii-compartilhando-memoria.md#2-os-dois-problemas-por-trás-atomicidade-e-visibilidade)
+- [3. `synchronized` — a solução mais direta](threads-e-concorrencia/ii-compartilhando-memoria.md#3-synchronized--a-solução-mais-direta)
+  - [Como funciona: o monitor](threads-e-concorrencia/ii-compartilhando-memoria.md#como-funciona-o-monitor)
+  - [As três formas](threads-e-concorrencia/ii-compartilhando-memoria.md#as-três-formas)
+  - [Bloco em vez de método: segure o lock pelo menor tempo possível](threads-e-concorrencia/ii-compartilhando-memoria.md#bloco-em-vez-de-método-segure-o-lock-pelo-menor-tempo-possível)
+  - [O lock é reentrante](threads-e-concorrencia/ii-compartilhando-memoria.md#o-lock-é-reentrante)
+- [4. `volatile` — só visibilidade](threads-e-concorrencia/ii-compartilhando-memoria.md#4-volatile--só-visibilidade)
+- [5. Por que `String` e os imutáveis são seguros](threads-e-concorrencia/ii-compartilhando-memoria.md#5-por-que-string-e-os-imutáveis-são-seguros)
+- [6. As coleções: `HashMap` é uma bomba](threads-e-concorrencia/ii-compartilhando-memoria.md#6-as-coleções-hashmap-é-uma-bomba)
+- [7. `wait`/`notify` — conversa entre threads](threads-e-concorrencia/ii-compartilhando-memoria.md#7-waitnotify--conversa-entre-threads)
+- [8. Deadlock — o impasse](threads-e-concorrencia/ii-compartilhando-memoria.md#8-deadlock--o-impasse)
+- [9. O resumo da decisão](threads-e-concorrencia/ii-compartilhando-memoria.md#9-o-resumo-da-decisão)
+
+#### [III - JAVA.UTIL.CONCURRENT](threads-e-concorrencia/iii-java-util-concurrent.md)
+
+`ExecutorService`, `Future`, `CompletableFuture`, atômicos, coleções concorrentes, locks e threads virtuais.
+
+- [1. `ExecutorService`: pare de criar thread na mão](threads-e-concorrencia/iii-java-util-concurrent.md#1-executorservice-pare-de-criar-thread-na-mão)
+- [2. `Callable` e `Future`: quando a tarefa devolve algo](threads-e-concorrencia/iii-java-util-concurrent.md#2-callable-e-future-quando-a-tarefa-devolve-algo)
+- [3. `CompletableFuture`: encadear sem bloquear](threads-e-concorrencia/iii-java-util-concurrent.md#3-completablefuture-encadear-sem-bloquear)
+- [4. Classes atômicas: contador sem lock](threads-e-concorrencia/iii-java-util-concurrent.md#4-classes-atômicas-contador-sem-lock)
+- [5. Coleções concorrentes](threads-e-concorrencia/iii-java-util-concurrent.md#5-coleções-concorrentes)
+- [6. `ReentrantLock`: o lock explícito](threads-e-concorrencia/iii-java-util-concurrent.md#6-reentrantlock-o-lock-explícito)
+- [7. Os sincronizadores](threads-e-concorrencia/iii-java-util-concurrent.md#7-os-sincronizadores)
+- [8. `ThreadLocal`: uma cópia por thread](threads-e-concorrencia/iii-java-util-concurrent.md#8-threadlocal-uma-cópia-por-thread)
+- [9. Threads virtuais (Java 21)](threads-e-concorrencia/iii-java-util-concurrent.md#9-threads-virtuais-java-21)
+- [10. O mapa da decisão](threads-e-concorrencia/iii-java-util-concurrent.md#10-o-mapa-da-decisão)
 
 <br>
 

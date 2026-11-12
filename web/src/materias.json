@@ -16,7 +16,7 @@
   ],
   "minutos": 9,
   "palavras": 1830,
-  "trilha": 5
+  "trilha": 6
  },
  {
   "grupo": "Arquitetura e design",
@@ -35,7 +35,7 @@
   ],
   "minutos": 12,
   "palavras": 2340,
-  "trilha": 3
+  "trilha": 4
  },
  {
   "grupo": "Arquitetura e design",
@@ -75,7 +75,7 @@
   ],
   "minutos": 27,
   "palavras": 5518,
-  "trilha": 4
+  "trilha": 5
  },
  {
   "grupo": "Arquitetura e design",
@@ -162,7 +162,7 @@
   ],
   "minutos": 61,
   "palavras": 12527,
-  "trilha": 13
+  "trilha": 14
  },
  {
   "grupo": "Sistemas distribuídos e integração",
@@ -209,7 +209,7 @@
   ],
   "minutos": 43,
   "palavras": 8607,
-  "trilha": 15
+  "trilha": 16
  },
  {
   "grupo": "Sistemas distribuídos e integração",
@@ -228,7 +228,7 @@
   ],
   "minutos": 10,
   "palavras": 1985,
-  "trilha": 14
+  "trilha": 15
  },
  {
   "grupo": "Sistemas distribuídos e integração",
@@ -261,7 +261,7 @@
   ],
   "minutos": 20,
   "palavras": 4050,
-  "trilha": 16
+  "trilha": 17
  },
  {
   "grupo": "Java e frameworks",
@@ -305,6 +305,46 @@
  },
  {
   "grupo": "Java e frameworks",
+  "nome": "THREADS E CONCORRÊNCIA",
+  "pasta": "threads-e-concorrencia",
+  "descricao": "Do zero: o que é uma thread, os métodos da classe Thread, o que quebra quando elas compartilham memória e o que o java.util.concurrent já resolve.",
+  "url": "/threads-e-concorrencia",
+  "capitulos": [
+   {
+    "rotulo": "Visão geral",
+    "url": "/threads-e-concorrencia",
+    "descricao": "processo × thread, concorrência × paralelismo, a primeira thread, os métodos essenciais e os três problemas",
+    "palavras": 1232,
+    "minutos": 6
+   },
+   {
+    "rotulo": "I - CRIANDO E CONTROLANDO THREADS",
+    "url": "/threads-e-concorrencia/i-criando-e-controlando-threads",
+    "descricao": "`Runnable` × `Thread`, `start()` × `run()`, `sleep`/`join`/`interrupt`, daemon, os seis estados",
+    "palavras": 1012,
+    "minutos": 5
+   },
+   {
+    "rotulo": "II - COMPARTILHANDO MEMÓRIA",
+    "url": "/threads-e-concorrencia/ii-compartilhando-memoria",
+    "descricao": "race condition, atomicidade × visibilidade, `synchronized`, `volatile`, `wait`/`notify`, deadlock",
+    "palavras": 1436,
+    "minutos": 7
+   },
+   {
+    "rotulo": "III - JAVA.UTIL.CONCURRENT",
+    "url": "/threads-e-concorrencia/iii-java-util-concurrent",
+    "descricao": "`ExecutorService`, `Future`, `CompletableFuture`, atômicos, coleções concorrentes, locks e threads virtuais",
+    "palavras": 1269,
+    "minutos": 6
+   }
+  ],
+  "minutos": 24,
+  "palavras": 4949,
+  "trilha": 3
+ },
+ {
+  "grupo": "Java e frameworks",
   "nome": "SPRING E SPRING BOOT",
   "pasta": "spring-e-spring-boot",
   "descricao": "A base que as outras matérias de Spring supõem: o container, o bean, o proxy e o que o Boot acrescenta.",
@@ -341,7 +381,7 @@
   ],
   "minutos": 43,
   "palavras": 8525,
-  "trilha": 6
+  "trilha": 7
  },
  {
   "grupo": "Java e frameworks",
@@ -388,7 +428,7 @@
   ],
   "minutos": 32,
   "palavras": 6288,
-  "trilha": 7
+  "trilha": 8
  },
  {
   "grupo": "Java e frameworks",
@@ -428,7 +468,7 @@
   ],
   "minutos": 28,
   "palavras": 5664,
-  "trilha": 8
+  "trilha": 9
  },
  {
   "grupo": "Java e frameworks",
@@ -454,7 +494,7 @@
   ],
   "minutos": 22,
   "palavras": 4332,
-  "trilha": 9
+  "trilha": 10
  },
  {
   "grupo": "Java e frameworks",
@@ -494,7 +534,7 @@
   ],
   "minutos": 33,
   "palavras": 6370,
-  "trilha": 10
+  "trilha": 11
  },
  {
   "grupo": "Java e frameworks",
@@ -534,7 +574,7 @@
   ],
   "minutos": 53,
   "palavras": 10744,
-  "trilha": 17
+  "trilha": 18
  },
  {
   "grupo": "Dados",
@@ -602,7 +642,7 @@
   ],
   "minutos": 43,
   "palavras": 8617,
-  "trilha": 11
+  "trilha": 12
  },
  {
   "grupo": "Infraestrutura",
@@ -656,7 +696,7 @@
   ],
   "minutos": 26,
   "palavras": 5287,
-  "trilha": 12
+  "trilha": 13
  },
  {
   "grupo": "Referência rápida",
